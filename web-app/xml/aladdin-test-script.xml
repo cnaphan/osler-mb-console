@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<oslerTestScript>
+  <testName>Aladdin's Test Script</testName>
+  <testDescription>Contains all the events for CEP (InputCEPTestXML). Ordered by timestamp. Sources simulate coming from either RTLS or BPM.</testDescription>
+	
+  <!-- Input events -->	
+  <event name="patientInED" sourceSuffix="RTLS">
+    <patientId>Pa123456</patientId>
+    <locationId>AssessmentRoom12</locationId>
+    <timestamp>2012-03-12 01:12:46</timestamp>
+  </event>
+  <event name="physicianInED" sourceSuffix="RTLS">
+    <physicianId>Phy777777</physicianId>
+    <locationId>AssessmentRoom12</locationId>
+    <timestamp>2012-03-12 01:16:28</timestamp>
+  </event>
+  <event name="physicianOutED" sourceSuffix="RTLS">
+    <physicianId>Phy777777</physicianId>
+    <locationId>AssessmentRoom12</locationId>
+    <timestamp>2012-03-12 01:19:51</timestamp>
+  </event>    
+  <event name="orderRequest" sourceSuffix="BPM">
+    <patientId>Pa123456</patientId>
+    <providerId>Pro654321</providerId>
+    <orderId>Order1111</orderId>
+    <orderType>ECG</orderType>
+    <timestamp>2012-03-12 01:22:33</timestamp>
+  </event>
+   <event name="orderRequest" sourceSuffix="BPM">
+    <patientId>Pa123456</patientId>
+    <providerId>Phy777777</providerId>
+    <orderId>Order1112</orderId>
+    <orderType>Blood Sample</orderType>
+    <timestamp>2012-03-12 01:27:41</timestamp>
+  </event>  
+  <event name="orderRequest" sourceSuffix="BPM">
+    <patientId>Pa123456</patientId>
+    <providerId>Order1113</providerId>
+    <orderId>Order1113</orderId>
+    <orderType>Blood Analysis</orderType>
+    <timestamp>2012-03-12 01:30:40</timestamp>
+  </event>
+  <event name="orderRequestCompleted" sourceSuffix="BPM">
+    <patientId>Pa123456</patientId>
+    <providerId>Nurse121212</providerId>
+    <orderId>Order1111</orderId>
+    <orderType>ECG</orderType>
+    <timestamp>2012-03-12 01:37:40</timestamp>
+  </event>
+  <event name="orderRequestCompleted" sourceSuffix="BPM">
+    <patientId>Pa123456</patientId>
+    <providerId>Pro654321</providerId>
+    <orderId>Order1112</orderId>
+    <orderType>Blood Sample</orderType>
+    <timestamp>2012-03-12 01:41:03</timestamp>
+  </event>
+  <event name="orderRequestCompleted" sourceSuffix="BPM">
+    <patientId>Pa123456</patientId>
+    <providerId>Pro654321</providerId>
+    <orderId>Order1113</orderId>
+    <orderType>Blood Analysis</orderType>
+    <timestamp>2012-03-12 01:43:47</timestamp>
+  </event>
+  <event name="patientInED" sourceSuffix="RTLS">
+    <patientId>Pa123456</patientId>
+    <locationId>AssessmentRoom12</locationId>
+    <timestamp>2012-03-12 01:46:50</timestamp>
+  </event>
+  <event name="physicianInED" sourceSuffix="RTLS">
+    <physicianId>Phy777777</physicianId>
+    <locationId>AssessmentRoom12</locationId>
+    <timestamp>2012-03-12 01:49:34</timestamp>
+  </event>
+  <event name="physicianOutED" sourceSuffix="RTLS">
+    <physicianId>Phy777777</physicianId>
+    <locationId>AssessmentRoom12</locationId>
+    <timestamp>2012-03-12 02:02:38</timestamp>
+  </event>  
+  <event name="bedRequest" sourceSuffix="RTLS">
+    <patientId>Pa123456</patientId>
+    <providerId>Pro654321</providerId>
+    <unitId>CCU</unitId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="patientAdmittedWithNoBed" sourceSuffix="BPM">
+    <patientId>Pa123456</patientId>
+    <unitId>CCU</unitId>
+    <timestamp>2012-03-12 02:10:52</timestamp>
+  </event>
+  <event name="patientAdmittedWithBed" sourceSuffix="BPM">
+    <patientId>Pa123456</patientId>
+    <unitId>CCU</unitId>
+    <bedId>Bed207</bedId>
+    <timestamp>2012-03-12 02:21:36</timestamp>
+  </event>    
+  <event name="patientTransportRequest" sourceSuffix="BPM">
+    <patientId>Pa123456</patientId>
+    <providerId>Nurse745774</providerId>
+    <unitId>CCU</unitId>
+    <timestamp>2012-03-12 02:26:13</timestamp>
+  </event>
+  <event name="patientOutED" sourceSuffix="RTLS">
+    <patientId>Pa123456</patientId>
+    <locationId>AssessmentRoom12</locationId>
+    <timestamp>2012-03-12 02:32:14</timestamp>
+  </event>
+  <event name="patientRegistered" sourceSuffix="BPM">
+    <patientId>Pa123456</patientId>
+    <roomId>Room12</roomId>
+    <timestamp>2012-03-12 02:32:14</timestamp>
+  </event>    
+  <event name="patientInCCU" sourceSuffix="RTLS">
+    <patientId>Pa123456</patientId>
+    <locationId>Bed207</locationId>
+    <timestamp>2012-03-12 02:35:47</timestamp>
+  </event>  
+</oslerTestScript>

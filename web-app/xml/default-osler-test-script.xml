@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<oslerTestScript>
+  <testName>Default Osler Test Script</testName>
+  <testDescription>The basic test script that contains definitions and sample data for all the types of events. Used to quickly prototype new tests.</testDescription>
+  <!-- Sample event to make copy pasting easier 
+	
+	<event name="allFlavouredEvent">
+		<patientId>Pa123456</patientId>
+		<providerId>Pro654321</providerId>
+		<physicianId>Phy777777</physicianId>
+		<unitId>CCU</unitId>
+		<roomId>Room12</roomId>
+		<bedId>Bed207</bedId>
+		<locationId>AssessmentRoom12</locationId>
+		<orderId>Order1111</orderId>		
+		<orderType>ECG</orderType>
+		<ctas>Sample CTAS data</ctas>				
+		<timestamp>2012-03-12 02:08:16</timestamp>	
+	</event>
+	
+	-->
+  <event name="patientAdmittedWithBed">
+    <patientId>Pa123456</patientId>
+    <unitId>CCU</unitId>
+    <bedId>Bed207</bedId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="consultationCompleted2">
+    <patientId>Pa123456</patientId>
+    <providerId>Pro654321</providerId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="patientRegistered">
+    <patientId>Pa123456</patientId>
+    <roomId>Room12</roomId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="consultationStarted1">
+    <patientId>Pa123456</patientId>
+    <providerId>Pro654321</providerId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="orderExecutionCompleted">
+    <patientId>Pa123456</patientId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="discharge">
+    <patientId>Pa123456</patientId>
+    <providerId>Pro654321</providerId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="consultationCompleted1">
+    <patientId>Pa123456</patientId>
+    <providerId>Pro654321</providerId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="waitForTransport">
+    <patientId>Pa123456</patientId>
+    <unitId>CCU</unitId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="patientInED">
+    <patientId>Pa123456</patientId>
+    <locationId>AssessmentRoom12</locationId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="physicianInED">
+    <physicianId>Phy777777</physicianId>
+    <locationId>AssessmentRoom12</locationId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="waitForOrderExecution">
+    <patientId>Pa123456</patientId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="patientOutED">
+    <patientId>Pa123456</patientId>
+    <locationId>AssessmentRoom12</locationId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="patientTransportRequest">
+    <patientId>Pa123456</patientId>
+    <providerId>Pro654321</providerId>
+    <unitId>CCU</unitId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="consultationStarted2">
+    <patientId>Pa123456</patientId>
+    <providerId>Pro654321</providerId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="waitForConsultation2">
+    <patientId>Pa123456</patientId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="bedRequest">
+    <patientId>Pa123456</patientId>
+    <providerId>Pro654321</providerId>
+    <unitId>CCU</unitId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="waitForConsultation1">
+    <patientId>Pa123456</patientId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="patientTransportStarted">
+    <patientId>Pa123456</patientId>
+    <unitId>CCU</unitId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="patientArrivedInBed">
+    <patientId>Pa123456</patientId>
+    <unitId>CCU</unitId>
+    <bedId>Bed207</bedId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="waitForBed">
+    <patientId>Pa123456</patientId>
+    <unitId>CCU</unitId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="triageScore">
+    <patientId>Pa123456</patientId>
+    <providerId>Pro654321</providerId>
+    <ctas>Sample CTAS data</ctas>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="orderRequestCompleted">
+    <patientId>Pa123456</patientId>
+    <providerId>Pro654321</providerId>
+    <orderId>Order1111</orderId>
+    <orderType>ECG</orderType>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="orderRequest">
+    <patientId>Pa123456</patientId>
+    <providerId>Pro654321</providerId>
+    <orderId>Order1111</orderId>
+    <orderType>ECG</orderType>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="patientInCCU">
+    <patientId>Pa123456</patientId>
+    <locationId>AssessmentRoom12</locationId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="patientAdmittedWithNoBed">
+    <patientId>Pa123456</patientId>
+    <unitId>CCU</unitId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+  <event name="physicianOutED">
+    <physicianId>Phy777777</physicianId>
+    <locationId>AssessmentRoom12</locationId>
+    <timestamp>2012-03-12 02:08:16</timestamp>
+  </event>
+</oslerTestScript>

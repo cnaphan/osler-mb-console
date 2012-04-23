@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT oslerTestScript (testName, testDescription, event+)>
+
+<!ELEMENT testName (#PCDATA)>
+<!ELEMENT testDescription (#PCDATA)>
+
+<!ELEMENT event (timestamp)>
+<!ATTLIST event name CDATA #REQUIRED>
+<!ATTLIST event sourceSuffix CDATA #IMPLIED>
+
+<!ELEMENT timestamp (#PCDATA)>

@@ -1,0 +1,10 @@
+# Ignore output files
+/target/*
+/target-eclipse/*
+/.groovy/*
+/.project
+/.settings/*
+/.classpath
+
+# Ignore log files
+/logs/*.txt

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT oslerRoutingRules (events, destinations, sources)>
+
+<!ELEMENT events (event*)>
+<!ELEMENT destinations (destination*)>
+<!ELEMENT sources (source*)>
+
+<!ELEMENT destination (name, description?, url, accessMethod, receives)>
+<!ELEMENT receives (event*)>
+<!ELEMENT source (name, accessMethod, matchingString)>
+
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT url (#PCDATA)>
+<!ELEMENT accessMethod (#PCDATA)>
+<!ELEMENT matchingString (#PCDATA)>
+<!ELEMENT event (#PCDATA)>
+
+<!ATTLIST destination disabled (true|false) "false">
