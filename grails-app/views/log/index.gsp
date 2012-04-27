@@ -81,7 +81,7 @@
 				<li><g:link class="list" action="list"><g:message code="osler.mb.routing.Log.list.title" default="View Log" /></g:link></li>
 			</ul>
 		</div>
-		<div id="list-event" class="content dashboard" role="main">
+		<div id="body">
 			<h1><g:message code="osler.mb.routing.Log.index.title" default="Log Dashboard" /></h1>
 			<div style="width: 80%; float:left;">
 				<h3>Events by Time</h3>		

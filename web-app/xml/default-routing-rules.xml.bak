@@ -31,7 +31,7 @@
 		<destination>
 			<name>BPM</name>
 			<description>IBM WebSphere Lombardi - Server</description>
-			<url>http://</url>
+			<url>http://WIN-687RHJV6VUL:19086/teamworks/webservices/OPPOD/WFMCoordinationEventService.tws</url>
 			<accessMethod>SOAP</accessMethod>
 			<receives>
 				<event>patientAdmittedWithBed</event>
@@ -91,22 +91,39 @@
 				<event>physicianOutED</event>
 			</receives>
 		</destination>
+		<destination disabled=''>
+			<name>PFM-Lap top</name>
+			<description>PFM running on Shirley's laptop</description>
+			<url>http://www.google.com</url>
+			<accessMethod>SOAP</accessMethod>
+			<receives></receives>
+		</destination>
 	</destinations>
 	<sources>
 		<source>
-			<name>CEP</name>
-			<accessMethod>SOAP</accessMethod>
-			<matchingString></matchingString>
-		</source>
-		<source>
 			<name>RTLS</name>
-			<accessMethod></accessMethod>
-			<matchingString></matchingString>
+			<accessMethod>SOAP</accessMethod>
+			<matchingString>wifi-something</matchingString>
 		</source>
 		<source>
 			<name>BPM</name>
-			<accessMethod></accessMethod>
-			<matchingString></matchingString>
+			<accessMethod>SOAP</accessMethod>
+			<matchingString>teamworks</matchingString>
+		</source>
+		<source>
+			<name>PFM</name>
+			<accessMethod>SOAP</accessMethod>
+			<matchingString>PFMon</matchingString>
+		</source>
+		<source>
+			<name>FSA4</name>
+			<accessMethod>SOAP</accessMethod>
+			<matchingString>localhost</matchingString>
+		</source>
+		<source>
+			<name>dmuhi064</name>
+			<accessMethod>SOAP</accessMethod>
+			<matchingString>137.122.88.14</matchingString>
 		</source>
 	</sources>
 </oslerRoutingRules>

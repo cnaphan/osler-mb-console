@@ -63,19 +63,22 @@ grails.hibernate.cache.queries = true
 // Configuration some elements that pertain to Message broker
 osler.mb.dateFormat="yyyy-MM-dd'T'HH:mm:ss"
 osler.mb.mbHost='http://fsa4.site.uottawa.ca'
-osler.mb.registerEventMethod='SOAP'
-osler.mb.registerEventUrls=[SOAP:'http://fsa4.site.uottawa.ca:7080/osler-mb/soap/registerEvent']
-osler.mb.getRoutingRulesUrl='http://fsa4.site.uottawa.ca:7080/osler-mb/http/getRoutingRules'
-osler.mb.updateRoutingRulesUrl='http://fsa4.site.uottawa.ca:7080/osler-mb/http/updateRoutingRules'
+osler.mb.registerEventUrls=[SOAP:'http://fsa4.site.uottawa.ca:7080/soap/registerEvent',
+							HTTP:'http://fsa4.site.uottawa.ca:7080/http/registerEvent']
+osler.mb.getRoutingRulesUrl='http://fsa4.site.uottawa.ca:7080/http/getRoutingRules'
+osler.mb.updateRoutingRulesUrl='http://fsa4.site.uottawa.ca:7080/http/updateRoutingRules'
 
 // set per-environment serverURL stem for creating absolute links
 environments {
     development {
+        grails.serverURL = "http://localhost:8080/osler-mb"
         grails.logging.jul.usebridge = true
+		osler.mb.registerEventMethod='SOAP'
     }
     production {
+        grails.serverURL = "http://fsa4.site.uottawa.ca:8080/osler-mb"
         grails.logging.jul.usebridge = false
-        // TODO: grails.serverURL = "http://www.changeme.com"
+		osler.mb.registerEventMethod='SOAP'
     }
 }
 
@@ -99,10 +102,12 @@ log4j = {
            'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
            'org.springframework',
            'org.hibernate',
-           'net.sf.ehcache.hibernate']
+           'net.sf.ehcache.hibernate',
+		   'org.springframework.core.env.StandardEnvironment']
 		   
-    info file:'grails.app.controllers'	
+    info file:'grails.app.controllers',
+			  'osler.mb'
 
-	debug file:'grails.app.controllers.osler.mb.EventController'
+	debug file:'grails.app.controllers.osler.mb.TesterController'
 				
 }

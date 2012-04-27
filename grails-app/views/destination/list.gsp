@@ -16,7 +16,7 @@
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 			</ul>
 		</div>
-		<div id="list-destination" class="content tight-list" role="main">
+		<div id="body" class="narrow">
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 			<div>
 				Destinations represent end-points for events. Message Broker will route events to destinations based on Routing Rules. 
@@ -24,9 +24,7 @@
 				mechanism is SOAP, according to the WSDL defined by BPM and PFM. New destinations can be added dynamically but not new 
 				access methods. New access methods require modificaitons to the deployed Message Broker archive (BAR).
 			</div>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
+			<g:messages/>
 			<table>
 				<thead>
 					<tr>

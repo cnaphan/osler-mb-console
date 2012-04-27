@@ -25,18 +25,16 @@
 				<li><g:link class="list" controller="source" action="list"><g:message code="default.list.label" args="['Source']" /></g:link></li>
 			</ul>
 		</div>
-		<div id="list-event" class="content tight-list" role="main">
+		<div id="body">
 			<h1><g:message code="osler.mb.routing.EventRouting.title"/></h1>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
+			<g:messages/>
 			<g:form method="post" >
-				<table>
+				<table class="data tight-list">
 					<thead>
 						<tr>						
-							<th><g:message code="osler.mb.routing.Event.label" default="Event"/></th>
+							<th style="width: 20%"><g:message code="osler.mb.routing.Event.label" default="Event"/></th>
 							<g:each in="${destinationInstanceList}" var="d">
-								<th>
+								<th style="text-align: right; width: ${80 / destinationInstanceList.size()}%;">
 									${d.name}<br/>
 									<input type="checkbox" name="all.${d.name}" ${(d.events.size() == eventInstanceList.size()) ? 'checked="checked"' : '' } onchange="toggleAll(this, '${d.name}')"/>
 								</th>
@@ -48,7 +46,7 @@
 						<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">					
 							<td class="first-column">${fieldValue(bean: e, field: "name")}</td>
 							<g:each in="${destinationInstanceList}" status="j" var="d">
-								<td><input type="checkbox" name="paths.${d.name}.${e.name}" id="paths.${d.name}.${e.name}"  value="on" ${d.events.contains(e.name)?'checked="checked"':''} /></td>
+								<td style="text-align: right;"><input type="checkbox" name="paths.${d.name}.${e.name}" id="paths.${d.name}.${e.name}"  value="on" ${d.events.contains(e.name)?'checked="checked"':''} /></td>
 							</g:each>					
 						</tr>
 					</g:each>

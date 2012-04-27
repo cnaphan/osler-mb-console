@@ -16,14 +16,12 @@
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 			</ul>
 		</div>
-		<div id="list-event" class="content tight-list" role="main">
+		<div id="body" class="narrow">
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 			<div>Events represent the different types of messages that get passed to Message Broker. Routing rules
 			connect various events to destinations. Events can be added dynamically without any changes to the Message Broker
 			BAR file.</div>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
+			<g:messages/>
 			<table>
 				<thead>
 					<tr>

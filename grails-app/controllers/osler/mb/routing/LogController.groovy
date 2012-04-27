@@ -85,7 +85,7 @@ class LogController {
 				try {
 					f = Date.parse(grailsApplication.config.osler.mb.dateFormat, params.fromdate)
 				} catch (java.text.ParseException e) {
-					flash.message = "Invalid 'from' date. Must be in the format ${grailsApplication.config.osler.mb.dateFormat}"
+					flash.error = "Invalid 'from' date. Must be in the format ${grailsApplication.config.osler.mb.dateFormat}"
 					log.debug("Couldn't parse from date: ${params.fromdate}")
 					f = null
 				}
@@ -98,7 +98,7 @@ class LogController {
 				try {
 					t = Date.parse(grailsApplication.config.osler.mb.dateFormat, params.todate)
 				} catch (java.text.ParseException e) {
-					flash.message = "Invalid 'to' date. Must be in the format ${grailsApplication.config.osler.mb.dateFormat}"
+					flash.error = "Invalid 'to' date. Must be in the format ${grailsApplication.config.osler.mb.dateFormat}"
 					log.debug("Couldn't parse to date: ${params.todate}")
 					t = new Date()
 				}
@@ -137,7 +137,7 @@ class LogController {
 		try {		
 			def logEvent = request.XML			
 			new Log(logTime: new Date(), event: logEvent.event.text(), source: logEvent.source.text(), inputMethod: logEvent.inputMethod.text()).save(failOnError: true) 
-			log.info("Event received for logging from ${request.getRemoteHost()}")
+			log.info("Event ${logEvent.event.text()} received for logging from ${request.getRemoteHost()}")
 			render(text: "Log successful", status: 200) // Respond with 200 Ack
 		} catch (grails.validation.ValidationException e) {
 			log.error("Error saving log: ${e.getMessage()}")

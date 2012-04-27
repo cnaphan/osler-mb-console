@@ -2,12 +2,13 @@ package osler.mb.routing
 
 abstract class XmlTransport {
 	
+	
 	public static XmlTransport getInstance() {
 		switch(grails.util.GrailsUtil.environment) {
-			case "production":
-				// TODO Implement web service based transport mechanism
-			default:
+			case grails.util.Environment.TEST:
 				return new LocalFileXmlTransport()
+			default:
+				return new RestXmlTransport()
 		}
 	}
 	

@@ -58,6 +58,7 @@ class TesterController {
 		
 		switch (params.mode) {
 			case MODE_AUTO:
+				flash.errors = []
 				// Grab the total number of events in the script for logging and error-checking
 				Integer numEvents = events.size()
 				Integer numEventsSent = 0 // Used to manually count the events sent, to detect errors
@@ -142,17 +143,20 @@ class TesterController {
 	}
 	
 	def locationTest() {
-		[defaultEventName: "patientInCCU", defaultLocationId: "CCU12"]
+		[eventName: "patientInCCU",
+			personType: "patientId",
+			personId:"Pa123456",
+			locationId: "CCU12"]
 	}
 	
 	def runLocationTest() {
 		// Check the parameters to make sure we don't input something bad
-		if (!params.locationEventName || !params.locationId || params.locationEventName.contains(" ") || !params.locationPersonId) { 
-			flash.message = "Bad parameters. All are required."
+		if (!params.eventName || !params.locationId || params.eventName.contains(" ") || !params.personId) { 
+			flash.error = "Bad parameters. All are required."
 			redirect(action: "locationTest")
 			return
-		} else if (!(params.locationEventName.indexOf("In") > 0)) {
-			flash.message = "Bad parameters. Location event does not appear to be a location event because it doesn't have 'In' in it."
+		} else if (!(params.eventName.indexOf("In") > 0)) {
+			flash.error = "Bad parameters. Location event does not appear to be a location event because it doesn't have 'In' in it."
 			redirect(action: "locationTest")
 			return
 		}
@@ -162,24 +166,26 @@ class TesterController {
 		String dateValue = new Date().format(dateFormat)	
 		def bodyWriter = new StringWriter()
 		def xml = new groovy.xml.MarkupBuilder(bodyWriter)
-		xml."${params.locationEventName}" (sourceSuffix: "RTLS") {
-			"${params.locationPersonType}"(params.locationPersonId)
+		xml."${params.eventName}" (sourceSuffix: "RTLS") {
+			"${params.personType}"(params.personId)
 			locationId(params.locationId)
 			timestamp (dateValue)
 		}	
-		String body = bodyWriter.toString()	
-		Integer responseStatusCode = this.sendMessage(params.locationEventName, body)
+		String body = bodyWriter.toString()			
+		Integer responseStatusCode = this.sendMessage(params.eventName, body)
 		
 		// Report back to the user
 		if (responseStatusCode < 400) {		
-			log.info("${dateValue} - ${params.locationEventName} sent using the location tester")
-			flash.message = "${dateValue} - '${params.locationEventName}' was successfully sent to Message Broker."
-			redirect(action: "locationTest")
+			log.info("${params.eventName} sent using the location tester")
+			flash.message = "'${params.eventName}' was successfully sent to Message Broker. (${dateValue})"
 		} else {
-			log.error("${dateValue} - ${params.locationEventName} failed to send with location tester, returning status ${responseStatusCode}")
-			flash.message = "${dateValue} - '${params.locationEventName}' was not sent to the Message Broker due to communications issues. Response code was ${responseStatusCode}"
-			redirect(action: "locationTest")
+			log.error("${params.eventName} failed to send with location tester, returning status ${responseStatusCode}")
+			flash.error = "'${params.eventName}' was not sent to the Message Broker due to communications issues. Response code was ${responseStatusCode}. (${dateValue})"
 		}
+		render(view: "locationTest", model: [eventName: params.eventName,
+											personType: params.personType,
+											personId: params.personId,
+											locationId: params.locationId])
 	}
 	
 	/**
@@ -247,73 +253,69 @@ class TesterController {
 	 * @param method The method to call (used for SOAP mainly)
 	 * @param body The payload to deliver in XML
 	 * @return The response code from the server, 200 if success
+	 * TODO Replace this with an interface and classloader construct
 	 */
 	private Integer sendMessage(String method, String body) {
 		switch (grailsApplication.config.osler.mb.registerEventMethod) {
 			case "SOAP":
 				return this.sendSoap(method, body)
 			case "HTTP":
-			case "MQ":
+			case "MQ":		
 			default:
-				throw new Exception("Access method unsupported: " + grailsApplication.config.osler.mb.registerEventMethod)
+				return this.saveDirect(method, body)
 		}
 	}
 	
 	/**
-	 * Sends an XML message via SOAP. In non-production modes, immediately logs the entry and returns a 
-	 * success message. The Message Broker host name is taken from the application configuration.
+	 * Sends an XML message via SOAP. The Message Broker host name is taken from the application configuration.
 	 * @param soapMethod The name of the method that appears in the SOAP header
 	 * @param soapBody The SOAP payload
 	 * @return The HTTP response code. 200 if successful, otherwise 400 or 500.
+	 * Note: Message Broker is very picky about the SOAP namespace - anything else is an error
 	 */
-	private Integer sendSoap(String soapMethod, String soapBody) {
-		switch(grails.util.GrailsUtil.environment) {
-			case "production":
-				// Then, send it via SOAP to the message broker
-				def soapRequest = """
-					<?xml version='1.0'?>
-					<soap:Envelope
-					xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
-					xmlns:axis="http://ws.apache.org/axis2">
-					<soap:Header/>
-					<soap:Body>
-					${soapBody}
-					</soap:Body>
-					</soap:Envelope>
-					"""
-				String url = grailsApplication.config.osler.mb.registerEventUrls["SOAP"]
-				log.debug("Registering event ${soapMethod} via SOAP using '${url}'")
-				def soapUrl =
-					new URL()
+	private Integer sendSoap(String soapMethod, String soapBody) {	
+		def soapRequest = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header/><soapenv:Body>${soapBody}</soapenv:Body></soapenv:Envelope>"""
+		String url = grailsApplication.config.osler.mb.registerEventUrls["SOAP"]
+		log.debug("Registering event ${soapMethod} via SOAP using '${url}'")
+		def soapUrl = new URL(url)
+
+		// Connect to the host and send the message
+		def connection = soapUrl.openConnection()
+		connection.setRequestMethod("POST" )
+		connection.setRequestProperty("Content-Length", String.valueOf( soapRequest.size() ) );
+		connection.setRequestProperty("Content-Type" , "application/xml" )
+		connection.doOutput = true
 		
-				// Connect to the host and send the message
-				def connection = soapUrl.openConnection()
-				connection.setRequestMethod("POST" )
-				connection.setRequestProperty("Content-Type" , "application/soap+xml" )
-				//TODO I may have to set the SOAPMethodName here to the event name
-				connection.doOutput = true
-				Writer writer = new OutputStreamWriter(connection.outputStream)
-				writer.write(soapRequest)
-				writer.flush()
-				writer.close()
-				connection.connect()
-				return connection.responseCode			
-			default:
-				log.debug("Method sendSoap in non-production mode - returning 200 OK")
-				// Check the body if it has the sourceSuffix attribute and if it does, extract it
-				String source = "TEST" + this.extractSuffix(soapBody)
-				log.error("BODY IN SOAP SEND: " + soapBody)
-				// Create a log entry instead of sending it by SOAP to simulate it being logged by the broker
-				try {
-					Log l = new Log(logTime: new Date(), event: soapMethod, source: source, inputMethod: "TEST-SOAP")
-					l.save(failOnError: true)
-					return 200
-				} catch (Exception e) {
-					log.error("Could not save log in development mode: ${e.getMessage()}")
-					return 500
-				}
-		}
+		// Write to stream
+		Writer writer = new OutputStreamWriter(connection.outputStream)
+		writer.write(soapRequest)
+		writer.flush()
+		writer.close()
+		connection.connect()
+		return connection.getResponseCode()
 	}	
+	
+	/**
+	 * Used in development modes when connection to Message Broker is down or unreliable.
+	 * Directly saves the log into the database, bypassing the broker.
+	 * @param body
+	 * @param method
+	 * @return Usually 200, unless save fails
+	 */
+	private Integer saveDirect(String body, String method) {
+		log.debug("Method saveDirect in non-production mode - returning 200 OK")
+		// Check the body if it has the sourceSuffix attribute and if it does, extract it
+		String source = "TEST" + this.extractSuffix(soapBody)
+		// Create a log entry instead of sending it by SOAP to simulate it being logged by the broker
+		try {
+			Log l = new Log(logTime: new Date(), event: soapMethod, source: source, inputMethod: "TEST-FAKE")
+			l.save(failOnError: true)
+			return 200
+		} catch (Exception e) {
+			log.error("Could not save log in development mode: ${e.getMessage()}")
+			return 500
+		}
+	}
 	
 	/**
 	 * Cleans up a timestamp string, removing some known issues, such as a non-T divider or a trailing Z.

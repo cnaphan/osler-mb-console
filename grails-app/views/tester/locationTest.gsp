@@ -6,14 +6,13 @@
 		<g:javascript library="jquery" />
 		<g:javascript>
 			function changeLocationPersonId(personType) {
-				if (personType.value == "patientId") { $("#locationPersonId").val("Pa123456"); }
-				else if (personType.value == "providerId") { $("#locationPersonId").val("Pro654321"); }
-				else if (personType.value == "physicianId") { $("#locationPersonId").val("Phy777777"); }			
+				if (personType.value == "patientId") { $("#personId").val("Pa123456"); }
+				else if (personType.value == "providerId") { $("#personId").val("Pro654321"); }
+				else if (personType.value == "physicianId") { $("#personId").val("Phy777777"); }			
 			}
 		</g:javascript>
 	</head>
 	<body>
-		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div id="page-body" role="main">
 			<div class="nav" role="navigation">
 				<ul>
@@ -21,33 +20,31 @@
 					<li><g:link action="index"><g:message code="default.button.back.label"/></g:link></li>
 				</ul>
 			</div>
-			<div class="content scaffold-edit" role="main">
+			<div id="body" class="narrow">
 				<h1><g:message code="osler.mb.tester.locationTest.label" /></h1>
-				<div><g:message code="osler.mb.tester.locationTest.help"/></div>
-				<g:if test="${flash.message}">
-					<div class="message" role="status">${flash.message}</div>
-				</g:if>
+				<g:messages/>
+				<div><g:message code="osler.mb.tester.locationTest.help"/></div>				
 				<g:form method="POST">
 					<fieldset>
-						<div class="fieldcontain">
-							<label for="personId">
-								<g:select name="locationPersonType" from="${["patientId","providerId","physicianId"] }" onchange="changeLocationPersonId(this)"/>								
-							</label>
-							<g:textField name="locationPersonId" value="Pa123456"/>					
-						</div>
 						<div class="fieldcontain">
 							<label for="locationEventName">
 								<g:message code="osler.mb.tester.locationEventName.label" />
 								<span class="required-indicator">*</span>
 							</label>
-							<g:textField name="locationEventName" value="${defaultEventName }"/>					
+							<g:textField name="eventName" value="${eventName }"/>					
+						</div>
+						<div class="fieldcontain">
+							<label for="personId">
+								<g:select name="personType" from="${["patientId","providerId","physicianId"] }" onchange="changeLocationPersonId(this)" value="${personType }"/>								
+							</label>
+							<g:textField name="personId" value="${personId }"/>					
 						</div>
 						<div class="fieldcontain">
 							<label for="locationId">
 								<g:message code="osler.mb.tester.locationId.label"  />
 								<span class="required-indicator">*</span>
 							</label>
-							<g:textField name="locationId" value="${defaultLocationId }"/>					
+							<g:textField name="locationId" value="${locationId }"/>					
 						</div>						
 					</fieldset>
 					<fieldset class="buttons">

@@ -36,21 +36,17 @@ environments {
 	}
 	production {
 		dataSource {
-			dbCreate = "update"
-			
-			
-			/*
-			// JDBC-DB2 configuration 
-			driverClassName = "com.ibm.db2.jcc.DB2Driver"
-			username = "oslermbuser"
-			password = "oslermbuser"
-			url = "jdbc:db2://fsa4.site.uottawa.ca:50000/OSLER_MB"
-			*/
-			
-			
+			dbCreate = "update"			
 			url = "jdbc:mysql://fsa4.site.uottawa.ca/osler-mb-prod?useUnicode=yes&characterEncoding=UTF-8"
 			username = "oslermbuser"
-			password = "oslermbuser"			
+			password = "oslermbuser"
+			
+			/*dbCreate = "create-drop" // one of 'create', 'create-drop','update'
+			url = "jdbc:h2:mem:prodDb"
+			driverClassName = "org.h2.Driver"
+			dialect = "org.hibernate.dialect.H2Dialect"
+			username = "sa"
+			password = ""*/
 		}
 	}
 }

@@ -3,37 +3,39 @@
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
 <!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
 <!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"><!--<![endif]-->
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title><g:layoutTitle default="Osler MB Console"/></title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
-		<link rel="apple-touch-icon" href="${resource(dir: 'images', file: 'apple-touch-icon.png')}">
-		<link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'apple-touch-icon-retina.png')}">
-		<link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}" type="text/css">
-		<link rel="stylesheet" href="${resource(dir: 'css', file: 'mobile.css')}" type="text/css">
-		<g:layoutHead/>
-        <r:layoutResources />
-	</head>
-	<body>
-		<div id="grailsLogo" role="banner">
-		
-			<div style="float: left;" class="logo"><a href="/osler-mb/" ><img src="${resource(dir: 'images', file: 'mb-logo.png')}" alt="IBM WebSphere Message Broker"/></a></div>
-			<div style="float: right;" class="logo"><a href="http://www.williamoslerhc.on.ca/" ><img src="${resource(dir: 'images', file: 'osler-logo.png')}" alt="William Osler Hospital"/></a></div> 
-			<div id="title" style="text-align: center; padding-top: 25px; font-size: 20pt; color: white; font-weight: bold; font-family: Tahoma, Arial, sans-serif;">
-				Osler Message Broker Console
-			</div>
-			<div style="clear: both;"></div>		
-			
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="en" class="no-js">
+<!--<![endif]-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title><g:layoutTitle default="Survey Manager" /></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- <link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}"
+	type="text/css">-->
+<link rel="stylesheet" href="${resource(dir: 'css', file: 'sparse.css')}"
+	type="text/css">	
+<g:layoutHead />
+<r:layoutResources />
+</head>
+<body>
+	<div id="header">
+		<a href="${ createLink(uri: '/') }" style="float: left;"><g:img file="mb-logo.png" alt="Osler Message Broker Console"/></a>
+		<div id="home" style="float: left;">			
+			<h1><a href="${createLink(uri: '/') }">Osler Message Broker Console</a></h1>
 		</div>
-		<g:layoutBody/>
-		<div class="footer" role="contentinfo">
-			University of Ottawa 2012<br/>			
+		<div id="icons" style="float: right;">
+			<g:link controller="tester" action="index"><g:img file="test-runner.png" alt="Inject Test Events" width="25" height="30"/></g:link>
+			<g:link controller="log" action="index"><g:img file="analytics.png" alt="Log Analytics" width="22" height="30"/></g:link>
+			<g:link controller="event" action="routing"><g:img file="router.png" alt="Update Routing Rules" width="30" height="30"/></g:link>
 		</div>
-		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
-		<g:javascript library="application"/>
-        <r:layoutResources />
-	</body>
+		<div class="clearer" ></div>
+	</div>	
+	<g:layoutBody />
+	<div id="spinner" class="spinner" style="display: none;">
+		<g:message code="spinner.alt" default="Loading&hellip;" />
+	</div>
+	<g:javascript library="application" />
+	<r:layoutResources />
+</body>
 </html>

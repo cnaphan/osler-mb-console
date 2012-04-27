@@ -16,12 +16,10 @@
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 			</ul>
 		</div>
-		<div id="list-source" class="content tight-list" role="main">
+		<div id="body" class="narrow">
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 			<div><g:message code="osler.mb.routing.Source.advice"/></div>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
+			<g:messages/>
 			<table>
 				<thead>
 					<tr>

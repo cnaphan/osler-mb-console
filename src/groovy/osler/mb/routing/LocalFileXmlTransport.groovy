@@ -17,7 +17,7 @@ class LocalFileXmlTransport extends XmlTransport {
 		def outputBuilder = new StreamingMarkupBuilder()
 		String result = outputBuilder.bind{ mkp.yield(root) }
 		File f = new File (this.getLocalFilePath())
-		f.write('<?xml version="1.0" encoding="utf-8"?>\n\n' + result)		
+		f.write(result)		
 		return true
 	}
 }

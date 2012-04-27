@@ -16,18 +16,9 @@
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 			</ul>
 		</div>		
-		<div id="show-destination" class="content scaffold-show" role="main">
+		<div id="body" class="narrow">
 			<h1><g:message code="default.show.label" args="[entityName]" /></h1>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
-			<g:hasErrors bean="${destinationInstance}">
-				<ul class="errors" role="alert">
-					<g:eachError bean="${destinationInstance}" var="error">
-					<li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
-					</g:eachError>
-				</ul>
-			</g:hasErrors>
+			<g:messages/>
 			<div><g:message code="osler.mb.routing.Destination.url.advice"/></div>
 			<ol class="property-list destination">			
 				<li class="fieldcontain">

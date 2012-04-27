@@ -4,7 +4,7 @@ import org.springframework.dao.DataIntegrityViolationException
 
 class EventController {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST", updaterouting: "POST", getDefault: "GET" ]
+    static allowedMethods = [save: "POST", update: "POST", delete: "POST", updaterouting: "POST", getDefaultRoutingRules: "GET" ]
 
     def index() {
         redirect(action: "list", params: params)
@@ -203,7 +203,7 @@ class EventController {
 	 * first initialized or if the file is ever deleted)
 	 * @return A routing rules file from the WEB-INF folder in XML format
 	 */
-	def getDefault() {
+	def getDefaultRoutingRules() {
 		log.info("Default routing rules were requested from ${request.getRemoteHost()}")
 		try {		
 			def trans = new LocalFileXmlTransport()

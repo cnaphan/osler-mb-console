@@ -6,8 +6,7 @@
 		<style type="text/css">
 		.xml-body {
 			height: 4em;
-			width: 50em;
-			font-size: smaller;
+			width: 60em;			
 		}
 		.sent {
 			color: green;
@@ -22,7 +21,6 @@
 		</g:javascript>
 	</head>
 	<body>
-		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div id="page-body" role="main">
 			<div class="nav" role="navigation">
 				<ul>
@@ -30,12 +28,12 @@
 					
 				</ul>
 			</div>
-			<div class="content tight-list" role="main">
+			<div id="body">
+				<g:messages/>
 				<h1><g:message code="osler.mb.tester.manual.title" /></h1>
-				<div id="intro"><g:message code="osler.mb.tester.manual.help"/></div>
-				<g:if test="${flash.message}"><div class="message" role="status">${flash.message}</div></g:if>
+				<div id="intro"><g:message code="osler.mb.tester.manual.help"/></div>				
 				<div id="send-failure" class="errors" style="display: none;"></div>
-				<table>
+				<table class="data">
 					<thead>
 						<tr>
 							<th style="width: 2em;">#</th>
