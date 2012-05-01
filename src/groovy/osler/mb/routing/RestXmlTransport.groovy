@@ -24,10 +24,13 @@ class RestXmlTransport extends XmlTransport {
 		// Turn the parsed XML back into a string
 		def outputBuilder = new StreamingMarkupBuilder()
 		String result = outputBuilder.bind{ mkp.yield(root) }
-		// Write a copy to the local drive
-		File f = new File ("./web-app/xml/latest-routing-rules.xml")
-		f.write(result)
-		
+		try {
+			// Write a copy to the local drive
+			File f = new File (org.codehaus.groovy.grails.web.context.ServletContextHolder.servletContext.getRealPath('/xml/latest-routing-rules.xml'))
+			f.write(result)
+		} catch (Exception e) {
+			log.warn("Failed to write latest copy of routing rules to web app but continuing... Message: ${e.getMessage()}")
+		}
 		new HTTPBuilder(grailsApplication.config.osler.mb.updateRoutingRulesUrl).post (body: result) { resp ->
 			log.debug("Sent updated routing rules. Responded with status code ${resp.statusLine.statusCode}.")
 			return resp.statusLine.statusCode == 200

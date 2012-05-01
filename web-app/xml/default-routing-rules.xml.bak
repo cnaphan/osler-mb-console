@@ -140,7 +140,7 @@
 		<source>
 			<name>FSA4</name>
 			<accessMethod>SOAP</accessMethod>
-			<matchingString>127.0.0.1</matchingString>
+			<matchingString>localhost</matchingString>
 		</source>
 		<source>
 			<name>dmuhi064</name>

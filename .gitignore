@@ -5,6 +5,7 @@
 /.project
 /.settings/*
 /.classpath
+*.*~
 
 # Ignore log files
 /logs/*.txt

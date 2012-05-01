@@ -13,9 +13,6 @@ environments {
 	development {
 		dataSource {
 			dbCreate = "create-drop" // one of 'create', 'create-drop','update'
-			/*url = "jdbc:mysql://fsa4.site.uottawa.ca/osler-mb-dev?useUnicode=yes&characterEncoding=UTF-8"			
-			username = "oslerdev"
-			password = "oslerdev"*/
 			url = "jdbc:h2:mem:devDb"
 			driverClassName = "org.h2.Driver"
 			dialect = "org.hibernate.dialect.H2Dialect"
@@ -28,10 +25,12 @@ environments {
 	}
 	test {
 		dataSource {
-			dbCreate = "create-drop" // one of 'create', 'create-drop','update'
-			url = "jdbc:mysql://fsa4.site.uottawa.ca/osler-mb-test?useUnicode=yes&characterEncoding=UTF-8"
-			username = "oslerdev"
-			password = "oslerdev"
+			dbCreate = "create-drop"
+			url = "jdbc:h2:mem:testDb"
+			driverClassName = "org.h2.Driver"
+			dialect = "org.hibernate.dialect.H2Dialect"
+			username = "sa"
+			password = ""
 		}
 	}
 	production {
