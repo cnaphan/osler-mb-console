@@ -12,7 +12,7 @@ class LogController {
 	private static final Integer VIEW_BY_ALL= 4
 	private static final Map TIME_HOUR_MAP = [(VIEW_BY_HOUR): 1, (VIEW_BY_DAY): 24, (VIEW_BY_WEEK): 24*7, (VIEW_BY_ALL): 0]	
 	
-	static allowedMethods = [logEvent: "POST" ]
+	static allowedMethods = [logEvent: "POST", logResponse: "POST" ]
 	
 	def index = {
 		def viewByMap = [(VIEW_BY_HOUR): "the last hour", (VIEW_BY_DAY): "the last day", (VIEW_BY_WEEK): "the last week", (VIEW_BY_ALL): "forever"]
@@ -77,52 +77,55 @@ class LogController {
 		def logCount
 		
 		if (params.fromdate || params.todate) {
-			Date f // from date
-			Date t // to date
-			
-			// Try to parse the given from date
-			if (params.fromdate) {
-				try {
-					f = Date.parse(grailsApplication.config.osler.mb.dateFormat, params.fromdate)
-				} catch (java.text.ParseException e) {
-					flash.error = "Invalid 'from' date. Must be in the format ${grailsApplication.config.osler.mb.dateFormat}"
-					log.debug("Couldn't parse from date: ${params.fromdate}")
-					f = null
-				}
-			} else {
-				f = null
-			}
-			
-			// Try to parse the given todate
-			if (params.todate) {
-				try {
-					t = Date.parse(grailsApplication.config.osler.mb.dateFormat, params.todate)
-				} catch (java.text.ParseException e) {
-					flash.error = "Invalid 'to' date. Must be in the format ${grailsApplication.config.osler.mb.dateFormat}"
-					log.debug("Couldn't parse to date: ${params.todate}")
-					t = new Date()
-				}
-			} else {
-				t = new Date()
-			}
-			
+			def dates = this.parseDates(params)			
 
-			if (f != null) {
+			if (dates.from != null) {
 				// If we have a from date, use both to get the logs between them				
-				logList = Log.findAllByLogTimeBetween(f,t,params)				
-				logCount = Log.countByLogTimeBetween(f,t,params)
-				if (log.isDebugEnabled()) { log.debug("list: Retrieved ${logCount} log entries between ${f.format(grailsApplication.config.osler.mb.dateFormat)} and ${t.format(grailsApplication.config.osler.mb.dateFormat)}") }
+				logList = Log.findAllByLogTimeBetween(dates.from,dates.to,params)				
+				logCount = Log.countByLogTimeBetween(dates.from,dates.to,params)
+				if (log.isDebugEnabled()) { log.debug("list: Retrieved ${logCount} log entries between ${dates.from.format(grailsApplication.config.osler.mb.dateFormat)} and ${dates.to.format(grailsApplication.config.osler.mb.dateFormat)}") }
 			} else {
 				// If we only have one date, get everything before it
-				logList = Log.findAllByLogTimeLessThanEquals(t, params)
-				logCount = Log.countByLogTimeLessThanEquals(t, params)
-				if (log.isDebugEnabled()) { log.debug("list: Retrieved ${logCount} log entries before ${t.format(grailsApplication.config.osler.mb.dateFormat)}") }			
+				logList = Log.findAllByLogTimeLessThanEquals(dates.to, params)
+				logCount = Log.countByLogTimeLessThanEquals(dates.to, params)
+				if (log.isDebugEnabled()) { log.debug("list: Retrieved ${logCount} log entries before ${dates.to.format(grailsApplication.config.osler.mb.dateFormat)}") }			
 			}
 		} else {
 			// If we have neither dates, just get everything
 			logList = Log.list(params)
 			logCount = Log.count()
 		    if (log.isDebugEnabled()) { log.debug("list: Retrieved ${logCount} log entries") }		
+		}
+		[logInstanceList: logList, logInstanceTotal: logCount, logDateFormat: grailsApplication.config.osler.mb.dateFormat]
+	}
+	
+	def responseLogList = {
+		// Set some default parameters, if they are not set
+		if (!params.sort) { params.sort = "logTime" }
+		if (!params.order) { params.order = "DESC" }
+		if (!params.max) { params.max = LogController.ITEMS_PER_PAGE }		
+		def logList
+		def logCount
+		
+		if (params.fromdate || params.todate) {
+			def dates = this.parseDates(params)			
+
+			if (dates.from != null) {
+				// If we have a from date, use both to get the logs between them				
+				logList = ResponseLog.findAllByLogTimeBetween(dates.from,dates.to,params)				
+				logCount = ResponseLog.countByLogTimeBetween(dates.from,dates.to,params)
+				if (log.isDebugEnabled()) { log.debug("list: Retrieved ${logCount} response log entries between ${dates.from.format(grailsApplication.config.osler.mb.dateFormat)} and ${dates.to.format(grailsApplication.config.osler.mb.dateFormat)}") }
+			} else {
+				// If we only have one date, get everything before it
+				logList = ResponseLog.findAllByLogTimeLessThanEquals(dates.to, params)
+				logCount = ResponseLog.countByLogTimeLessThanEquals(dates.to, params)
+				if (log.isDebugEnabled()) { log.debug("list: Retrieved ${logCount} response log entries before ${dates.to.format(grailsApplication.config.osler.mb.dateFormat)}") }			
+			}
+		} else {
+			// If we have neither dates, just get everything
+			logList = ResponseLog.list(params)
+			logCount = ResponseLog.count()
+		    if (log.isDebugEnabled()) { log.debug("list: Retrieved ${logCount} response log entries") }		
 		}
 		[logInstanceList: logList, logInstanceTotal: logCount, logDateFormat: grailsApplication.config.osler.mb.dateFormat]
 	}
@@ -152,6 +155,60 @@ class LogController {
 			log.error("Failed while processing event for log: ${e.getMessage()}")
 			render (text:  e.getMessage(), status: 500) // Respond with 500 server error
 		}
+	}
+	
+	def logResponse = {
+		try {		
+			def logResponse = request.XML			
+			new ResponseLog(logTime: new Date(), 
+					event: logResponse.event.text(), 
+					destinationName: logResponse.destinationName.text(),
+					accessMethod: logResponse.accessMethod.text(),
+					responseStatusCode: Integer.parseInt(logResponse.responseStatusCode.text())
+				).save(failOnError: true) 
+			log.info("Response event ${logResponse.event.text()} received for logging from ${request.getRemoteHost()}")
+			render(text: "Log successful", status: 200) // Respond with 200 Ack
+		} catch (grails.validation.ValidationException e) {
+			log.error("Error saving log: ${e.getMessage()}")
+			render (text: "There was an error saving the response log message due to missing or malformed parameters.", status: 500)
+		} catch (Exception e) {
+			log.error("Failed while processing event for response log: ${e.getMessage()}")
+			render (text:  e.getMessage(), status: 500) // Respond with 500 server error
+		}
+	}
+	
+	/**
+	 * Parses the form and to dates in the parameters into a nice map
+	 */
+	private Map parseDates (def params) {
+		Date f // from date
+		Date t // to date
+		// Try to parse the given from date
+		if (params.fromdate) {
+			try {
+				f = Date.parse(grailsApplication.config.osler.mb.dateFormat, params.fromdate)
+			} catch (java.text.ParseException e) {
+				flash.error = "Invalid 'from' date. Must be in the format ${grailsApplication.config.osler.mb.dateFormat}"
+				log.debug("Couldn't parse from date: ${params.fromdate}")
+				f = null
+			}
+		} else {
+			f = null
+		}
+		
+		// Try to parse the given todate
+		if (params.todate) {
+			try {
+				t = Date.parse(grailsApplication.config.osler.mb.dateFormat, params.todate)
+			} catch (java.text.ParseException e) {
+				flash.error = "Invalid 'to' date. Must be in the format ${grailsApplication.config.osler.mb.dateFormat}"
+				log.debug("Couldn't parse to date: ${params.todate}")
+				t = new Date()
+			}
+		} else {
+			t = new Date()
+		}
+		return [from: f, to: t]		
 	}
 	
 	private List listByTime(Integer by) {		
