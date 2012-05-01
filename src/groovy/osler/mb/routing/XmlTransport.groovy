@@ -4,10 +4,10 @@ abstract class XmlTransport {
 	
 	public static XmlTransport getInstance() {
 		switch(grails.util.GrailsUtil.environment) {
-			case grails.util.Environment.TEST:
+			case grails.util.Environment.PRODUCTION:
+				return new RestXmlTransport()
+			default:				
 				return new LocalFileXmlTransport()				
-			default:
-				return new RestXmlTransport()				
 		}
 	}
 	

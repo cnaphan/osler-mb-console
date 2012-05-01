@@ -1,12 +1,12 @@
 package osler.mb.routing
 
 import groovy.xml.*
+import org.codehaus.groovy.grails.web.context.ServletContextHolder
 
 class LocalFileXmlTransport extends XmlTransport {
 	
-	public String getLocalFilePath() {
-		return org.codehaus.groovy.grails.web.context.ServletContextHolder.servletContext.getRealPath('/xml/default-routing-rules.xml')
-		
+	private String getLocalFilePath() {
+		return ServletContextHolder.servletContext.getRealPath('/xml/default-routing-rules.xml.bak')		
 	}
 	
 	public groovy.util.slurpersupport.GPathResult getRoutingRules() {

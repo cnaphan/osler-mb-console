@@ -23,6 +23,7 @@
 		          chartArea: {width:'90%'},
 		          vAxis: {minValue: 0, format: "##"},
 		          pointSize: 5,   lineWidth: 0,                 
+		          fontName: ["Calibri", "Arial", "sans-serif"],
 		        };
 
 		        var chart1 = new google.visualization.LineChart(document.getElementById('events_by_hour'));
@@ -38,11 +39,12 @@
 		        var options_pie = {
 		        	legend: {position: 'right'},
 		        	pieSliceText: 'percent',
-		        	chartArea: {top: '5%', left: '0', width: '90%', height: '90%'},     
+		        	chartArea: {top: '5%', left: '0', width: '90%', height: '90%'},
+		        	fontName: ["Calibri", "Arial", "sans-serif"],
 		        };
 	
-		        var chart3 = new google.visualization.PieChart(document.getElementById('events_by_source'));
-		        chart3.draw(data2, options_pie);
+		        var chart2 = new google.visualization.PieChart(document.getElementById('events_by_source'));
+		        chart2.draw(data2, options_pie);
 
 		        var data3 = new google.visualization.DataTable();
 		        data3.addColumn('string', 'Method');
@@ -65,10 +67,26 @@
 			        	legend: {position: 'none'},
 			        	chartArea: {left: '25%', width: '90%', height: '90%'},
 			        	hAxis: {minValue: 0},
+		        	    fontName: ["Calibri", "Arial", "sans-serif"],
 			        };
 			   
 		        var chart4 = new google.visualization.BarChart(document.getElementById('events_by_type'));
 		        chart4.draw(data4, options_type);
+		        
+		        var data5 = new google.visualization.DataTable();
+		        data5.addColumn('string', 'Method');
+		        data5.addColumn('number', 'Events');
+		        data5.addRows([
+		       		<g:each in="${responsesByDestinationAndStatusCode}" var="r" status="i">['${r.key}', ${r.value}],</g:each>
+		        ]);
+			   
+		        var chart5 = new google.visualization.PieChart(document.getElementById('responses_by_dest'));
+		        options_pie.colors = [${responsesByDestinationAndStatusCode.collect{
+		        		Integer.parseInt(it.key.substring(it.key.size() - 3, it.key.size())) in 200..399 ? "'#228b22'" : "'#CC0000'"
+		        }.join(", ")}]; 
+		        options_pie.pieSliceText = "label";		        
+		        chart5.draw(data5, options_pie);
+
 	      }
     </script>
     </g:if>
@@ -97,13 +115,17 @@
 					<div id="events_by_hour" style="width: 100%; height: 150px;"></div>
 				</div>
 				<div style="clear:both;"></div>
-				<div style="width: 50%; float:left;">
+				<div style="width: 33%; float:left;">
 					<h3>Events by Source</h3>
 					<div id="events_by_source" style="width: 100%; height: 200px;"></div>
 				</div>
-				<div style="width: 50%; float: right;">
+				<div style="width: 33%; float: left;">
 					<h3>Events by Input Method</h3>
 					<div id="events_by_input" style="width: 100%; height: 200px;"></div>
+				</div>
+				<div style="width: 33%; float: left;">
+					<h3>Responses by Destination-Status Code</h3>
+					<div id="responses_by_dest" style="width: 100%; height: 200px;"></div>
 				</div>
 				<div style="clear:both;"></div>
 				<div style="width: 100%;">

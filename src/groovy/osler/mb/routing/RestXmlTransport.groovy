@@ -2,6 +2,7 @@ package osler.mb.routing
 
 import groovyx.net.http.*
 import groovy.xml.*
+import org.codehaus.groovy.grails.web.context.ServletContextHolder
 
 /**
  * Provides a set of methods for transporting the XML routing rules to and from the Message Broker using a 
@@ -26,7 +27,7 @@ class RestXmlTransport extends XmlTransport {
 		String result = outputBuilder.bind{ mkp.yield(root) }
 		try {
 			// Write a copy to the local drive
-			File f = new File (org.codehaus.groovy.grails.web.context.ServletContextHolder.servletContext.getRealPath('/xml/latest-routing-rules.xml'))
+			File f = new File (ServletContextHolder.servletContext.getRealPath('/xml/latest-routing-rules.xml'))
 			f.write(result)
 		} catch (Exception e) {
 			log.warn("Failed to write latest copy of routing rules to web app but continuing... Message: ${e.getMessage()}")

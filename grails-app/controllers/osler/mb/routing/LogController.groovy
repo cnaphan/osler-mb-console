@@ -14,16 +14,24 @@ class LogController {
 	
 	static allowedMethods = [logEvent: "POST", logResponse: "POST" ]
 	
+	/**
+	 * Builds up some maps to help in generating the dashboard widgets. 
+	 * Note: Since it iterates across database results, it would be much more efficient to use various COUNT and GROUP BY's
+	 * to build these statistics.
+	 */
 	def index = {
 		def viewByMap = [(VIEW_BY_HOUR): "the last hour", (VIEW_BY_DAY): "the last day", (VIEW_BY_WEEK): "the last week", (VIEW_BY_ALL): "forever"]
 		Integer by = params.viewfor ? Integer.parseInt(params.viewfor) : LogController.VIEW_BY_HOUR	
-		def logItems = this.listByTime(by)
-		if (log.isDebugEnabled()) { log.debug("index: Found ${logItems.size()} log entries for '${by}'") }
+
 		def byInput = [:]
 		def bySource = [:]
 		def byType = [:]
 		def byTime = [:]
+		def byDest = [:]
 		
+		// Use the incoming log entries to build some statistics
+		def logItems = this.listByTime(by)
+		if (log.isDebugEnabled()) { log.debug("index: Found ${logItems.size()} log entries for '${by}'") }
 		logItems.each{ Log l ->
 			if (byInput.get(l.inputMethod) > 0) {
 				byInput.put(l.inputMethod, byInput.get(l.inputMethod)+1)
@@ -57,12 +65,25 @@ class LogController {
 				byTime[key] = [d.year + 1900, d.month, d.date, d.hours, d.minutes, 0, 1]	
 			}
 		}		
-				
+
+		// Use the response log entries to build some statistics
+		def responseLogItems = this.listResponsesByTime(by)
+		responseLogItems.each{ ResponseLog l ->
+			String destinationAndCodeKey = "${l.destinationName}-${l.responseStatusCode}"
+			if (byDest.get(destinationAndCodeKey) > 0) {
+				byDest.put(destinationAndCodeKey, byDest.get(destinationAndCodeKey)+1)
+			} else {
+				byDest.put(destinationAndCodeKey, 1)
+			}
+		}
+		
+		
 		[viewfor:by,
 		eventsByHour:byTime,
 		eventsBySource:bySource,
 		eventsByInput:byInput,
 		eventsByType:byType.sort {a,b -> a.key.compareTo(b.key) },
+		responsesByDestinationAndStatusCode: byDest.sort {a,b -> a.key.compareTo(b.key) },
 		viewByMap:viewByMap	
 		]
 				
@@ -220,6 +241,18 @@ class LogController {
 			return Log.findAllByLogTimeBetween(yesterday.getTime(),new Date(),[sort:"logTime", order:"ASC"])
 		} else {
 			return Log.list([sort:"logTime", order:"ASC"])
+		}
+	}	
+	
+	private List listResponsesByTime(Integer by) {		
+		Integer numHours = TIME_HOUR_MAP.get(by)		
+		if (numHours > 0) {
+			GregorianCalendar now = new GregorianCalendar()
+			GregorianCalendar yesterday = new GregorianCalendar()
+			yesterday.add(Calendar.HOUR, -1 * numHours)
+			return ResponseLog.findAllByLogTimeBetween(yesterday.getTime(),new Date(),[sort:"logTime", order:"ASC"])
+		} else {
+			return ResponseLog.list([sort:"logTime", order:"ASC"])
 		}
 	}	
 }

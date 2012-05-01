@@ -1,7 +1,7 @@
 package osler.mb
 
 import org.xml.sax.SAXException
-import osler.mb.routing.Log
+import osler.mb.routing.*
 import java.text.SimpleDateFormat
 import java.util.Map;
 
@@ -304,16 +304,22 @@ class TesterController {
 	 * @param method
 	 * @return Usually 200, unless save fails
 	 */
-	private Integer saveDirect(String body, String method) {
+	private Integer saveDirect(String method, String body) {
 		log.debug("Method saveDirect in non-production mode - returning 200 OK")
 		// Check the body if it has the sourceSuffix attribute and if it does, extract it
-		String source = "TEST" + this.extractSuffix(soapBody)
+		String source = "TEST" + this.extractSuffix(body)
 		// Create a log entry instead of sending it by SOAP to simulate it being logged by the broker
 		try {
-			Log l = new Log(logTime: new Date(), event: soapMethod, source: source, inputMethod: "TEST-FAKE")
-			l.save(failOnError: true)
+			def log = new Log(logTime: new Date(), event: method, source: source, inputMethod: "TEST-FAKE")
+			log.save(failOnError: true)
+			def responseLog = new ResponseLog(logTime: new Date(), event: method, destinationName: "TEST", 
+				accessMethod: "DIRECT", 
+				responseStatusCode: ((body.size() % 2) + 1) * 300 - 100 // Simulate 200s and 500s
+				)
+			responseLog.save(failOnError: true)
 			return 200
 		} catch (Exception e) {
+			flash.errors << "Cannot save log entry due to validation errors"
 			log.error("Could not save log in development mode: ${e.getMessage()}")
 			return 500
 		}

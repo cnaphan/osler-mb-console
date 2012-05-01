@@ -73,7 +73,7 @@ environments {
     development {
         grails.serverURL = "http://localhost:8080/osler-mb"
         grails.logging.jul.usebridge = true
-		osler.mb.registerEventMethod='SOAP'
+		osler.mb.registerEventMethod='DIRECT'
     }
     production {
         grails.serverURL = "http://fsa4.site.uottawa.ca:8080/osler-mb"

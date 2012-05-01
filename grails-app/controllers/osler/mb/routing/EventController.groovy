@@ -263,7 +263,7 @@ class EventController {
 		log.info("Default routing rules were requested from ${request.getRemoteHost()}")
 		try {		
 			def trans = new LocalFileXmlTransport()
-			def f = new File(trans.getLocalFilePath())		
+			def f = new File(org.codehaus.groovy.grails.web.context.ServletContextHolder.servletContext.getRealPath('/xml/default-routing-rules.xml'))		
 			render (text: f.getText(), contentType: "text/xml", encoding: "UTF-8", status: 200)
 		} catch (Exception e) {
 			log.error("Attempted to retrieve default routing rules but failed with message: ${e.getMessage()}")

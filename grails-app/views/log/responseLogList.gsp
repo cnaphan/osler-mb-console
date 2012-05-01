@@ -58,7 +58,7 @@
 								${fieldValue(bean: logInstance, field: "accessMethod")}
 							</td>
 							<td>
-								<span style="color: ${(logInstance.responseStatusCode >= 200 && logInstance.responseStatusCode < 400) ? 'green' : 'red' };">
+								<span style="color: ${(logInstance.responseStatusCode >= 200 && logInstance.responseStatusCode < 400) ? '#228B22' : '#CC0000' };">
 									${fieldValue(bean: logInstance, field: "responseStatusCode")}
 								</span>
 							</td>
