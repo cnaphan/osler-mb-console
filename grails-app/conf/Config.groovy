@@ -69,11 +69,14 @@ osler.mb.getRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/http/getRoutingRul
 osler.mb.updateRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/http/updateRoutingRules"
 osler.mb.registerEventMethod="DIRECT"
 osler.mb.routingRulesTransportMode = "LOCAL"
+osler.mb.soapNamespace = "http://schemas.xmlsoap.org/soap/envelope/"
+osler.mb.eventNamespace = "http://patientflowmonitoring/"
 
 environments {
     development {
         grails.serverURL = "http://localhost:8080/osler-mb"
         grails.logging.jul.usebridge = true
+		osler.mb.registerEventMethod="SOAP"
     }
     production {
         grails.serverURL = "http://fsa4.site.uottawa.ca:8080/osler-mb"
@@ -117,6 +120,6 @@ log4j = {
     info file: ['grails.app.controllers',
 		 		'osler.mb']
 			
-	//debug file:'osler.mb.RestXmlTransport'
+	//debug file:'grails.app.controllers.osler.mb.TesterController'
 				
 }

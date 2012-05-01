@@ -161,7 +161,7 @@ class TesterController {
 		String dateFormat = grailsApplication.config.osler.mb.dateFormat	
 		String dateValue = new Date().format(dateFormat)	
 		def bodyWriter = new StringWriter()
-		def xml = new groovy.xml.MarkupBuilder(bodyWriter)
+		def xml = new groovy.xml.MarkupBuilder(bodyWriter)		
 		xml."${params.eventName}" (sourceSuffix: "RTLS") {
 			"${params.personType}"(params.personId)
 			locationId(params.locationId)
@@ -230,7 +230,7 @@ class TesterController {
 				flash.errors << "Timestamp for event '${eventName}' contained the malformed timestamp ${ts}. Overrode with current date and time."
 				ts = now.format(timestampFormat) // Just use the old timestamp instead
 			}
-			it.timestamp.text = ts
+			it.timestamp = ts
 						
 			// Gather the text for the children nodes
 			String childrenNodes = it.children().collect { "<${it.name()}>${it}</${it.name()}>" }.join('')
@@ -269,13 +269,17 @@ class TesterController {
 	 * @return The HTTP response code. 200 if successful, otherwise 400 or 500.
 	 * Note: Message Broker is very picky about the SOAP namespace - anything else is an error
 	 */
-	private Integer sendSoap(String soapMethod, String soapBody) {	
+	private Integer sendSoap(String soapMethod, String soapBody) {
+		
 		// Message broker and destinations are super picky about the SOAP namespace
-		def soapNamespace = "http://schemas.xmlsoap.org/soap/envelope/"
+		def soapNamespace = grailsApplication.config.osler.mb.soapNamespace
+		def bodyNamespace = grailsApplication.config.osler.mb.eventNamespace
+		soapBody = soapBody.replace("<${soapMethod}", "<ns1:${soapMethod}").replace("</${soapMethod}>", "</ns1:${soapMethod}>")		
 		// Generate the SOAP message
-		def soapRequest = """<soap:Envelope xmlns:soap="${soapNamespace}"><soap:Header/><soap:Body>${soapBody}</soap:Body></soap:Envelope>"""
+		def soapRequest = """<soap:Envelope xmlns:soap="${soapNamespace}" xmlns:ns1="${bodyNamespace}"><soap:Header/><soap:Body>${soapBody}</soap:Body></soap:Envelope>"""
 		String url = grailsApplication.config.osler.mb.registerEventUrls["SOAP"]
-		log.debug("Registering event ${soapMethod} via SOAP using '${url}'")
+		if (log.isDebugEnabled()) { log.debug("Registering event ${soapMethod} via SOAP using '${url}': ${soapRequest}") }
+		
 		def soapUrl = new URL(url)
 
 		// Connect to the host and send the message
