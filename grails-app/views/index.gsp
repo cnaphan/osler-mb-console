@@ -44,12 +44,36 @@
 		</div>
 		<div id="body" class="indented">
 			<h1>Welcome to the Osler Message Broker Console</h1>
+			<g:messages/>
 			This console allows you to work with the Message Broker component of the uOttawa Osler project.
 			To get started, choose from the following options.
 			<ul id="options">
-				<li id="test-li"><h2><g:link controller="tester" action="index">Inject Test Events</g:link></h2>Use this tool to inject test events from a script into Message Broker.</li>
-				<li id="log-li"><h2><g:link controller="log" action="index">Log Analytics</g:link></h2>Use this tool to view the Message Broker dashboard and log to ensure that everything is working properly.</li>
-				<li id="routing-li"><h2><g:link controller="event" action="routing">Routing Rules</g:link></h2>Use this tool to change the routing rules that Message Broker uses. Add new events and destinations, as well as change the paths between them.</li> 
+				<li id="test-li">
+					<h2><g:link controller="tester" action="index">Inject Test Events</g:link></h2>Use this tool to inject test events from a script into Message Broker.
+					<div>
+						<g:link controller="tester" action="index">Run Script</g:link> |
+						<g:link controller="tester" action="locationTest"><g:message code="osler.mb.tester.locationTest.label"/></g:link>
+					</div>
+				</li>
+				<li id="log-li">
+					<h2><g:link controller="log" action="index">Log Analytics</g:link></h2>Use this tool to view the Message Broker dashboard and log to ensure that everything is working properly.
+					<div>
+						<g:link controller="log" action="index" params="${[viewfor:1]}">Last Hour</g:link> |
+						<g:link controller="log" action="index" params="${[viewfor:2]}">Today</g:link> |
+						<g:link controller="log" action="list">List</g:link>
+						
+					</div>
+				</li>
+				
+				<li id="routing-li">
+					<h2><g:link controller="event" action="routing">Routing Rules</g:link></h2>Use this tool to change the routing rules that Message Broker uses. Add new events and destinations, as well as change the paths between them.
+					<div>
+						<g:link controller="event" action="routing">Rules</g:link> |
+						<g:link controller="event" action="list">Events</g:link> |
+						<g:link controller="destination" action="list">Destinations</g:link> | 
+						<g:link controller="source" action="list">Sources</g:link> 
+					</div>
+					</li> 
 			</ul>
 		</div>
 	</body>

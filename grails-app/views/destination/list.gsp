@@ -16,7 +16,7 @@
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 			</ul>
 		</div>
-		<div id="body" class="narrow">
+		<div id="body">
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 			<div>
 				Destinations represent end-points for events. Message Broker will route events to destinations based on Routing Rules. 
@@ -35,10 +35,9 @@
 				</thead>
 				<tbody>
 				<g:each in="${destinationInstanceList}" status="i" var="d">
-					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-					
+					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">					
 						<td><g:link action="show" id="${d.name}">${fieldValue(bean: d, field: "name")}</g:link></td>
-						<td><a href="${fieldValue(bean: d, field: "url")}">${fieldValue(bean: d, field: "url")}</a></td>
+						<td>${fieldValue(bean: d, field: "url")}</td>
 						<td>${fieldValue(bean:d, field: "accessMethod") }</td>
 					</tr>
 				</g:each>

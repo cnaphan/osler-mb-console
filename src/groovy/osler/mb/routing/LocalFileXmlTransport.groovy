@@ -5,8 +5,8 @@ import groovy.xml.*
 class LocalFileXmlTransport extends XmlTransport {
 	
 	public String getLocalFilePath() {
-		//return System.properties['base.dir'] + "/web-app/xml/default-routing-rules.xml"
-		return "./web-app/xml/default-routing-rules.xml"
+		return org.codehaus.groovy.grails.web.context.ServletContextHolder.servletContext.getRealPath('/xml/default-routing-rules.xml')
+		
 	}
 	
 	public groovy.util.slurpersupport.GPathResult getRoutingRules() {
@@ -17,7 +17,7 @@ class LocalFileXmlTransport extends XmlTransport {
 		def outputBuilder = new StreamingMarkupBuilder()
 		String result = outputBuilder.bind{ mkp.yield(root) }
 		File f = new File (this.getLocalFilePath())
-		f.write(result)		
+		f.write(result)	
 		return true
 	}
 }

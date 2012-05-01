@@ -2,13 +2,12 @@ package osler.mb.routing
 
 abstract class XmlTransport {
 	
-	
 	public static XmlTransport getInstance() {
 		switch(grails.util.GrailsUtil.environment) {
 			case grails.util.Environment.TEST:
-				return new LocalFileXmlTransport()
+				return new LocalFileXmlTransport()				
 			default:
-				return new RestXmlTransport()
+				return new RestXmlTransport()				
 		}
 	}
 	
@@ -41,12 +40,12 @@ abstract class XmlTransport {
 		} else if (destinations.size() > 1) {
 			throw new Exception ("Found ${destinations.size()} destinations in routing-rules file with name '${params.id}'")
 		} else {
-			def destination = destinations[0]
-			def d = new osler.mb.routing.Destination(name: destination.name, description: destination.description, url: destination.url, accessMethod: destination.accessMethod, disabled: destination.@disabled.equals("true"))
-			destination.receives.event.each { e ->				
-					d.events << e.name				
+			def d = destinations[0]
+			def destinationObject = new osler.mb.routing.Destination(name: d.name, description: d.description, url: d.url, accessMethod: d.accessMethod, disabled: d.disabled?.equals("true"))
+			d.receives.event.each { e ->				
+				destinationObject.events << e.name				
 			}
-			return d
+			return destinationObject
 		}
 	}
 	
@@ -86,7 +85,7 @@ abstract class XmlTransport {
 		def destinationInstanceList = new LinkedList<osler.mb.routing.Destination>()
 		for (def d: rr.destinations.destination) {
 			def events =  d.receives.event.collect{ it.toString() }			
-			destinationInstanceList << new osler.mb.routing.Destination(name: d.name, description: d.description, url: d.url, accessMethod: d.accessMethod, events: events)
+			destinationInstanceList << new osler.mb.routing.Destination(name: d.name, description: d.description, url: d.url, accessMethod: d.accessMethod, disabled: d.disabled?.equals("true"), events: events)
 		}
 		Integer destinationInstanceTotal = destinationInstanceList.size()
 		if (params.sort) {

@@ -4,6 +4,7 @@
 		<meta name="layout" content="main"/>
 		<title>Log Analytics</title>
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<g:if test="${eventsByHour}">
     	<script type="text/javascript">
       		google.load("visualization", "1", {packages:["corechart"]});
       		google.setOnLoadCallback(drawChart);
@@ -70,6 +71,7 @@
 		        chart4.draw(data4, options_type);
 	      }
     </script>
+    </g:if>
 	<style>
 	</style>
 	</head>
@@ -83,30 +85,34 @@
 		</div>
 		<div id="body">
 			<h1><g:message code="osler.mb.routing.Log.index.title" default="Log Dashboard" /></h1>
-			<div style="width: 80%; float:left;">
-				<h3>Events by Time</h3>		
-				<div id="events_by_hour" style="width: 100%; height: 150px;"></div>
-			</div>
 			<div style="width: 20%; float: right;">
 				<g:form action="index" method="GET">
 				View for: <g:select name="viewfor" optionKey="key" optionValue="value" from="${viewByMap}" value="${viewfor}" onchange="document.forms[0].submit()"/>
 				</g:form>
 			</div>
-			<div style="clear:both;"></div>
-			<div style="width: 50%; float:left;">
-				<h3>Events by Source</h3>
-				<div id="events_by_source" style="width: 100%; height: 200px;"></div>
-			</div>
-			<div style="width: 50%; float: right;">
-				<h3>Events by Input Method</h3>
-				<div id="events_by_input" style="width: 100%; height: 200px;"></div>
-			</div>
-			<div style="clear:both;"></div>
-			<div style="width: 100%;">
-				<h3>Events by Type</h3>
-				<div id="events_by_type" style="width: 80%; height: ${eventsByType.size() * 22}px;"></div>
-			</div>	
+			<g:if test="${ eventsByHour }">
+				<div style="width: 80%; float:left;">
+					<h3>Events by Time</h3>		
+					<div id="events_by_hour" style="width: 100%; height: 150px;"></div>
+				</div>
+				<div style="clear:both;"></div>
+				<div style="width: 50%; float:left;">
+					<h3>Events by Source</h3>
+					<div id="events_by_source" style="width: 100%; height: 200px;"></div>
+				</div>
+				<div style="width: 50%; float: right;">
+					<h3>Events by Input Method</h3>
+					<div id="events_by_input" style="width: 100%; height: 200px;"></div>
+				</div>
+				<div style="clear:both;"></div>
+				<div style="width: 100%;">
+					<h3>Events by Type</h3>
+					<div id="events_by_type" style="width: 80%; height: ${eventsByType.size() * 22}px;"></div>
+				</div>	
+			</g:if>
+			<g:else>
+				<i>There are no events logged for the time period selected.</i>				
+			</g:else>
 		</div>
-	
 	</body>
 </html>

@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta name="layout" content="main"/>
-		<title><g:message code="osler.mb.tester.index.title" default="Inject Test Events" /></title>
+		<title><g:message code="osler.mb.tester.index.title" /></title>
 		<g:javascript library="jquery" />
 		<g:javascript>
 			function changeLocationPersonId(personType) {

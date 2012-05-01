@@ -13,7 +13,15 @@ class DestinationController {
 
     def list() {
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
 		return trans.listDestinations(rr, params)
     }
 
@@ -30,7 +38,15 @@ class DestinationController {
 		}
 		
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
 		
 		// Check if any event with this name exists, if so give an error
 		if (rr.destinations.destination.findAll{ it == destinationInstance.name }.size() > 0) {
@@ -41,7 +57,8 @@ class DestinationController {
 		
 		// Add the event to the file
 		rr.destinations.appendNode { 
-			destination (disabled: destinationInstance.disabled) {				
+			destination () {
+				disabled(destinationInstance.disabled)				
 				name(destinationInstance.name)
 				description(destinationInstance.description)
 				url(destinationInstance.url)
@@ -63,10 +80,18 @@ class DestinationController {
 
     def show() {
         def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
-		def destinationInstance = trans.getDestinationByName(rr, params)
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
+		def destinationInstance = trans.getDestinationByName(rr, params)		
         if (!destinationInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Destination.label', default: 'Destination'), params.id])
+			flash.error = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Destination.label', default: 'Destination'), params.id])
             redirect(action: "list")
             return
         }
@@ -76,10 +101,18 @@ class DestinationController {
 
     def edit() {
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
         def destinationInstance = trans.getDestinationByName(rr, params)
         if (!destinationInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Destination.label', default: 'Destination'), params.id])
+            flash.error = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Destination.label', default: 'Destination'), params.id])
             redirect(action: "list")
             return
         }
@@ -89,11 +122,19 @@ class DestinationController {
 
  def update() {
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
-        def destinationInstance = trans.getDestinationByName(rr, params)
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
+        def destinationInstance = trans.getDestinationByName(rr, params)		
 		
         if (!destinationInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Destination.label', default: 'Destination'), params.id])
+            flash.error = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Destination.label', default: 'Destination'), params.id])
             redirect(action: "list")
             return
         }
@@ -105,7 +146,7 @@ class DestinationController {
         }
 
 		def existingDestination = rr.destinations.destination.find { it.name == params.id }
-		if (destinationInstance.disabled) { existingDestination.@disabled = "true" } else { existingDestination.@disabled.replaceNode{} }
+		existingDestination.disabled = destinationInstance.disabled
 		existingDestination.name.replaceNode{ name(destinationInstance.name) }
 		existingDestination.description.replaceNode{ description(destinationInstance.description) }
 		existingDestination.url.replaceNode{ url(destinationInstance.url) }
@@ -123,11 +164,19 @@ class DestinationController {
 
     def delete() {		
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
         def destinationInstance = trans.getDestinationByName(rr, params)
 		
         if (!destinationInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Destination.label', default: 'Destination'), params.id])
+			flash.error = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Destination.label', default: 'Destination'), params.id])
             redirect(action: "list")
             return
         }

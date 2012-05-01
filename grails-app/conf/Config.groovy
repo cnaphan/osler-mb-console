@@ -91,6 +91,14 @@ log4j = {
         console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
 		file name:'file', file:'logs/log.txt'
     }
+	
+	environments {
+		production {
+			appenders {			
+				file name:'file', file:"C:\\tomcat7\\logs\\osler-mb.txt"
+    		}
+		}
+	}
 
     error file:['org.codehaus.groovy.grails.web.servlet',  //  controllers
            'org.codehaus.groovy.grails.web.pages', //  GSP
@@ -105,9 +113,9 @@ log4j = {
            'net.sf.ehcache.hibernate',
 		   'org.springframework.core.env.StandardEnvironment']
 		   
-    info file:'grails.app.controllers',
-			  'osler.mb'
-
-	debug file:'grails.app.controllers.osler.mb.TesterController'
+    info file: ['grails.app.controllers',
+		 		'osler.mb']
+			
+//	debug file:'grails.app.controllers.osler.mb.TesterController'
 				
 }

@@ -4,7 +4,7 @@ import org.springframework.dao.DataIntegrityViolationException
 
 class EventController {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST", updaterouting: "POST", getDefaultRoutingRules: "GET" ]
+    static allowedMethods = [save: "POST", update: "POST", delete: "POST", updaterouting: "POST", getDefaultRoutingRules: "GET", receiveEventSoap: "POST", receiveEventHttp: "POST" ]
 
     def index() {
         redirect(action: "list", params: params)
@@ -12,7 +12,15 @@ class EventController {
 
     def list() {		
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
 		return trans.listEvents(rr, params)
     }
 
@@ -23,7 +31,15 @@ class EventController {
 
 	def routing() {
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
 		def eventList = trans.listEvents(rr, [sort: "name", order: "asc", max: -1]).eventInstanceList
 		def destinationList = trans.listDestinations(rr, [sort: "name", order: "asc", max: -1]).destinationInstanceList
 		log.info("Loading routing rules with ${eventList.size()} events and ${destinationList.size()} destinations")
@@ -37,7 +53,15 @@ class EventController {
 	def updaterouting() {
 		if (log.isDebugEnabled()) { log.debug("updaterouting: Received ${params.paths.toString()}") }
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
 		def destinations = trans.listDestinations(rr, [sort: "name", order: "asc", max: -1]).destinationInstanceList
 		def events = trans.listEvents(rr, [sort: "name", order: "asc", max: -1]).eventInstanceList
 
@@ -68,7 +92,7 @@ class EventController {
 		}
 		if (changesMade > 0) {
 			if (!trans.updateRoutingRules(rr)) {
-				flash.errors << "Failed to update routing rules"
+				flash.error = "Failed to update routing rules"
 				log.error("Update routing rules failed")
 			}
 		}		
@@ -113,7 +137,15 @@ class EventController {
 
     def show() {
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
 		def eventInstance = trans.getEventByName(rr, params)
         if (!eventInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'event.label', default: 'Event'), params.id])
@@ -126,7 +158,15 @@ class EventController {
 
     def edit() {
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
         def eventInstance = trans.getEventByName(rr, params)
         if (!eventInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'event.label', default: 'Event'), params.id])
@@ -139,7 +179,15 @@ class EventController {
 
     def update() {
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
         def eventInstance = trans.getEventByName(rr, params)
 		
         if (!eventInstance) {
@@ -169,7 +217,15 @@ class EventController {
 
     def delete() {		
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
         def eventInstance = trans.getEventByName(rr, params)
 		
         if (!eventInstance) {
@@ -215,4 +271,30 @@ class EventController {
 		}
 	}
 	
+	/**
+	 * Receives an event and writes to the logger. Used to test the message flow by having the console act as a destination.
+	 */
+	def receiveEventSoap () {
+		try {
+			def xml = request.XML
+			log.info("EVENT HANDLER - Event received via SOAP from ${request.getRemoteHost()}:\n\tContents: ${xml.Body.children()[0]}")
+			render(status: 200) // Respond with 200 Ack
+		} catch (Exception e) {
+			log.error("Failed in SOAP event handler: ${e.getMessage()}")
+			render (text:  e.getMessage(), status: 500) // Respond with 500 server error
+		}
+	}	
+   def receiveEventHttp () {
+	   try {
+		   def xml = request.XML
+		   log.info("EVENT HANDLER - Event received via HTTP from ${request.getRemoteHost()}:\n\tContents: ${xml}")
+		   render(status: 200) // Respond with 200 Ack
+	   } catch (Exception e) {
+		   log.error("Failed in HTTP event handler: ${e.getMessage()}")
+		   render (text:  e.getMessage(), status: 500) // Respond with 500 server error
+	   }
+   }
+
+	
+		
 }

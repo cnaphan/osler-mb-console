@@ -20,14 +20,14 @@
 	<g:textField name="url" maxlength="150" value="${destinationInstance?.url}" style="width: 30em;"/>	
 </div>
 <div class="fieldcontain ${hasErrors(bean: destinationInstance, field: 'accessMethod', 'error')} required">
-	<label for="url">
+	<label for="accessMethod">
 		<g:message code="osler.mb.routing.Destination.accessMethod.label" />
 	</label>	
-	<g:select name="accessMethod" from="${destinationInstance.constraints.accessMethod.inList }"/>	
+	<g:select name="accessMethod" from="${destinationInstance.constraints.accessMethod.inList }" value="${ fieldValue(bean: destinationInstance, field: "accessMethod") }"/>	
 </div>
 <div class="fieldcontain ${hasErrors(bean: destinationInstance, field: 'disabled', 'error')}">
 	<label for="url">
 		<g:message code="osler.mb.routing.Destination.disabled.label" />
 	</label>	
-	<g:checkBox name="disabled" value="${destinationInstance.disabled }"/>	
+	<g:checkBox name="disabled" value="true" checked="${ destinationInstance.disabled }"/>	
 </div>

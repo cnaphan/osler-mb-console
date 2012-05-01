@@ -47,13 +47,18 @@
 				<thead>
 					<tr>
 						<g:sortableColumn property="logTime"
-							title="${message(code: 'log.logTime.label', default: 'Log Time')}" />
+							title="${message(code: 'log.logTime.label', default: 'Log Time')}" rowspan="2"/>
 						<g:sortableColumn property="event"
-							title="${message(code: 'log.event.label', default: 'Event')}" />
+							title="${message(code: 'log.event.label', default: 'Event')}"  rowspan="2"/>
 						<g:sortableColumn property="source"
-							title="${message(code: 'log.source.label', default: 'Source')}" />
+							title="${message(code: 'log.source.label', default: 'Source')}"  rowspan="2"/>
 						<g:sortableColumn property="inputMethod"
-							title="${message(code: 'log.inputMethod.label', default: 'Input Method')}" />
+							title="${message(code: 'log.inputMethod.label', default: 'Input Method')}"  rowspan="2"/>
+						<th colspan="2" style="background: #FCFCFC; text-align: center;">Num sent to:</th>
+					</tr>
+					<tr>
+						<g:sortableColumn property="numSentP2P" title="P2P"/>
+						<g:sortableColumn property="numSentPubSub" title="PubSub"/>		
 					</tr>
 				</thead>
 				<tbody>
@@ -69,6 +74,12 @@
 							</td>
 							<td>
 								${fieldValue(bean: logInstance, field: "inputMethod")}
+							</td>
+							<td>
+								${fieldValue(bean: logInstance, field: "numSentP2P")}
+							</td>
+							<td>
+								${fieldValue(bean: logInstance, field: "numSentPubSub")}
 							</td>
 						</tr>
 					</g:each>

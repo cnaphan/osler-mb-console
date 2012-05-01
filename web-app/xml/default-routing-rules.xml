@@ -91,12 +91,34 @@
 				<event>physicianOutED</event>
 			</receives>
 		</destination>
-		<destination disabled=''>
-			<name>PFM-Lap top</name>
-			<description>PFM running on Shirley's laptop</description>
-			<url>http://www.google.com</url>
+		<destination>
+			<name>Console</name>
+			<description>The Message Broker Console, acting as a destination</description>
+			<url>http://fsa4.site.uottawa.ca/osler-mb/event/receiveEventSoap</url>
 			<accessMethod>SOAP</accessMethod>
-			<receives></receives>
+			<receives>
+				<event>patientAdmittedWithBed</event>
+				<event>consultationCompleted2</event>
+				<event>patientRegistered</event>
+				<event>consultationStarted1</event>
+				<event>discharge</event>
+				<event>consultationCompleted1</event>
+				<event>waitForTransport</event>
+				<event>patientInED</event>
+				<event>physicianInED</event>
+				<event>waitForOrderExecution</event>
+				<event>patientOutED</event>
+				<event>patientTransportRequest</event>
+				<event>consultationStarted2</event>
+				<event>waitForConsultation2</event>
+				<event>waitForConsultation1</event>
+				<event>patientTransportStarted</event>
+				<event>patientArrivedInBed</event>
+				<event>waitForBed</event>
+				<event>patientInCCU</event>
+				<event>patientAdmittedWithNoBed</event>
+				<event>physicianOutED</event>
+			</receives>
 		</destination>
 	</destinations>
 	<sources>
@@ -118,7 +140,7 @@
 		<source>
 			<name>FSA4</name>
 			<accessMethod>SOAP</accessMethod>
-			<matchingString>localhost</matchingString>
+			<matchingString>127.0.0.1</matchingString>
 		</source>
 		<source>
 			<name>dmuhi064</name>

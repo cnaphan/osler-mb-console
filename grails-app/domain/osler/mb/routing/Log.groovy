@@ -6,6 +6,8 @@ class Log {
 	String event;
 	String source;
 	String inputMethod;
+	Integer numSentPubSub = 0;
+	Integer numSentP2P = 0; 
 
 	static mapping = {
 		table "log_entry"

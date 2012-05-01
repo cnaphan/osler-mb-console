@@ -1,4 +1,5 @@
-<div id="messages" class="${(!flash.message && !flash.messages) ? "errors" : ""}">
+<g:if test="${flash.message || flash.error || (flash.messages?.size() > 0) }">
+<div id="messages" class="${(!flash.message && !flash.messages?.contains{ it[0] != "error"}) ? "errors" : ""}">
 	<ul>
 		<g:if test="${flash.error }">
 			<li class="error">${flash.error }</li>
@@ -14,3 +15,9 @@
 		</g:eachError>
 	</ul>
 </div>
+</g:if>
+<g:hasErrors>
+<div class="errors">
+	<g:renderErrors/>
+</div>
+</g:hasErrors>

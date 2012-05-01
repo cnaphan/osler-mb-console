@@ -29,6 +29,9 @@
 			<h1><g:message code="osler.mb.routing.EventRouting.title"/></h1>
 			<g:messages/>
 			<g:form method="post" >
+				<fieldset class="buttons">
+					<g:actionSubmit class="save" action="updaterouting" value="${message(code: 'osler.mb.routing.EventRouting.update', default: 'Update')}" name="save1"/>
+				</fieldset>
 				<table class="data tight-list">
 					<thead>
 						<tr>						
@@ -53,7 +56,7 @@
 					</tbody>
 				</table>
 				<fieldset class="buttons">
-					<g:actionSubmit class="save" action="updaterouting" value="${message(code: 'osler.mb.routing.EventRouting.update', default: 'Update')}" />
+					<g:actionSubmit class="save" action="updaterouting" value="${message(code: 'osler.mb.routing.EventRouting.update', default: 'Update')}" name="save2"/>
 				</fieldset>
 			</g:form>
 		</div>

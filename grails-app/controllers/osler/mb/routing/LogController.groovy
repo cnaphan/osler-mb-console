@@ -129,14 +129,20 @@ class LogController {
 	
 	/**
 	 * A REST web service invoked by Message Broker using POST. Contains a small XML message with the format
-	 * <logEvent><event>someEvent</event><source>someSource</source><inputMethod>someInputMethod</inputMethod></logEvent>
+	 * <logEvent><event>someEvent</event><source>someSource</source><inputMethod>someInputMethod</inputMethod><sentToJms></sentToJms></logEvent>
 	 * Parses the message and saves the log. If there's an error (malformed XML or invalid parameters),
 	 * responds with status 500. If the save is successful, responds with status 200.
 	 */
 	def logEvent = {
 		try {		
 			def logEvent = request.XML			
-			new Log(logTime: new Date(), event: logEvent.event.text(), source: logEvent.source.text(), inputMethod: logEvent.inputMethod.text()).save(failOnError: true) 
+			new Log(logTime: new Date(), 
+					event: logEvent.event.text(), 
+					source: logEvent.source.text(), 
+					inputMethod: logEvent.inputMethod.text(),
+					numSentPubSub: logEvent.numSentPubSub.text(),
+					numSentP2P: logEvent.numSentP2P.text()
+				).save(failOnError: true) 
 			log.info("Event ${logEvent.event.text()} received for logging from ${request.getRemoteHost()}")
 			render(text: "Log successful", status: 200) // Respond with 200 Ack
 		} catch (grails.validation.ValidationException e) {

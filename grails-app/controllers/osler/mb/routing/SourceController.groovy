@@ -13,7 +13,15 @@ class SourceController {
 
     def list() {
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
 		return trans.listSources(rr, params)
     }
 
@@ -30,7 +38,15 @@ class SourceController {
 		}
 		
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
 		
 		// Check if any event with this name exists, if so give an error
 		if (rr.sources.source.findAll{ it == sourceInstance.name }.size() > 0) {
@@ -62,7 +78,15 @@ class SourceController {
 
     def show() {
         def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
 		def sourceInstance = trans.getSourceByName(rr, params)
         if (!sourceInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Source.label', default: 'Source'), params.id])
@@ -75,7 +99,15 @@ class SourceController {
 
     def edit() {
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
         def sourceInstance = trans.getSourceByName(rr, params)
         if (!sourceInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Source.label', default: 'Source'), params.id])
@@ -88,7 +120,15 @@ class SourceController {
 
 	def update() {
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
         def sourceInstance = trans.getSourceByName(rr, params)
 		
         if (!sourceInstance) {
@@ -121,7 +161,15 @@ class SourceController {
 
     def delete() {		
 		def trans = XmlTransport.getInstance()
-		def rr = trans.getRoutingRules()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+		} catch (java.net.ConnectException e) {
+			flash.error = "There was a problem communicating with Message Broker"
+			log.error("Failed to get routing rules: ${e.getMessage()}")
+			redirect(uri: "/")
+			return
+		}
         def sourceInstance = trans.getSourceByName(rr, params)
 		
         if (!sourceInstance) {

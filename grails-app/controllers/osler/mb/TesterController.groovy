@@ -143,20 +143,16 @@ class TesterController {
 	}
 	
 	def locationTest() {
-		[eventName: "patientInCCU",
-			personType: "patientId",
-			personId:"Pa123456",
-			locationId: "CCU12"]
+		[eventName: params.eventName ? params.eventName : "patientInCCU",
+		 personType: params.personType ? params.personType : "patientId",
+		 personId:params.personId ? params.personId : "Pa123456",
+		 locationId: params.locationId ? params.locationId : "CCU12"]
 	}
 	
 	def runLocationTest() {
 		// Check the parameters to make sure we don't input something bad
 		if (!params.eventName || !params.locationId || params.eventName.contains(" ") || !params.personId) { 
 			flash.error = "Bad parameters. All are required."
-			redirect(action: "locationTest")
-			return
-		} else if (!(params.eventName.indexOf("In") > 0)) {
-			flash.error = "Bad parameters. Location event does not appear to be a location event because it doesn't have 'In' in it."
 			redirect(action: "locationTest")
 			return
 		}
@@ -182,7 +178,7 @@ class TesterController {
 			log.error("${params.eventName} failed to send with location tester, returning status ${responseStatusCode}")
 			flash.error = "'${params.eventName}' was not sent to the Message Broker due to communications issues. Response code was ${responseStatusCode}. (${dateValue})"
 		}
-		render(view: "locationTest", model: [eventName: params.eventName,
+		redirect(action:"locationTest", model: [eventName: params.eventName,
 											personType: params.personType,
 											personId: params.personId,
 											locationId: params.locationId])
@@ -287,12 +283,18 @@ class TesterController {
 		connection.doOutput = true
 		
 		// Write to stream
-		Writer writer = new OutputStreamWriter(connection.outputStream)
-		writer.write(soapRequest)
-		writer.flush()
-		writer.close()
-		connection.connect()
-		return connection.getResponseCode()
+		try {
+			Writer writer = new OutputStreamWriter(connection.outputStream)
+			writer.write(soapRequest)
+			writer.flush()
+			writer.close()
+			connection.connect()
+			return connection.getResponseCode()
+		} catch (java.net.ConnectException e) {
+			log.error("Communication error sending SOAP message to message broker: ${e.getMessage()}")
+			flash.error = "Failed to send message. Message Broker seems to be down."
+			return 400		
+		}
 	}	
 	
 	/**

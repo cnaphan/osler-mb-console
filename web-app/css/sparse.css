@@ -423,7 +423,7 @@ fieldset,
 
 .fieldcontain .property-value {
 	display: block;
-	margin-left: 17%;
+	margin-left: 22%;
 }
 
 label {
@@ -515,7 +515,7 @@ fieldset.embedded legend {
 
 #messages {
 	background-color: #FAFAD2;
-	margin: 0.5em 10% 0;
+	margin: 0.5em 10%;
 	width: 80%;
 	border: 1px solid #BDB76B;
 	   -moz-box-shadow: 0 0 0.5em #EEE8AA;
@@ -526,7 +526,7 @@ fieldset.embedded legend {
 #messages.errors, .errors {
 	background: #fff3f3;
 	border: 1px solid #ffaaaa;
-	margin: 0.5em 10% 0;
+	margin: 0.5em 10%;
 	width: 80%;
 	color: #cc0000;
 	   -moz-box-shadow: 0 0 0.25em #ff8888;
