@@ -8,6 +8,10 @@ import org.codehaus.groovy.grails.web.context.ServletContextHolder as SCH
  * Provides a set of methods for transporting the XML routing rules to and from the Message Broker using a 
  * RESTful web service. The service end-points are stored in the configuration file.
  * Further reading: http://grails.org/doc/latest/guide/webServices.html#13.1 REST
+ *
+ * This implementation uses caching to store the routing rules for 5 minutes at a time. There are two reasons. First,
+ * it is faster. Second, Message Broker is too slow to update the routing rules before the console's next page loads,
+ * resulting in the user not seeing the changes for a few seconds.
  * @author cnaph035
  *
  */

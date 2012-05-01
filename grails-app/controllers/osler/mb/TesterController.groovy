@@ -270,7 +270,10 @@ class TesterController {
 	 * Note: Message Broker is very picky about the SOAP namespace - anything else is an error
 	 */
 	private Integer sendSoap(String soapMethod, String soapBody) {	
-		def soapRequest = """<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header/><soapenv:Body>${soapBody}</soapenv:Body></soapenv:Envelope>"""
+		// Message broker and destinations are super picky about the SOAP namespace
+		def soapNamespace = "http://schemas.xmlsoap.org/soap/envelope/"
+		// Generate the SOAP message
+		def soapRequest = """<soap:Envelope xmlns:soap="${soapNamespace}"><soap:Header/><soap:Body>${soapBody}</soap:Body></soap:Envelope>"""
 		String url = grailsApplication.config.osler.mb.registerEventUrls["SOAP"]
 		log.debug("Registering event ${soapMethod} via SOAP using '${url}'")
 		def soapUrl = new URL(url)
