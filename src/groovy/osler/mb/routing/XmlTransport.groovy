@@ -3,8 +3,9 @@ package osler.mb.routing
 abstract class XmlTransport {
 	
 	public static XmlTransport getInstance() {
-		switch(grails.util.Environment.current) {
-			case grails.util.Environment.PRODUCTION:
+		def grailsApplication = new Log().domainClass.grailsApplication		
+		switch(grailsApplication.config.osler.mb.routingRulesTransportMode) {
+			case "REST":
 				return new RestXmlTransport()
 			default:				
 				return new LocalFileXmlTransport()				

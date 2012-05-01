@@ -61,24 +61,25 @@ grails.hibernate.cache.queries = true
 
 
 // Configuration some elements that pertain to Message broker
+osler.mb.mbHost="http://fsa4.site.uottawa.ca"
 osler.mb.dateFormat="yyyy-MM-dd'T'HH:mm:ss"
-osler.mb.mbHost='http://fsa4.site.uottawa.ca'
-osler.mb.registerEventUrls=[SOAP:'http://fsa4.site.uottawa.ca:7080/soap/registerEvent',
-							HTTP:'http://fsa4.site.uottawa.ca:7080/http/registerEvent']
-osler.mb.getRoutingRulesUrl='http://fsa4.site.uottawa.ca:7080/http/getRoutingRules'
-osler.mb.updateRoutingRulesUrl='http://fsa4.site.uottawa.ca:7080/http/updateRoutingRules'
+osler.mb.registerEventUrls=[SOAP:"http://fsa4.site.uottawa.ca:7080/soap/registerEvent",
+							HTTP:"http://fsa4.site.uottawa.ca:7080/http/registerEvent"]
+osler.mb.getRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/http/getRoutingRules"
+osler.mb.updateRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/http/updateRoutingRules"
+osler.mb.registerEventMethod="DIRECT"
+osler.mb.routingRulesTransportMode = "LOCAL"
 
-// set per-environment serverURL stem for creating absolute links
 environments {
     development {
         grails.serverURL = "http://localhost:8080/osler-mb"
         grails.logging.jul.usebridge = true
-		osler.mb.registerEventMethod='DIRECT'
     }
     production {
         grails.serverURL = "http://fsa4.site.uottawa.ca:8080/osler-mb"
         grails.logging.jul.usebridge = false
-		osler.mb.registerEventMethod='SOAP'
+		osler.mb.registerEventMethod="SOAP"
+		osler.mb.routingRulesTransportMode = "REST"
     }
 }
 
@@ -116,6 +117,6 @@ log4j = {
     info file: ['grails.app.controllers',
 		 		'osler.mb']
 			
-//	debug file:'grails.app.controllers.osler.mb.TesterController'
+	//debug file:'osler.mb.RestXmlTransport'
 				
 }
