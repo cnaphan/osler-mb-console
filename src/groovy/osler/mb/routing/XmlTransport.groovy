@@ -3,7 +3,7 @@ package osler.mb.routing
 abstract class XmlTransport {
 	
 	public static XmlTransport getInstance() {
-		switch(grails.util.GrailsUtil.environment) {
+		switch(grails.util.Environment.current) {
 			case grails.util.Environment.PRODUCTION:
 				return new RestXmlTransport()
 			default:				
