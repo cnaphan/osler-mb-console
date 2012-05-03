@@ -61,16 +61,16 @@ grails.hibernate.cache.queries = true
 
 
 // Configuration some elements that pertain to Message broker
-osler.mb.mbHost="http://fsa4.site.uottawa.ca"
 osler.mb.dateFormat="yyyy-MM-dd'T'HH:mm:ss"
 osler.mb.registerEventUrls=[SOAP:"http://fsa4.site.uottawa.ca:7080/soap/registerEvent",
 							HTTP:"http://fsa4.site.uottawa.ca:7080/http/registerEvent"]
 osler.mb.getRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/http/getRoutingRules"
 osler.mb.updateRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/http/updateRoutingRules"
 osler.mb.registerEventMethod="DIRECT"
-osler.mb.routingRulesTransportMode = "LOCAL"
+osler.mb.routingRulesTransportMode = "REST"
 osler.mb.soapNamespace = "http://schemas.xmlsoap.org/soap/envelope/"
 osler.mb.eventNamespace = "http://patientflowmonitoring/"
+osler.mb.twsNamespace="http://WIN-687RHJV6VUL:19086/teamworks/webservices/OPPOD/WFMCoordinationEventService.tws"
 
 environments {
     development {
@@ -103,6 +103,8 @@ log4j = {
     		}
 		}
 	}
+	
+	all file: 'osler.mb.routing.RestXmlTransport'
 
     error file:['org.codehaus.groovy.grails.web.servlet',  //  controllers
            'org.codehaus.groovy.grails.web.pages', //  GSP
@@ -117,9 +119,7 @@ log4j = {
            'net.sf.ehcache.hibernate',
 		   'org.springframework.core.env.StandardEnvironment']
 		   
-    info file: ['grails.app.controllers',
-		 		'osler.mb']
+    info file: ['grails.app.controllers']
 			
-	//debug file:'grails.app.controllers.osler.mb.TesterController'
 				
 }

@@ -192,7 +192,7 @@ class TesterController {
 	private List parseEvents(ByteArrayInputStream fileByteStream, boolean overrideTimestamps) {
 		def results = []		
 		def oslerTestScript
-		String timestampFormat = "yyyy-MM-dd'T'HH:mm:ss"
+		String timestampFormat = grailsApplication.config.osler.mb.dateFormat
 		SimpleDateFormat sdf = new SimpleDateFormat(timestampFormat) // Used to parse string dates
 		Date now = new Date() // Used to generate current date
 	
@@ -287,6 +287,8 @@ class TesterController {
 		connection.setRequestMethod("POST" )
 		connection.setRequestProperty("Content-Length", String.valueOf( soapRequest.size() ) );
 		connection.setRequestProperty("Content-Type" , "application/xml" )
+		// Required by some destinations for processing
+		connection.setRequestProperty("SOAPAction" , soapMethod)
 		connection.doOutput = true
 		
 		// Write to stream

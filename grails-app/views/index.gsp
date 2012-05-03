@@ -33,13 +33,16 @@
 			<h1>Console Status</h1>
 			<ul>
 				<li>Console Version: ${grailsApplication.metadata['app.version'] }</li>
-				<li>MB Host: ${grailsApplication.config.osler.mb.mbHost}</li>
 				<li>Environment: ${grails.util.GrailsUtil.environment}</li>
-				<li>Transmission Method: ${grailsApplication.config.osler.mb.registerEventMethod }</li>
+				<li>Rules Transmission: ${grailsApplication.config.osler.mb.routingRulesTransportMode }</li>
+				<li>Event Tranmission: ${grailsApplication.config.osler.mb.registerEventMethod }</li>
+				<li>Schematic: <a href="https://docs.google.com/drawings/d/1F_-LBLroqUFj0bD7KDeTxOrZZOn2vx6fE-7uNQt0Ke8/edit">On Google Docs</a>
+			</ul>
+			<h1>Database Status</h1>
 				<li>DB Host: ${(ds.indexOf("mysql") >= 0) ? ds.substring(ds.indexOf("//")+2,ds.indexOf("/",ds.indexOf("//")+2)) : "Unknown"}</li>
 				<li>DB Name: ${(ds.indexOf("mysql") >= 0) ?ds.substring(ds.indexOf("/",ds.indexOf("//")+2)+1, ds.indexOf("?")) : "Unknown" }</li>
-				<li>DB Username: ${grailsApplication.config.dataSource.username }</li>				
-				<li>Schematic: <a href="https://docs.google.com/drawings/d/1F_-LBLroqUFj0bD7KDeTxOrZZOn2vx6fE-7uNQt0Ke8/edit">On Google Docs</a>				
+				<li>DB Username: ${grailsApplication.config.dataSource.username }</li>
+				<li>Log: ${osler.mb.routing.Log.count()} entries</li>				
 			</ul>
 		</div>
 		<div id="body" class="indented">

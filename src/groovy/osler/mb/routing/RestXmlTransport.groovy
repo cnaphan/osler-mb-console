@@ -17,19 +17,22 @@ import org.codehaus.groovy.grails.web.context.ServletContextHolder as SCH
  */
 class RestXmlTransport extends XmlTransport {
 	
+	private static final log = org.apache.commons.logging.LogFactory.getLog(this)
+	
 	private final static String NEXT_TIME_KEY = "NextTime"
 	private final static Integer USE_LOCAL_FOR_MINUTES = 5
 	private final static String PATH_TO_LATEST_COPY = "/xml/latest-routing-rules.xml"
 		
 	public groovy.util.slurpersupport.GPathResult getRoutingRules() {				
 		def grailsApplication = new Log().domainClass.grailsApplication		
-		if (!SCH.servletContext[NEXT_TIME_KEY] || new Date().compareTo(SCH.servletContext[NEXT_TIME_KEY])) {
+		def cacheDate = SCH.servletContext.getAttribute(NEXT_TIME_KEY)
+		if (!cacheDate || new Date().compareTo(cacheDate) > 0) {
+			def c = new GregorianCalendar()
+			c.add(Calendar.MINUTE, USE_LOCAL_FOR_MINUTES)
+			SCH.servletContext.setAttribute(NEXT_TIME_KEY, c.getTime())
 			log.debug("Fetching routing rules from remote service")
 			return new HTTPBuilder(grailsApplication.config.osler.mb.getRoutingRulesUrl).request(Method.GET,ContentType.XML) {}
 		} else {
-			def c = new GregorianCalendar()
-			c.add(Calendar.MINUTE, USE_LOCAL_FOR_MINUTES)
-			SCH.servletContext[NEXT_TIME_KEY] = c.time()
 			log.debug("Fetching routing rules from local file")
 			return new XmlSlurper(true, false).parse(SCH.servletContext.getRealPath(PATH_TO_LATEST_COPY))
 		}
@@ -45,11 +48,16 @@ class RestXmlTransport extends XmlTransport {
 			File f = new File (SCH.servletContext.getRealPath(PATH_TO_LATEST_COPY))
 			f.write(result)
 		} catch (Exception e) {
-			log.warn("Failed to write latest copy of routing rules to web app but continuing... Message: ${e.getMessage()}")
+			log.debug("Failed to write latest copy of routing rules to web app but continuing... Message: ${e.getMessage()}")
 		}
 		new HTTPBuilder(grailsApplication.config.osler.mb.updateRoutingRulesUrl).post (body: result) { resp ->
-			log.debug("Sent updated routing rules. Responded with status code ${resp.statusLine.statusCode}.")
-			return resp.statusLine.statusCode == 200
+			if (resp.statusLine.statusCode == 200) {
+				log.debug("Sent updated routing rules. Responded with status code ${resp.statusLine.statusCode}.")
+				return true
+			} else {
+				log.error("Could not update remote routing rules. Returned ${resp.statusLine.statusCode}.")
+				return false
+			}
 		}
 	}
 }

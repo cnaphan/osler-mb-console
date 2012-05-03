@@ -17,6 +17,7 @@
 		<div id="body" class="narrow">
 			<h1><g:message code="default.create.label" args="[entityName]" /></h1>
 			<g:messages/>
+			<p><g:message code="osler.mb.routing.Destination.help"/></p>
 			<g:form action="save" >
 				<fieldset class="form">
 					<g:render template="form"/>

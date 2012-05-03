@@ -18,6 +18,7 @@
 		<div id="body" class="narrow">
 			<h1><g:message code="default.edit.label" args="[entityName]" /></h1>
 			<g:messages/>
+			<p><g:message code="osler.mb.routing.Destination.help"/></p>
 			<g:form method="post" >
 				<g:hiddenField name="id" value="${destinationInstance?.name}" />				
 				<fieldset class="form">

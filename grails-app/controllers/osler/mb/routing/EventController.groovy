@@ -4,7 +4,7 @@ import org.springframework.dao.DataIntegrityViolationException
 
 class EventController {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST", updaterouting: "POST", getDefaultRoutingRules: "GET", receiveEventSoap: "POST", receiveEventHttp: "POST" ]
+    static allowedMethods = [save: "POST", update: "POST", delete: "POST", updaterouting: "POST", getDefaultRoutingRules: "GET"]
 
     def index() {
         redirect(action: "list", params: params)
@@ -41,7 +41,13 @@ class EventController {
 			return
 		}
 		def eventList = trans.listEvents(rr, [sort: "name", order: "asc", max: -1]).eventInstanceList
-		def destinationList = trans.listDestinations(rr, [sort: "name", order: "asc", max: -1]).destinationInstanceList
+		def allDestinations = trans.listDestinations(rr, [sort: "name", order: "asc", max: -1]).destinationInstanceList
+		def destinationList = []
+		for (def d : allDestinations) {
+			if (!d.disabled?.equals("true")) {
+				destinationList << d
+			}
+		}
 		log.info("Loading routing rules with ${eventList.size()} events and ${destinationList.size()} destinations")
 
 		[eventInstanceList: eventList, destinationInstanceList: destinationList]
@@ -68,24 +74,26 @@ class EventController {
 		int changesMade = 0
 		destinations.each { Destination d ->
 			def existingDestination = rr.destinations.destination.find { it.name == d.name}
-			// Go through each destination
-			events.each { Event e ->
-				String key = "${d.name}.${e.name}"								
-				// And go through each event				
-				if (params.paths.containsKey(key)) {
-					// If the paths parameter contains an entry with the key "destinationId.eventId"
-					if (!d.events.contains(e.name)) {
-						// And the event does NOT contain the destination, add it						
-						existingDestination.receives.appendNode { event(e.name) }
-						changesMade++					
-					}	
-				} else {
-					// If the paths parameter does not contain the entry (it was unchecked)
-					if (d.events.contains(e.name)) {
-						// And the event had this destination, remove it from the event's destinations
-						def existingEvent = existingDestination.receives.event.find { it == e.name }
-						existingEvent.replaceNode{}
-						changesMade++
+			if (!d.disabled?.equals("true")) {
+				// Go through each destination
+				events.each { Event e ->
+					String key = "${d.name}.${e.name}"								
+					// And go through each event				
+					if (params.paths.containsKey(key)) {
+						// If the paths parameter contains an entry with the key "destinationId.eventId"
+						if (!d.events.contains(e.name)) {
+							// And the event does NOT contain the destination, add it						
+							existingDestination.receives.appendNode { event(e.name) }
+							changesMade++					
+						}	
+					} else {
+						// If the paths parameter does not contain the entry (it was unchecked)
+						if (d.events.contains(e.name)) {
+							// And the event had this destination, remove it from the event's destinations
+							def existingEvent = existingDestination.receives.event.find { it == e.name }
+							existingEvent.replaceNode{}
+							changesMade++
+						}
 					}
 				}
 			}
@@ -271,29 +279,6 @@ class EventController {
 		}
 	}
 	
-	/**
-	 * Receives an event and writes to the logger. Used to test the message flow by having the console act as a destination.
-	 */
-	def receiveEventSoap () {
-		try {
-			def xml = request.XML
-			log.info("EVENT HANDLER - Event received via SOAP from ${request.getRemoteHost()}:\n\tContents: ${xml.Body.children()[0]}")
-			render(status: 200) // Respond with 200 Ack
-		} catch (Exception e) {
-			log.error("Failed in SOAP event handler: ${e.getMessage()}")
-			render (text:  e.getMessage(), status: 500) // Respond with 500 server error
-		}
-	}	
-   def receiveEventHttp () {
-	   try {
-		   def xml = request.XML
-		   log.info("EVENT HANDLER - Event received via HTTP from ${request.getRemoteHost()}:\n\tContents: ${xml}")
-		   render(status: 200) // Respond with 200 Ack
-	   } catch (Exception e) {
-		   log.error("Failed in HTTP event handler: ${e.getMessage()}")
-		   render (text:  e.getMessage(), status: 500) // Respond with 500 server error
-	   }
-   }
 
 	
 		
