@@ -28,7 +28,8 @@ osler.mb.routing.Event.delete.withDestinations.message=Events cannot be deleted 
 
 osler.mb.routing.Destination.name.label=Name
 osler.mb.routing.Destination.description.label=Description
-osler.mb.routing.Destination.url.label=Service URL
+osler.mb.routing.Destination.url.label=Host URL
+osler.mb.routing.Destination.url.advice=Host URL should point to the web service that will receive events.
 osler.mb.routing.Destination.accessMethod.label=Access Method
 osler.mb.routing.Destination.disabled.label=Disabled
 osler.mb.routing.Destination.name.blank=Destination name cannot be blank.
@@ -38,7 +39,7 @@ osler.mb.routing.Destination.delete.withEvents.message=This destination is set u
 osler.mb.routing.Destination.name.has.whitespace=Name cannot have whitespace.
 osler.mb.routing.Destination.delete.withEvents.message=Destinations cannot be deleted while they receive events.
 osler.mb.routing.Destination.urlWithQueue.message=A {2} destination cannot have a URL. Published events must be retrieved from the queue by the destination application.
-osler.mb.routing.Destination.help=Changing the access method of a destination will change how Message Broker routes the message. The TWS method acts the same way that SOAP does, except the format of the message is changed from the normal format established by the Patient Flow Monitor WSDL to the format preferred by Lombardi Teamwork Services (TWS). The URL should point to the service end-point to which the message will be sent.
+osler.mb.routing.Destination.help=Changing the access method of a destination will change how Message Broker routes the message. The TWS method acts the same way that SOAP does, except the format of the message is changed from the normal format established by the Patient Flow Monitor WSDL to the format preferred by Lombardi Teamwork Services (TWS). The URL should point to the service end-point that the message will be sent.
 
 osler.mb.routing.EventRouting.title=Routing Rules
 osler.mb.routing.EventRouting.update=Save Changes

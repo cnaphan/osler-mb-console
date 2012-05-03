@@ -21,8 +21,10 @@ class DestinationController {
 			log.error("Failed to get routing rules: ${e.getMessage()}")
 			redirect(uri: "/")
 			return
-		}
-		return trans.listDestinations(rr, params)
+		}		
+		def destinationResults = trans.listDestinations(rr, params)
+		log.debug("Fetched ${destinationResults.destinationInstanceTotal} destinations")
+		return destinationResults
     }
 
     def create() {		

@@ -5,6 +5,8 @@ import org.codehaus.groovy.grails.web.context.ServletContextHolder
 
 class LocalFileXmlTransport extends XmlTransport {
 	
+	private static final log = org.apache.commons.logging.LogFactory.getLog(this)
+	
 	private String getLocalFilePath() {
 		return ServletContextHolder.servletContext.getRealPath('/xml/default-routing-rules.xml.bak')		
 	}

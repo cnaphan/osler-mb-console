@@ -14,8 +14,8 @@ class Destination implements Comparable  {
     static constraints = {
 		name maxSize: 50, blank: false, validator: { if (it?.contains(" ")) return ["has.whitespace"] }
 		description maxSize: 500, nullable: true, blank: true
-		accessMethod inList: ["SOAP", "HTTP", "MQ", "JMS"], validator: checkMethod	
-		url nullable: true, url:true	
+		accessMethod inList: ["SOAP", "HTTP", "TWS", "MQ", "JMS"], validator: checkMethod	
+		url nullable: true, maxSize: 500	
     }
 	
 	public Destination(def params) {
@@ -30,8 +30,6 @@ class Destination implements Comparable  {
 		this.disabled = params.disabled ? true : false;
 		if (params.events) { this.events = params.events }
 	}
-	
-
 	
 	String toString() { return "Destination[name:${name}]" }
 	
