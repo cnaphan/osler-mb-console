@@ -29,10 +29,8 @@ class ReceiveController {
 			// Try to detect errors in the canonical SOAP format, determined by Shirley's WSDL
 			if (this.testEquals(errors, "NoEnvelope", xml.name(), "Envelope")) {
 				this.testEquals(errors, "BadEnvelopeNS", xml.namespaceURI(), grailsApplication.config.osler.mb.soapNamespace)
-				this.testEquals(errors, "NoHeader", xml.children()[0].name(), "Header")
-				this.testEquals(errors, "BadHeaderNS", xml.children()[0].namespaceURI(), grailsApplication.config.osler.mb.soapNamespace)
-				if (this.testEquals(errors, "NoBody", xml.children()[1].name(), "Body")) {
-					def b = xml.children()[1]
+				if (this.testEquals(errors, "NoBody", xml.children()[-1].name(), "Body")) {
+					def b = xml.children()[-1]
 					this.testEquals(errors, "BadBodyNS", b.namespaceURI(), grailsApplication.config.osler.mb.soapNamespace)
 					// Ensure the event's namespace is Shirley's
 					if (this.testEquals(errors, "BadBodyChildrenNum", b.children().size(), 1)) {
