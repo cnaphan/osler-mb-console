@@ -29,6 +29,7 @@ class ReceiveController {
 			// Try to detect errors in the canonical SOAP format, determined by Shirley's WSDL
 			if (this.testEquals(errors, "NoEnvelope", xml.name(), "Envelope")) {
 				this.testEquals(errors, "BadEnvelopeNS", xml.namespaceURI(), grailsApplication.config.osler.mb.soapNamespace)
+				// Don't assume there is a SOAP header. Message Broker's SOAP Envelope node does not add one, if there are no headers.
 				if (this.testEquals(errors, "NoBody", xml.children()[-1].name(), "Body")) {
 					def b = xml.children()[-1]
 					this.testEquals(errors, "BadBodyNS", b.namespaceURI(), grailsApplication.config.osler.mb.soapNamespace)
