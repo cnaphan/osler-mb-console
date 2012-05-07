@@ -42,7 +42,7 @@ abstract class XmlTransport {
 			throw new Exception ("Found ${destinations.size()} destinations in routing-rules file with name '${params.id}'")
 		} else {
 			def d = destinations[0]
-			def destinationObject = new osler.mb.routing.Destination(name: d.name, description: d.description, url: d.url, accessMethod: d.accessMethod, disabled: d.disabled?.equals("true"))
+			def destinationObject = new osler.mb.routing.Destination(name: d.name, description: d.description, url: d.url, accessMethod: d.accessMethod, format: d.format, disabled: d.disabled?.equals("true"))
 			d.receives.event.each { e ->				
 				destinationObject.events << e.name				
 			}
@@ -86,7 +86,7 @@ abstract class XmlTransport {
 		def destinationInstanceList = new LinkedList<osler.mb.routing.Destination>()
 		for (def d: rr.destinations.destination) {
 			def events =  d.receives.event.collect{ it.toString() }			
-			destinationInstanceList << new osler.mb.routing.Destination(name: d.name, description: d.description, url: d.url, accessMethod: d.accessMethod, disabled: d.disabled?.equals("true"), events: events)
+			destinationInstanceList << new osler.mb.routing.Destination(name: d.name, description: d.description, url: d.url, accessMethod: d.accessMethod, format: d.format, disabled: d.disabled?.equals("true"), events: events)
 		}
 		Integer destinationInstanceTotal = destinationInstanceList.size()
 		if (params.sort) {

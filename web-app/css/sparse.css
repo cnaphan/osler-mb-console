@@ -541,6 +541,7 @@ fieldset.embedded legend {
 #messages li {
 	list-style: none;
 	padding-left: 2.2em;
+	margin-bottom: 0.2em;
 	background: transparent url(../images/skin/information.png) 0.5em 50% no-repeat;	
 }
 #messages li.error {
@@ -553,4 +554,9 @@ fieldset.embedded legend {
 
 .skip { 
 	display: none;
+}
+
+.disabled {
+	font-style: italic;	
+	color: #888;
 }

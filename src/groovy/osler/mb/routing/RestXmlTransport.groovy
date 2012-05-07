@@ -26,7 +26,7 @@ class RestXmlTransport extends XmlTransport {
 	public groovy.util.slurpersupport.GPathResult getRoutingRules() {				
 		def grailsApplication = new Log().domainClass.grailsApplication		
 		def cacheDate = SCH.servletContext.getAttribute(NEXT_TIME_KEY)
-		if (!cacheDate || new Date().compareTo(cacheDate) > 0) {
+		if (!cacheDate || new Date().compareTo(cacheDate) > 0 || !(new File(SCH.servletContext.getRealPath(PATH_TO_LATEST_COPY)).exists())) {
 			def c = new GregorianCalendar()
 			c.add(Calendar.MINUTE, USE_LOCAL_FOR_MINUTES)
 			SCH.servletContext.setAttribute(NEXT_TIME_KEY, c.getTime())
@@ -47,6 +47,7 @@ class RestXmlTransport extends XmlTransport {
 			// Write a copy to the local drive
 			File f = new File (SCH.servletContext.getRealPath(PATH_TO_LATEST_COPY))
 			f.write(result)
+			log.debug("Wrote routing rules to a local file")
 		} catch (Exception e) {
 			log.debug("Failed to write latest copy of routing rules to web app but continuing... Message: ${e.getMessage()}")
 		}

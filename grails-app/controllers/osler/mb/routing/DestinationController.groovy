@@ -65,6 +65,7 @@ class DestinationController {
 				description(destinationInstance.description)
 				url(destinationInstance.url)
 				accessMethod(destinationInstance.accessMethod)
+				format(destinationInstance.format)
 				receives{}	
 			}
 		}
@@ -148,11 +149,12 @@ class DestinationController {
         }
 
 		def existingDestination = rr.destinations.destination.find { it.name == params.id }
-		existingDestination.disabled = destinationInstance.disabled
+		existingDestination.disabled.replaceNode{ disabled(destinationInstance.disabled) }
 		existingDestination.name.replaceNode{ name(destinationInstance.name) }
 		existingDestination.description.replaceNode{ description(destinationInstance.description) }
 		existingDestination.url.replaceNode{ url(destinationInstance.url) }
 		existingDestination.accessMethod.replaceNode{ accessMethod(destinationInstance.accessMethod) }
+		existingDestination.format.replaceNode{ format(destinationInstance.format) }
 		
 		if (!trans.updateRoutingRules(rr)) {
 			destinationInstance.errors.reject("osler.mb.routing.event.failedToUpdate")

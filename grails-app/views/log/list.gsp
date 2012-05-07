@@ -19,9 +19,10 @@
 				</g:link></li>
 				<li><g:link class="list" action="list"><g:message code="osler.mb.routing.Log.list.title"/></g:link></li>
 				<li><g:link class="list" action="responseLogList"><g:message code="osler.mb.routing.Log.responseLogList.title"/></g:link></li>
+				<li><g:link class="list" action="destinationResultList"><g:message code="osler.mb.routing.Log.destinationResultList.title"/></g:link></li>
 		</ul>
 	</div>
-	<div id="body" class="narrow">
+	<div id="body">
 		<g:form action="list" method="GET">
 			<h1>
 				<g:message code="osler.mb.routing.Log.list.title" />

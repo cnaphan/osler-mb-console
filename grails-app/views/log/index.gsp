@@ -100,6 +100,7 @@
 				<li><g:link class="dashboard" action="index"><g:message code="osler.mb.routing.Log.index.title" default="Log Dashboard" /></g:link></li>				
 				<li><g:link class="list" action="list"><g:message code="osler.mb.routing.Log.list.title"/></g:link></li>
 				<li><g:link class="list" action="responseLogList"><g:message code="osler.mb.routing.Log.responseLogList.title"/></g:link></li>
+				<li><g:link class="list" action="destinationResultList"><g:message code="osler.mb.routing.Log.destinationResultList.title"/></g:link></li>
 			</ul>
 		</div>
 		<div id="body">

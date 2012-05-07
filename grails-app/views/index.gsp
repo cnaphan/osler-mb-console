@@ -56,7 +56,8 @@
 					<h2><g:link controller="tester" action="index">Inject Test Events</g:link></h2>Use this tool to inject test events from a script into Message Broker.
 					<div>
 						<g:link controller="tester" action="index">Run Script</g:link> |
-						<g:link controller="tester" action="locationTest"><g:message code="osler.mb.tester.locationTest.label"/></g:link>
+						<g:link controller="tester" action="locationTest"><g:message code="osler.mb.tester.locationTest.label"/></g:link> | 
+						<g:link controller="tester" action="integrationTest"><g:message code="osler.mb.tester.integrationTest.label"/></g:link>
 					</div>
 				</li>
 				<li id="log-li">
@@ -65,7 +66,8 @@
 						<g:link controller="log" action="index" params="${[viewfor:1]}">Last Hour</g:link> |
 						<g:link controller="log" action="index" params="${[viewfor:2]}">Today</g:link> |
 						<g:link controller="log" action="list"><g:message code="osler.mb.routing.Log.list.title"/></g:link> |
-						<g:link controller="log" action="responseLogList"><g:message code="osler.mb.routing.Log.responseLogList.title"/></g:link>						
+						<g:link controller="log" action="responseLogList"><g:message code="osler.mb.routing.Log.responseLogList.title"/></g:link> |					
+						<g:link controller="log" action="destinationResultList"><g:message code="osler.mb.routing.Log.destinationResultList.title"/></g:link>						
 					</div>
 				</li>
 				

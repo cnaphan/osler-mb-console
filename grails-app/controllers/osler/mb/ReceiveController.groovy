@@ -1,6 +1,7 @@
 package osler.mb
 
 import grails.converters.XML
+import osler.mb.routing.DestinationResult
 
 /**
  * Provides a series of actions for receiving events, as if the console were a destination itself. It can receive
@@ -54,9 +55,14 @@ class ReceiveController {
 				log.info("SOAP event ${xml.Body.children()[0].name()} received from ${request.getRemoteHost()}")
 				render(status: 200) // Respond with 200 Ack
 			} else {
-				log.warn("SOAP event received from ${request.getRemoteHost()} with the following errors: ${errors as XML}")
+				log.warn("SOAP event received from ${request.getRemoteHost()} with the following errors: ${errors as XML}")				
 				render(text: errors as XML, status: 500) // Respond with 500 Internal Error
 			}
+			new DestinationResult(logTime: new Date(), 
+				event: xml?.Body?.children()[0]?.name() ?: "Unknown",
+				method: "SOAP",
+				remoteHost: request.getRemoteHost(), 
+				errorXml: errors ? (errors as XML).toString() : null).save(failOnError: true, flush: true)
 		} catch (Exception e) {
 			log.error("Failed in SOAP event handler: ${e.getMessage()}")
 			render (text: e.getMessage(), status: 500) // Respond with 500 server error
@@ -71,8 +77,8 @@ class ReceiveController {
 			// Try to detect errors in the canonical HTTP format
 			this.testEquals(errors, "BadEventNS", xml.namespaceURI(), grailsApplication.config.osler.mb.eventNamespace)
 			xml.children().each { this.testEquals(errors, "BadEvent${it.name()}NS", it.namespaceURI(), "") }
-			if (this.testEquals(errors, "LastParameterNotTimestamp", e.children()[-1].name(), "timestamp")) {
-				this.testDateFormat(errors,"TimestampFormat", e.children()[-1].text())
+			if (this.testEquals(errors, "LastParameterNotTimestamp", xml.children()[-1].name(), "timestamp")) {
+				this.testDateFormat(errors,"TimestampFormat", xml.children()[-1].text())
 			}
 			if (!errors) {
 				log.info("HTTP event ${xml.name()} received from ${request.getRemoteHost()}")
@@ -81,9 +87,15 @@ class ReceiveController {
 				log.warn("HTTP event received from ${request.getRemoteHost()} with the following errors: ${errors as XML}")
 				render(text: errors as XML, status: 500) // Respond with 500 Internal Error
 			}
-		} catch (Exception e) {
-			log.error("Failed in HTTP event handler: ${e.getMessage()}")
-			render (text:  e.getMessage(), status: 500) // Respond with 500 server error
+			def d = new DestinationResult(logTime: new Date(), 
+				event: xml.name() ?: "Unknown",
+				method: "HTTP",
+				remoteHost: request.getRemoteHost(), 
+				errorXml: errors ? (errors as XML).toString() : null).save(failOnError: true, flush: true)
+			log.debug("Created result: ${d.event}")
+		} catch (Exception exc) {
+			log.error("Failed in HTTP event handler: ${exc.toString()}")
+			render (text: exc.toString(), status: 500) // Respond with 500 server error
 		}
 	}
 
@@ -121,6 +133,12 @@ class ReceiveController {
 				log.warn("TWS event received from ${request.getRemoteHost()} with the following errors: ${errors as XML}")
 				render(text: errors as XML, status: 500) // Respond with 500 Internal Error
 			}
+			new DestinationResult(logTime: new Date(), 
+				event: xml?.Body?.children()[0]?.name() ?: "Unknown",
+				method: "TWS",
+				remoteHost: request.getRemoteHost(), 
+				errorXml: errors ? (errors as XML).toString() : null).save(failOnError: true, flush: true)
+			
 		} catch (Exception e) {
 			log.error("Failed in TWS event handler: ${e.getMessage()}")
 			render (text: e.getMessage(), status: 500) // Respond with 500 server error

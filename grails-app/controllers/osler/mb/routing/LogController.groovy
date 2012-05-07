@@ -135,12 +135,12 @@ class LogController {
 				// If we have a from date, use both to get the logs between them				
 				logList = ResponseLog.findAllByLogTimeBetween(dates.from,dates.to,params)				
 				logCount = ResponseLog.countByLogTimeBetween(dates.from,dates.to,params)
-				if (log.isDebugEnabled()) { log.debug("list: Retrieved ${logCount} response log entries between ${dates.from.format(grailsApplication.config.osler.mb.dateFormat)} and ${dates.to.format(grailsApplication.config.osler.mb.dateFormat)}") }
+				if (log.isDebugEnabled()) { log.debug("responseLogList: Retrieved ${logCount} response log entries between ${dates.from.format(grailsApplication.config.osler.mb.dateFormat)} and ${dates.to.format(grailsApplication.config.osler.mb.dateFormat)}") }
 			} else {
 				// If we only have one date, get everything before it
 				logList = ResponseLog.findAllByLogTimeLessThanEquals(dates.to, params)
 				logCount = ResponseLog.countByLogTimeLessThanEquals(dates.to, params)
-				if (log.isDebugEnabled()) { log.debug("list: Retrieved ${logCount} response log entries before ${dates.to.format(grailsApplication.config.osler.mb.dateFormat)}") }			
+				if (log.isDebugEnabled()) { log.debug("responseLogList: Retrieved ${logCount} response log entries before ${dates.to.format(grailsApplication.config.osler.mb.dateFormat)}") }			
 			}
 		} else {
 			// If we have neither dates, just get everything
@@ -149,6 +149,37 @@ class LogController {
 		    if (log.isDebugEnabled()) { log.debug("list: Retrieved ${logCount} response log entries") }		
 		}
 		[logInstanceList: logList, logInstanceTotal: logCount, logDateFormat: grailsApplication.config.osler.mb.dateFormat]
+	}
+	
+	def destinationResultList = {
+		// Set some default parameters, if they are not set
+		if (!params.sort) { params.sort = "logTime" }
+		if (!params.order) { params.order = "DESC" }
+		if (!params.max) { params.max = LogController.ITEMS_PER_PAGE }		
+		def resultList
+		def resultCount
+		
+		if (params.fromdate || params.todate) {
+			def dates = this.parseDates(params)			
+
+			if (dates.from != null) {
+				// If we have a from date, use both to get the logs between them				
+				resultList = DestinationResult.findAllByLogTimeBetween(dates.from,dates.to,params)				
+				resultCount = DestinationResult.countByLogTimeBetween(dates.from,dates.to,params)
+				if (log.isDebugEnabled()) { log.debug("destinationResultList: Retrieved ${resultCount} response log entries between ${dates.from.format(grailsApplication.config.osler.mb.dateFormat)} and ${dates.to.format(grailsApplication.config.osler.mb.dateFormat)}") }
+			} else {
+				// If we only have one date, get everything before it
+				resultList = DestinationResult.findAllByLogTimeLessThanEquals(dates.to, params)
+				resultCount = DestinationResult.countByLogTimeLessThanEquals(dates.to, params)
+				if (log.isDebugEnabled()) { log.debug("destinationResultList: Retrieved ${resultCount} response log entries before ${dates.to.format(grailsApplication.config.osler.mb.dateFormat)}") }			
+			}
+		} else {
+			// If we have neither dates, just get everything
+			resultList = DestinationResult.list(params)
+			resultCount = DestinationResult.count()
+		    if (log.isDebugEnabled()) { log.debug("list: Retrieved ${logCount} response log entries") }		
+		}
+		[resultInstanceList: resultList, resultInstanceTotal: resultCount, logDateFormat: grailsApplication.config.osler.mb.dateFormat]
 	}
 	
 	/**

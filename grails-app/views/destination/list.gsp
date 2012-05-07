@@ -31,14 +31,21 @@
 						<g:sortableColumn property="name" title="${message(code: 'osler.mb.routing.Destination.name.label')}" />
 						<g:sortableColumn property="url" title="${message(code: 'osler.mb.routing.Destination.url.label')}" />
 						<g:sortableColumn property="accessMethod" title="${message(code: 'osler.mb.routing.Destination.accessMethod.label')}" />
+						<g:sortableColumn property="format" title="${message(code: 'osler.mb.routing.Destination.format.label')}" />						
 					</tr>
 				</thead>
 				<tbody>
 				<g:each in="${destinationInstanceList}" status="i" var="d">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">					
-						<td><g:link action="show" id="${d.name}">${fieldValue(bean: d, field: "name")}</g:link></td>
+						<td class="${d.disabled ? "disabled" : ""}">
+							<g:link action="show" id="${d.name}">${fieldValue(bean: d, field: "name")}</g:link>
+							<g:if test="${d.disabled}">
+								(Disabled)
+							</g:if>
+						</td>
 						<td>${fieldValue(bean: d, field: "url")}</td>
 						<td>${fieldValue(bean:d, field: "accessMethod") }</td>
+						<td>${fieldValue(bean:d, field: "format") }</td>
 					</tr>
 				</g:each>
 				</tbody>

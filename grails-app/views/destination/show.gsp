@@ -19,7 +19,7 @@
 		<div id="body" class="narrow">
 			<h1><g:message code="default.show.label" args="[entityName]" /></h1>
 			<g:messages/>
-			<div><g:message code="osler.mb.routing.Destination.url.advice"/></div>
+			<p><g:message code="osler.mb.routing.Destination.help"/></p>
 			<ol class="property-list destination">			
 				<li class="fieldcontain">
 					<span id="name-label" class="property-label"><g:message code="osler.mb.routing.Destination.name.label" default="Name" /></span>					
@@ -32,7 +32,11 @@
 				</li>
 				<li class="fieldcontain">
 					<span id="method-label" class="property-label"><g:message code="osler.mb.routing.Destination.method.label" default="Access Method" /></span>	
-					<span class="property-value" aria-labelledby="method-label"><g:fieldValue bean="${destinationInstance}" field="accessMethod"/></span>					
+					<span class="property-value" aria-labelledby="method-label">${destinationInstance.accessMethod}</span>					
+				</li>
+				<li class="fieldcontain">
+					<span id="method-label" class="property-label"><g:message code="osler.mb.routing.Destination.format.label" /></span>	
+					<span class="property-value" aria-labelledby="method-label">${destinationInstance.format}</span>					
 				</li>
 				<li class="fieldcontain">
 					<span id="url-label" class="property-label"><g:message code="osler.mb.routing.Destination.url.label" default="URL" /></span>

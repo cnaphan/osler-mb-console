@@ -3,7 +3,7 @@ package osler.mb
 import org.xml.sax.SAXException
 import osler.mb.routing.*
 import java.text.SimpleDateFormat
-import java.util.Map;
+import java.util.*;
 
 class TesterController {
 	
@@ -47,7 +47,7 @@ class TesterController {
 		}
 		
 		ByteArrayInputStream inStream = f.getInputStream()		
-		List events = this.parseEvents(inStream, overrideTimestamps)
+		List events = this.parseEvents(inStream, overrideTimestamps, false)
 		if (!events) {
 			flash.errors << message(code: "osler.mb.tester.run.empty.message")
 		}
@@ -184,18 +184,168 @@ class TesterController {
 											locationId: params.locationId])
 	}
 	
+	
+	def integrationTest () {		
+	}
+	
+	def runIntegrationTest () {
+		log.info("Running integration test")
+		def whatHappened = this.runIntegrationTestModule()
+		assert whatHappened
+		String color = "#B3FF99"
+		String resultText = "Test succeeded"
+		if (whatHappened.find { it.type?.equals("error") }) { 
+			color = "#FF5353"
+			resultText = "Test failed. Check the details for more information."
+		} else if (whatHappened.find { it.type?.equals("warn") }) { 			
+			color = "#FFF06A"
+			resultText = resultText + " but with warnings. Check the details for more information."
+		}
+
+		[whatHappened: whatHappened, displayColor: color, resultText: resultText]
+	}
+	
+	/**
+	 * Executes the integration test. This method is easier to write as a method because it's easier to return.
+	 */
+	private List runIntegrationTestModule() {
+		def w = []
+		w << [type:"info", text:"Initiating integration test"]
+		
+		// Check some configuration elements before proceeding
+		if (grailsApplication.config.osler.mb.registerEventMethod != "SOAP") {	w << [type:"warn", text:"The method to register events must be SOAP. Console is incorrectly configured (possibly in development mode)."] }
+		if (grailsApplication.config.osler.mb.routingRulesTransportMode != "REST") {	w << [type:"warn", text:"The method to get routign rules must be REST. Console is incorrectly configured (possibly in development mode)."] }
+		if (w.find { it.type?.equals("error") }) { return w }
+		
+		// Check the test script for problems
+		def f = request.getFile("testScript")					
+		if (!f || f.isEmpty()) {
+			w << [type:"error", text:"Test script was empty."]
+			return w
+		}		
+		ByteArrayInputStream inStream = f.getInputStream()		
+		def events = this.parseEvents(inStream, false, true) // Parse events in test mode
+		if (!events) {
+			w << [type:"error", text:"Test script did not contain any valid events."]
+			return w
+		} else {
+			w << [type:"info", text:"Retrieved ${events.size()} events from test script. Forced events into 'test' mode."]
+		}
+		
+		def trans = XmlTransport.getInstance()
+		def rr
+		try {
+			rr = trans.getRoutingRules()
+			w << [type:"info", text:"Retrieved routing rules with ${rr.events.event.size()} events and ${rr.destinations.destination.size()} destinations"]
+		} catch (java.net.ConnectException e) {
+			w << [type:"error", text:"An error occurred while retrieving the routing rules: ${e.getMessage()}"]
+			return w
+		}
+		
+		// Confirm the destinations exist and they are properly configured
+		def eventCount = rr.events.event.size()
+		// Initialize a list of receivers. Add more to test more receivers.
+		def dests = ["TestSoap", "TestHttp", "TestTws"]
+		dests.each { destName ->
+			def testDest = rr.destinations.destination.find{ it.name.text().toUpperCase() == destName.toUpperCase() }
+			if (testDest) {
+				if (testDest.disabled?.text()?.equals("true")) {
+					w << [type:"warn", text:"The destination ${destName} is disabled. This might cause problems with the test."]
+				} else if (testDest.receives.event.size() != eventCount) { 
+					w << [type:"warn", text:"The destination ${destName} receives ${testDest.receives.event.size()} of ${eventCount} events. The test destination should receive all events."]					
+				} else {
+					w << [type:"info", text:"Confirmed that ${destName} exists and receives all ${eventCount} events."]
+				}
+			
+			} else {
+				w << [type:"warn", text:"Routing rules did not contain a destination called '${destName}'. This could cause problems testing responses."]
+			}
+		}
+		
+		def beforeSending = new Date() // Get a current time before sending the events
+		Integer logCount = Log.count()
+		Integer responseLogCount = ResponseLog.count()
+		Integer resultCount = DestinationResult.count()
+		
+		// Send the test events to the broker
+		for (def it : events) {		
+			Integer responseCode = 0
+			try {
+				responseCode = this.sendMessage(it.method, it.body)																					
+			} catch (java.net.UnknownHostException uhe) {
+				w << [type:"error", text:"Could not send test event to the broker: ${uhe.getMessage()}"]
+				return w
+			}			
+			if (responseCode != 200) { // 200=OK
+				w << [type:"error", text:"Received error code ${responseCode} from the broker for one of the events."]
+				return w
+			}
+		}
+		w << [type:"info", text:"Events sent to broker with no problems."]
+
+		// Listen for new logs and compare them with what they ought to be
+		Integer logsExpected = events.size()
+		Integer responseLogsExpected = events.size() * dests.size()		
+		Integer resultsExpected = responseLogsExpected		
+		Integer waitSeconds = 1
+		Integer secondsWaited = 0
+		Integer secondsToWait = 5		
+		boolean logReceived = false
+		Integer newLogCount = 0
+		Integer newResponseLogCount = 0
+		Integer newResultCount = 0
+		w << [type:"info", text:"Listening for incoming messages for ${secondsToWait} seconds. Expecting ${logsExpected} incoming logs, ${responseLogsExpected} response logs and ${resultsExpected} destination results."]
+		while (!logReceived && secondsWaited < secondsToWait) {			
+			w << [type:"info", text:"Going to sleep for ${waitSeconds} second(s) to wait for broker response"]
+			Thread.currentThread().sleep(waitSeconds*1000)
+			secondsWaited = secondsWaited + waitSeconds
+			// Wake up and check log counts
+			newLogCount = Log.count()
+			newResponseLogCount = ResponseLog.count()
+			newResultCount = DestinationResult.count()			
+			logReceived = (newLogCount >= (logCount + logsExpected)) && 
+				(newResponseLogCount >= (responseLogCount + responseLogsExpected)) &&
+				(newResultCount >= (resultCount + resultsExpected))
+			w << [type:"info", text:"Received ${ newLogCount - logCount } incoming log messages, ${ newResponseLogCount - responseLogCount } response log messages and ${ newResultCount - resultCount } destination results"]
+		}
+		if (!logReceived) {
+			w << [type:"error", text:"Did not receive all messages in the time alloted.<br/>Received ${newLogCount - logCount} of ${logsExpected} incoming log messages, ${ newResponseLogCount - responseLogCount } of ${responseLogsExpected} response log messages and ${ newResultCount - resultCount } of ${resultsExpected} destination results."]
+		} else {
+			w << [type:"info", text:"Received all log messages and destination results."]
+		}				
+		// Check destination results for errors
+		def results = DestinationResult.findAllByLogTimeGreaterThanEquals(beforeSending)
+		if (!results) { w << [type:"error", text: "Could not retrieve any new destination results."] }
+		else if (results.size() > resultsExpected) { w << [type:"warn", text:"Found more results than expected. Expected ${resultsExpected} but found ${results.size()}. There could be other broker activity interfering with the test."] }
+		else if (results.size() < resultsExpected) { w << [type:"warn", text:"Found fewer results than expected. Expected ${resultsExpected} but found ${results.size()}. The broker may be slower than the integration test allows for."] }
+
+		if (results.find{ it.errorXml }) {
+			for (def r : results) {
+				if (r.errorXml) {
+					def xml = new XmlSlurper(false, false).parseText(r.errorXml)
+					def errorList = xml.entry?.collect { '<li>${it.@key} ${it.text()}</li>' }?.join("\n")
+					w << [type:"error", text:"An error was detected in the result of event ${r.eventName} by method ${r.method}:\n<ul>${errorList}</ul>"]
+				}
+			}
+		} else if (results) {
+			w << [type:"info", text:"${results.size()} destination results checked. No errors reported in events received by console."]
+		}
+		return w
+	}
+	
 	/**
 	 * Takes a byte stream of XML and converts it into a list of event objects with the format {method, body}
 	 * @param fileByteStream A byte stream coming from an XML file
 	 * @param overrideTimestamps If true, replaces any timestamps' date with the current date.
 	 */
-	private List parseEvents(ByteArrayInputStream fileByteStream, boolean overrideTimestamps) {
+	private List parseEvents(ByteArrayInputStream fileByteStream, boolean overrideTimestamps, boolean forceTest = false) {
 		def results = []		
 		def oslerTestScript
 		String timestampFormat = grailsApplication.config.osler.mb.dateFormat
 		SimpleDateFormat sdf = new SimpleDateFormat(timestampFormat) // Used to parse string dates
 		Date now = new Date() // Used to generate current date
-	
+		
+		
 		try {
 			oslerTestScript = new XmlSlurper(false, false).parseText(fileByteStream.getText())
 		} catch (SAXException saxe) {
@@ -211,6 +361,9 @@ class TesterController {
 		for (def it : oslerTestScript.event) {
 			// Pick the event name out of the event tag's name attribute
 			String eventName = it.@name.text()
+			// If we're forcing the events into test mode or if the test attribute is true, set the event into test mode
+			String isTest = (forceTest || it.@test?.text()?.equals("true")) ? ' test="true"' : ''
+			
 			// Pick the attribute sourceSuffix which will be used later
 			String sourceSuffix = (!it.@sourceSuffix.text().equals("")) ? ' sourceSuffix="' + it.@sourceSuffix.text() + '"' : ""
 			if ((!sourceSuffix.equals("")) && log.isDebugEnabled()) { log.debug("For ${eventName}, found source suffix: '${it.@sourceSuffix.text()}'") }
@@ -236,7 +389,7 @@ class TesterController {
 			String childrenNodes = it.children().collect { "<${it.name()}>${it}</${it.name()}>" }.join('')
 			// Then, create the entire event tag using the event's name, which is the format that MB wants
 			// Add the attribute @sourceSuffix, which will be used by message broker for simulating virtual sources
-			String bodyText = "<${eventName}${sourceSuffix}>${childrenNodes}</${eventName}>"
+			String bodyText = "<${eventName}${sourceSuffix}${isTest}>${childrenNodes}</${eventName}>"
 			
 			results << [method: eventName, body: bodyText]
 		}

@@ -10,3 +10,4 @@
 
 # Ignore log files
 /logs/*.txt
+/logs/*.xml

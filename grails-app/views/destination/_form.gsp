@@ -25,6 +25,12 @@
 	</label>	
 	<g:select name="accessMethod" from="${destinationInstance.constraints.accessMethod.inList }" value="${ fieldValue(bean: destinationInstance, field: "accessMethod") }"/>	
 </div>
+<div class="fieldcontain ${hasErrors(bean: destinationInstance, field: 'format', 'error')} required">
+	<label for="format">
+		<g:message code="osler.mb.routing.Destination.format.label" />
+	</label>	
+	<g:select name="format" from="${destinationInstance.constraints.format.inList }" value="${ fieldValue(bean: destinationInstance, field: "format") }"/>	
+</div>
 <div class="fieldcontain ${hasErrors(bean: destinationInstance, field: 'disabled', 'error')}">
 	<label for="url">
 		<g:message code="osler.mb.routing.Destination.disabled.label" />

@@ -44,7 +44,7 @@ class EventController {
 		def allDestinations = trans.listDestinations(rr, [sort: "name", order: "asc", max: -1]).destinationInstanceList
 		def destinationList = []
 		for (def d : allDestinations) {
-			if (!d.disabled?.equals("true")) {
+			if (!d.disabled) {
 				destinationList << d
 			}
 		}
@@ -74,7 +74,7 @@ class EventController {
 		int changesMade = 0
 		destinations.each { Destination d ->
 			def existingDestination = rr.destinations.destination.find { it.name == d.name}
-			if (!d.disabled?.equals("true")) {
+			if (!d.disabled) {
 				// Go through each destination
 				events.each { Event e ->
 					String key = "${d.name}.${e.name}"								

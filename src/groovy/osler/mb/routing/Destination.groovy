@@ -7,14 +7,16 @@ class Destination implements Comparable  {
 	String name
 	String description
 	String url
-	String accessMethod
+	String accessMethod = "SOAP"
+	String format = "PFM"
 	Boolean disabled = false
 	def events = []
 	
     static constraints = {
 		name maxSize: 50, blank: false, validator: { if (it?.contains(" ")) return ["has.whitespace"] }
 		description maxSize: 500, nullable: true, blank: true
-		accessMethod inList: ["SOAP", "HTTP", "TWS", "MQ", "JMS"], validator: checkMethod	
+		accessMethod inList: ["SOAP", "HTTP", "MQ", "JMS"], validator: checkMethod
+		format maxSize: 25, inList: ["PFM", "TWS", "WODM"]
 		url nullable: true, maxSize: 500	
     }
 	
@@ -28,6 +30,7 @@ class Destination implements Comparable  {
 		this.url = params.url
 		this.accessMethod = params.accessMethod
 		this.disabled = params.disabled ? true : false;
+		this.format = params.format
 		if (params.events) { this.events = params.events }
 	}
 	

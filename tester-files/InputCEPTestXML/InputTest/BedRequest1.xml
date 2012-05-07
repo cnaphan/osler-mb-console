@@ -1,4 +1,3 @@
-
 <connector xmlns="http://wbe.ibm.com/6.2/Event/BedRequest" name="WFM" version="6.2">
   <connector-bundle name="BedRequest" type="Event">
     <BedRequestobject>

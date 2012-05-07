@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<oslerTestScript>
+  <testName>Small Integration Test</testName>
+  <testDescription>Contains two events used to run integration tests.</testDescription>
+	
+  <!-- Input events -->	
+  <event name="patientInED" sourceSuffix="RTLS">
+    <patientId>Pa123456</patientId>
+    <locationId>AssessmentRoom12</locationId>
+    <timestamp>2012-03-12 01:12:46</timestamp>
+  </event>
+  <event name="patientAdmittedWithBed" sourceSuffix="BPM">
+    <patientId>Pa123456</patientId>
+    <unitId>CCU</unitId>
+    <bedId>Bed207</bedId>
+    <timestamp>2012-03-12 02:21:36</timestamp>
+  </event>    
+</oslerTestScript>
