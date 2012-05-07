@@ -130,7 +130,6 @@ class LogController {
 		
 		if (params.fromdate || params.todate) {
 			def dates = this.parseDates(params)			
-
 			if (dates.from != null) {
 				// If we have a from date, use both to get the logs between them				
 				logList = ResponseLog.findAllByLogTimeBetween(dates.from,dates.to,params)				
@@ -142,6 +141,9 @@ class LogController {
 				logCount = ResponseLog.countByLogTimeLessThanEquals(dates.to, params)
 				if (log.isDebugEnabled()) { log.debug("responseLogList: Retrieved ${logCount} response log entries before ${dates.to.format(grailsApplication.config.osler.mb.dateFormat)}") }			
 			}
+		} else if (params.destination) {
+			logList = ResponseLog.findAllByDestination(params.destination, params)
+			logCount = ResponseLog.countByDestination(params.destination)
 		} else {
 			// If we have neither dates, just get everything
 			logList = ResponseLog.list(params)
