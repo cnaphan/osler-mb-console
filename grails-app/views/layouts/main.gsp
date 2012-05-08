@@ -26,7 +26,7 @@
 		</div>
 		<div id="icons" style="float: right;">
 			<g:link controller="tester" action="index"><g:img file="test-runner.png" alt="Inject Test Events" width="25" height="30"/></g:link>
-			<g:link controller="log" action="index"><g:img file="analytics.png" alt="Log Analytics" width="22" height="30"/></g:link>
+			<g:link controller="log" action="index"><g:img file="analytics.png" alt="Log Analytics" width="31" height="31"/></g:link>
 			<g:link controller="event" action="routing"><g:img file="router.png" alt="Update Routing Rules" width="30" height="30"/></g:link>
 		</div>
 		<div class="clearer" ></div>
