@@ -12,7 +12,7 @@ class Source {
     static constraints = {
 		name blank: false, maxSize: 6,
 			 validator: { if (it?.contains(" ")) return ["has.whitespace.message"] }
-	    accessMethod inList: ["SOAP", "HTTP", "MQ", "JMS"]
+	    accessMethod inList: ["SOAP", "REST", "MQ", "JMS"]
 		matchingString blank: false
     }
 	

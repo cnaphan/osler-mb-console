@@ -245,7 +245,7 @@ class TesterController {
 		// Confirm the destinations exist and they are properly configured
 		def eventCount = rr.events.event.size()
 		// Initialize a list of receivers. Add more to test more receivers.
-		def dests = ["TestSoap", "TestHttp", "TestTws"]
+		def dests = ["TestSoap", "TestRest", "TestTws"]
 		dests.each { destName ->
 			def testDest = rr.destinations.destination.find{ it.name.text().toUpperCase() == destName.toUpperCase() }
 			if (testDest) {
@@ -280,7 +280,7 @@ class TesterController {
 				w << [type:"error", text:"Received error code ${responseCode} from the broker for one of the events."]
 				return w
 			}
-		}
+		}		
 		w << [type:"info", text:"Events sent to broker with no problems."]
 
 		// Listen for new logs and compare them with what they ought to be
@@ -313,6 +313,39 @@ class TesterController {
 		} else {
 			w << [type:"info", text:"Received all log messages and destination results."]
 		}				
+		
+		// Check logs for incoming messages
+		def logs = Log.findAllByLogTimeGreaterThanEquals(beforeSending)
+		if (!logs) { w << [type:"error", text: "Could not retrieve any new incoming logs."] }
+		else if (logs.size() > logsExpected) { w << [type:"warn", text:"Found more incoming logs than expected. Expected ${logsExpected} but found ${logs.size()}. There could be other broker activity interfering with the test."] }
+		else if (logs.size() < logsExpected) { w << [type:"warn", text:"Found fewer incoming logs than expected. Expected ${logsExpected} but found ${logs.size()}. The broker may be slower than the integration test allows for."] }
+		if (logs) {
+			for (def l : logs) {
+				if (l.numSentP2P != dests.size()) {
+					w << [type: "warn", text: "The event ${l.event} was sent to ${l.numSentP2P} P2P destinations but ${dests.size()} were expected."]
+				}
+				if (l.numSentPubSub != 0) {
+					w << [type: "warn", text: "The event ${l.event} was published to ${l.numSentPubSub} subscription points but none were expected."]
+				}
+			}
+		}
+		
+		// Check response logs for error codes
+		def responseLogs = ResponseLog.findAllByLogTimeGreaterThanEquals(beforeSending)
+		if (!responseLogs) { w << [type:"error", text: "Could not retrieve any new response logs."] }
+		else if (responseLogs.size() > responseLogsExpected) { w << [type:"warn", text:"Found more response logs than expected. Expected ${responseLogsExpected} but found ${responseLogs.size()}. There could be other broker activity interfering with the test."] }
+		else if (responseLogs.size() < responseLogsExpected) { w << [type:"warn", text:"Found fewer response logs than expected. Expected ${responseLogsExpected} but found ${responseLogs.size()}. The broker may be slower than the integration test allows for."] }
+		
+		if (responseLogs.find{ it.responseStatusCode >= 400 }) {
+			for (def r : responseLogs) {
+				if (r.responseStatusCode >= 400) {
+					w << [type:"error", text: "The destination ${r.destinationName} responded to the event ${r.event} with status code ${r.responseStatusCode}"]
+				}
+			}
+		} else if (responseLogs) {
+			w << [type:"info", text:"${responseLogs.size()} response logs checked. The test destinations did not respond to message broker with errors."]
+		}
+		
 		// Check destination results for errors
 		def results = DestinationResult.findAllByLogTimeGreaterThanEquals(beforeSending)
 		if (!results) { w << [type:"error", text: "Could not retrieve any new destination results."] }

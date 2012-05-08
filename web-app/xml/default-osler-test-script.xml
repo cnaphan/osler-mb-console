@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <oslerTestScript>
   <testName>Default Osler Test Script</testName>
   <testDescription>The basic test script that contains definitions and sample data for all the types of events. Used to quickly prototype new tests.</testDescription>

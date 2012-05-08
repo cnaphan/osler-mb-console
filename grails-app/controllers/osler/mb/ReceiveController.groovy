@@ -5,7 +5,7 @@ import osler.mb.routing.DestinationResult
 
 /**
  * Provides a series of actions for receiving events, as if the console were a destination itself. It can receive
- * in SOAP, HTTP or TWS format. TWS ("Teamwork Services" AKA Lombardi) is the special format that Lombardi uses.
+ * in SOAP, REST or TWS format. TWS ("Teamwork Services" AKA Lombardi) is the special format that Lombardi uses.
  * It differs slightly from the normal format. If there are errors in the format, a machine and human-readable 
  * XML-ified map is returned with the errors. This is to facilitate using these methods in automated tests in 
  * the future.
@@ -17,7 +17,7 @@ import osler.mb.routing.DestinationResult
  */
 class ReceiveController {
 
-	static allowedMethods = [soap: "POST", http: "POST", tws: "POST" ]
+	static allowedMethods = [soap: "POST", rest: "POST", tws: "POST" ]
 
 	/**
 	 * Receives an event and writes to the logger. Used to test the message flow by having the console act as a destination.
@@ -69,32 +69,32 @@ class ReceiveController {
 		}
 	}
 
-	def http () {
+	def rest () {
 		try {
 			def xml = request.XML
 			def errors = [:]
 
-			// Try to detect errors in the canonical HTTP format
+			// Try to detect errors in the canonical REST format
 			this.testEquals(errors, "BadEventNS", xml.namespaceURI(), grailsApplication.config.osler.mb.eventNamespace)
 			xml.children().each { this.testEquals(errors, "BadEvent${it.name()}NS", it.namespaceURI(), "") }
 			if (this.testEquals(errors, "LastParameterNotTimestamp", xml.children()[-1].name(), "timestamp")) {
 				this.testDateFormat(errors,"TimestampFormat", xml.children()[-1].text())
 			}
 			if (!errors) {
-				log.info("HTTP event ${xml.name()} received from ${request.getRemoteHost()}")
+				log.info("REST event ${xml.name()} received from ${request.getRemoteHost()}")
 				render(status: 200) // Respond with 200 Ack
 			} else {
-				log.warn("HTTP event received from ${request.getRemoteHost()} with the following errors: ${errors as XML}")
+				log.warn("REST event received from ${request.getRemoteHost()} with the following errors: ${errors as XML}")
 				render(text: errors as XML, status: 500) // Respond with 500 Internal Error
 			}
 			def d = new DestinationResult(logTime: new Date(), 
 				event: xml.name() ?: "Unknown",
-				method: "HTTP",
+				method: "REST",
 				remoteHost: request.getRemoteHost(), 
 				errorXml: errors ? (errors as XML).toString() : null).save(failOnError: true, flush: true)
 			log.debug("Created result: ${d.event}")
 		} catch (Exception exc) {
-			log.error("Failed in HTTP event handler: ${exc.toString()}")
+			log.error("Failed in REST event handler: ${exc.toString()}")
 			render (text: exc.toString(), status: 500) // Respond with 500 server error
 		}
 	}

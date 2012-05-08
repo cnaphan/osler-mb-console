@@ -142,8 +142,8 @@ class LogController {
 				if (log.isDebugEnabled()) { log.debug("responseLogList: Retrieved ${logCount} response log entries before ${dates.to.format(grailsApplication.config.osler.mb.dateFormat)}") }			
 			}
 		} else if (params.destination) {
-			logList = ResponseLog.findAllByDestination(params.destination, params)
-			logCount = ResponseLog.countByDestination(params.destination)
+			logList = ResponseLog.findAllByDestinationName(params.destination, params)
+			logCount = ResponseLog.findAllByDestinationName(params.destination)
 		} else {
 			// If we have neither dates, just get everything
 			logList = ResponseLog.list(params)

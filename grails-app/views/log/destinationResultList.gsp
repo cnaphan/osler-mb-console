@@ -23,7 +23,7 @@
 		</ul>
 	</div>
 	<div id="body">
-		<g:form action="list" method="GET">
+		<g:form action="destinationResultList" method="GET">
 			<h1>
 				<g:message code="osler.mb.routing.Log.destinationResultList.title" />
 			</h1>

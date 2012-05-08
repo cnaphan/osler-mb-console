@@ -63,9 +63,9 @@ grails.hibernate.cache.queries = true
 // Configuration some elements that pertain to Message broker
 osler.mb.dateFormat="yyyy-MM-dd'T'HH:mm:ss"
 osler.mb.registerEventUrls=[SOAP:"http://fsa4.site.uottawa.ca:7080/soap/registerEvent",
-							HTTP:"http://fsa4.site.uottawa.ca:7080/http/registerEvent"]
-osler.mb.getRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/http/getRoutingRules"
-osler.mb.updateRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/http/updateRoutingRules"
+							REST:"http://fsa4.site.uottawa.ca:7080/rest/registerEvent"]
+osler.mb.getRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/rest/getRoutingRules"
+osler.mb.updateRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/rest/updateRoutingRules"
 osler.mb.registerEventMethod="DIRECT"
 osler.mb.routingRulesTransportMode = "REST"
 osler.mb.soapNamespace = "http://schemas.xmlsoap.org/soap/envelope/"
