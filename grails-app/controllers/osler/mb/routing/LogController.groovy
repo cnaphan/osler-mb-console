@@ -143,7 +143,7 @@ class LogController {
 			}
 		} else if (params.destination) {
 			logList = ResponseLog.findAllByDestinationName(params.destination, params)
-			logCount = ResponseLog.findAllByDestinationName(params.destination)
+			logCount = ResponseLog.countByDestinationName(params.destination)
 		} else {
 			// If we have neither dates, just get everything
 			logList = ResponseLog.list(params)
