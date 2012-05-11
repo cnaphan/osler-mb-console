@@ -8,7 +8,8 @@ class LocalFileXmlTransport extends XmlTransport {
 	private static final log = org.apache.commons.logging.LogFactory.getLog(this)
 	
 	private String getLocalFilePath() {
-		return ServletContextHolder.servletContext.getRealPath('/xml/default-routing-rules.xml.bak')		
+		// Use the default routing rules in development mode
+		return ServletContextHolder.servletContext.getRealPath('/xml/default-routing-rules.xml')		
 	}
 	
 	public groovy.util.slurpersupport.GPathResult getRoutingRules() {

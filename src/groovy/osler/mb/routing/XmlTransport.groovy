@@ -1,14 +1,24 @@
 package osler.mb.routing
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+
 abstract class XmlTransport {
 	
+	/**
+	 * Returns a proper instance of XmlTransport, based on system configuration. This would be best done by the ClassLoader
+	 * construction, but I couldn't be bothered.
+	 */
 	public static XmlTransport getInstance() {
-		def grailsApplication = new Log().domainClass.grailsApplication		
-		switch(grailsApplication.config.osler.mb.routingRulesTransportMode) {
+		//def grailsApplication = new Log().domainClass.grailsApplication		
+		switch(CH.config.osler.mb.routingRulesTransportMode) {
 			case "REST":
 				return new RestXmlTransport()
+			case "MEM":
+				return new MemXmlTransport()
+			case "LOCAL":
+				return new LocalFileXmlTransport() 
 			default:				
-				return new LocalFileXmlTransport()				
+				throw new Exception("Unknown XML transport type: ${CH.config.osler.mb.routingRulesTransportMode}")										
 		}
 	}
 	
@@ -44,7 +54,7 @@ abstract class XmlTransport {
 			def d = destinations[0]
 			def destinationObject = new osler.mb.routing.Destination(name: d.name, description: d.description, url: d.url, accessMethod: d.accessMethod, format: d.format, disabled: d.disabled?.equals("true"))
 			d.receives.event.each { e ->				
-				destinationObject.events << e.name				
+				destinationObject.events << e				
 			}
 			return destinationObject
 		}

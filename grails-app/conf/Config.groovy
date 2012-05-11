@@ -66,8 +66,8 @@ osler.mb.registerEventUrls=[SOAP:"http://fsa4.site.uottawa.ca:7080/soap/register
 							REST:"http://fsa4.site.uottawa.ca:7080/rest/registerEvent"]
 osler.mb.getRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/rest/getRoutingRules"
 osler.mb.updateRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/rest/updateRoutingRules"
-osler.mb.registerEventMethod="DIRECT"
-osler.mb.routingRulesTransportMode = "REST"
+osler.mb.registerEventMethod="DIRECT" // Save events directly in memory by default
+osler.mb.routingRulesTransportMode = "MEM" // Work with an in-memory routing rules table by default
 osler.mb.soapNamespace = "http://schemas.xmlsoap.org/soap/envelope/"
 osler.mb.eventNamespace = "http://patientflowmonitoring/"
 osler.mb.twsNamespace="http://WIN-687RHJV6VUL:19086/teamworks/webservices/OPPOD/WFMCoordinationEventService.tws"
@@ -77,6 +77,7 @@ environments {
         grails.serverURL = "http://localhost:8080/osler-mb"
         grails.logging.jul.usebridge = true
 		osler.mb.registerEventMethod="SOAP"
+		osler.mb.routingRulesTransportMode = "LOCAL" // Work with the default routing rules file in local mode
     }
     production {
         grails.serverURL = "http://fsa4.site.uottawa.ca:8080/osler-mb"
@@ -119,7 +120,9 @@ log4j = {
            'net.sf.ehcache.hibernate',
 		   'org.springframework.core.env.StandardEnvironment']
 		   
-    info file: ['grails.app.controllers']
-			
+    info file: ['grails.app.controllers',
+    			'osler.mb.routing']
+    			
+	//debug file: ['grails.app.controllers.osler.mb.routing.EventController']
 				
 }

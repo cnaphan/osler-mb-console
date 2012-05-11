@@ -72,16 +72,18 @@ class EventController {
 		def events = trans.listEvents(rr, [sort: "name", order: "asc", max: -1]).eventInstanceList
 
 		int changesMade = 0
+		if (log.isDebugEnabled()) { log.debug("Starting loops with ${destinations.size()} destinations and ${events.size()} events") }
 		destinations.each { Destination d ->
 			def existingDestination = rr.destinations.destination.find { it.name == d.name}
 			if (!d.disabled) {
 				// Go through each destination
 				events.each { Event e ->
-					String key = "${d.name}.${e.name}"								
+					String key = "${d.name}.${e.name}".toString()								
 					// And go through each event				
 					if (params.paths.containsKey(key)) {
 						// If the paths parameter contains an entry with the key "destinationId.eventId"
 						if (!d.events.contains(e.name)) {
+							if (log.isDebugEnabled()) { log.debug("Destination ${d.name} does not have event ${e.name} so adding") }
 							// And the event does NOT contain the destination, add it						
 							existingDestination.receives.appendNode { event(e.name) }
 							changesMade++					
@@ -89,6 +91,7 @@ class EventController {
 					} else {
 						// If the paths parameter does not contain the entry (it was unchecked)
 						if (d.events.contains(e.name)) {
+							if (log.isDebugEnabled()) { log.debug("Destination ${d.name} has event ${e.name} so removing") }
 							// And the event had this destination, remove it from the event's destinations
 							def existingEvent = existingDestination.receives.event.find { it == e.name }
 							existingEvent.replaceNode{}
