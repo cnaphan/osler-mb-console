@@ -103,6 +103,8 @@ class ReceiveController {
 		try {
 			def xml = request.XML
 			def errors = [:]
+			
+			
 			// Try to detect errors in the TWS format, determined by Lombardi's WSDL
 			if (this.testEquals(errors, "NoEnvelope", xml.name(), "Envelope")) {
 				this.testEquals(errors, "BadEnvelopeNS", xml.namespaceURI(), grailsApplication.config.osler.mb.soapNamespace)
@@ -115,6 +117,7 @@ class ReceiveController {
 						def e = b.children()[0]
 						this.testEquals(errors, "BadEventNS", e.namespaceURI(), grailsApplication.config.osler.mb.twsNamespace)
 						this.testEquals(errors, "EventWith1stLowerCase}", e.name()[0], e.name().toUpperCase()[0])
+						this.testEquals(errors, "BadSoapAction", request.getHeader("SOAPAction"), "\"${grailsApplication.config.osler.mb.twsNamespace}/${e.name()}\"")
 						// Ensure all the children of the event have NO namespace
 						e.children().each {
 							this.testEquals(errors, "BadParameterNS-${it.name()}", it.namespaceURI(), grailsApplication.config.osler.mb.twsNamespace)

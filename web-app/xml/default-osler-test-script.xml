@@ -37,7 +37,7 @@
   </event>
   <event name="consultationStarted1">
     <patientId>Pa123456</patientId>
-    <providerId>Pro654321</providerId>
+    <physicianId>Phy777777</physicianId>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
   <event name="orderExecutionCompleted">

@@ -60,12 +60,12 @@ class DestinationController {
 		// Add the event to the file
 		rr.destinations.appendNode { 
 			destination () {
-				disabled(destinationInstance.disabled)				
 				name(destinationInstance.name)
 				description(destinationInstance.description)
-				url(destinationInstance.url)
+				url(destinationInstance.url.trim())
 				accessMethod(destinationInstance.accessMethod)
 				format(destinationInstance.format)
+				disabled(destinationInstance.disabled)				
 				receives{}	
 			}
 		}
@@ -149,12 +149,12 @@ class DestinationController {
         }
 
 		def existingDestination = rr.destinations.destination.find { it.name == params.id }
-		existingDestination.disabled.replaceNode{ disabled(destinationInstance.disabled) }
 		existingDestination.name.replaceNode{ name(destinationInstance.name) }
 		existingDestination.description.replaceNode{ description(destinationInstance.description) }
-		existingDestination.url.replaceNode{ url(destinationInstance.url) }
+		existingDestination.url.replaceNode{ url(destinationInstance.url.trim()) }
 		existingDestination.accessMethod.replaceNode{ accessMethod(destinationInstance.accessMethod) }
 		existingDestination.format.replaceNode{ format(destinationInstance.format) }
+		existingDestination.disabled.replaceNode{ disabled(destinationInstance.disabled) }
 		
 		if (!trans.updateRoutingRules(rr)) {
 			destinationInstance.errors.reject("osler.mb.routing.event.failedToUpdate")

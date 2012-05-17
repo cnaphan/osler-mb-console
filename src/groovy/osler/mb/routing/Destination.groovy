@@ -15,7 +15,7 @@ class Destination implements Comparable  {
     static constraints = {
 		name maxSize: 50, blank: false, validator: { if (it?.contains(" ")) return ["has.whitespace"] }
 		description maxSize: 500, nullable: true, blank: true
-		accessMethod inList: ["SOAP", "REST", "MQ", "JMS"], validator: checkMethod
+		accessMethod inList: ["SOAP", "REST", "JMS", "MQ", "PubSub"], validator: checkMethod
 		format maxSize: 25, inList: ["PFM", "TWS", "WBE"]
 		url nullable: true, maxSize: 500	
     }
@@ -44,8 +44,8 @@ class Destination implements Comparable  {
 	 * A validator used to catch inconsistencies in the access method versus other parameters
 	 */
 	static checkMethod = { val, obj ->
-		if (val in ["MQ", "JMS"] && obj.url?.size() > 0) {
-			return ['osler.mb.routing.Destination.urlWithQueue.message'] 
+		if (val in ["PubSub"] && obj.url?.size() > 0) {
+			return ['osler.mb.routing.Destination.urlWithPubSub.message'] 
 		}
 	}
 	

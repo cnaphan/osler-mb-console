@@ -450,7 +450,7 @@ class TesterController {
 	
 	/**
 	 * Sends an XML message via SOAP. The Message Broker host name is taken from the application configuration.
-	 * @param soapMethod The name of the method that appears in the SOAP header
+	 * @param soapMethod The name of the method that appears in the HTTP header. It should be the event name.
 	 * @param soapBody The SOAP payload
 	 * @return The HTTP response code. 200 if successful, otherwise 400 or 500.
 	 * Note: Message Broker is very picky about the SOAP namespace - anything else is an error
@@ -460,12 +460,12 @@ class TesterController {
 		// Message broker and destinations are super picky about the SOAP namespace
 		def soapNamespace = grailsApplication.config.osler.mb.soapNamespace
 		def bodyNamespace = grailsApplication.config.osler.mb.eventNamespace
-		soapBody = soapBody.replace("<${soapMethod}", "<ns1:${soapMethod}").replace("</${soapMethod}>", "</ns1:${soapMethod}>")		
+		soapBody = soapBody.replace("<${soapMethod}", "<pat:${soapMethod}").replace("</${soapMethod}>", "</pat:${soapMethod}>")		
 		// Generate the SOAP message
-		def soapRequest = """<soap:Envelope xmlns:soap="${soapNamespace}" xmlns:ns1="${bodyNamespace}"><soap:Header/><soap:Body>${soapBody}</soap:Body></soap:Envelope>"""
+		def soapRequest = "<soapenv:Envelope xmlns:soapenv=\"${soapNamespace}\" xmlns:pat=\"${bodyNamespace}\"><soapenv:Header/><soapenv:Body>${soapBody}</soapenv:Body></soapenv:Envelope>"
 		String url = grailsApplication.config.osler.mb.registerEventUrls["SOAP"]
-		if (log.isDebugEnabled()) { log.debug("Registering event ${soapMethod} via SOAP using '${url}': ${soapRequest}") }
-		
+		if (log.isDebugEnabled()) { log.debug("Registering event ${soapMethod} via SOAP using '${url}': ${soapRequest}") }		
+		 
 		def soapUrl = new URL(url)
 
 		// Connect to the host and send the message
@@ -473,6 +473,8 @@ class TesterController {
 		connection.setRequestMethod("POST" )
 		connection.setRequestProperty("Content-Length", String.valueOf( soapRequest.size() ) );
 		connection.setRequestProperty("Content-Type" , "application/xml" )
+		connection.setRequestProperty("Accept" , "*/*" )
+		connection.setRequestProperty("Host" , request["Host"] )
 		// Required by some destinations for processing
 		connection.setRequestProperty("SOAPAction" , soapMethod)
 		connection.doOutput = true

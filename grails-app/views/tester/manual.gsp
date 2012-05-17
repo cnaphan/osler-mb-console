@@ -49,7 +49,7 @@
 							<td>${e.method}</td>
 							<td><textarea class="xml-body" readonly="readonly">${e.body}</textarea></td>
 							<td style="text-align: center; vertical-align: middle;" id='send${i}'>
-							 	<g:formRemote name="sendForm.${i}" url="[controller: 'tester', action: 'send']" method="POST" update="${[success: 'send'+i, failure: 'send-failure'] }" onFailure="setErrorVisible(true);">
+							 	<g:formRemote name="sendForm.${i}" url="[controller: 'tester', action: 'send']" method="POST" update="${[success: 'send'+i, failure: 'send-failure'] }" onFailure="setErrorVisible(true);" onSuccess="setErrorVisible(false);">
 							 		<g:hiddenField name="method" value="${e.method}"/>
 							 		<g:hiddenField name="body" value="${e.body}"/>
 							 		<g:submitButton name="send" value="${message(code:'osler.mb.tester.manual.send.label')}"/>
