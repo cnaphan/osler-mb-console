@@ -62,12 +62,18 @@ grails.hibernate.cache.queries = true
 
 // Configuration some elements that pertain to Message broker
 osler.mb.dateFormat="yyyy-MM-dd'T'HH:mm:ss"
+
+// Register Event configuration
 osler.mb.registerEventUrls=[SOAP:"http://fsa4.site.uottawa.ca:7080/soap/registerEvent",
 							REST:"http://fsa4.site.uottawa.ca:7080/rest/registerEvent"]
+osler.mb.registerEventMethod="DIRECT" // DIRECT or SOAP
+							
+// Routing Rules configuration			
 osler.mb.getRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/rest/getRoutingRules"
 osler.mb.updateRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/rest/updateRoutingRules"
-osler.mb.registerEventMethod="DIRECT" // Save events directly in memory by default
-osler.mb.routingRulesTransportMode = "MEM" // Work with an in-memory routing rules table by default
+osler.mb.routingRulesTransportMode = "MEM" // MEM, LOCAL or REST
+
+// Namespaces used by the console
 osler.mb.soapNamespace = "http://schemas.xmlsoap.org/soap/envelope/"
 osler.mb.eventNamespace = "http://patientflowmonitoring/"
 osler.mb.twsNamespace="http://WIN-687RHJV6VUL:19086/teamworks/webservices/OPPOD/WFMCoordinationEventService.tws"

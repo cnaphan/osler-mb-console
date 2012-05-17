@@ -185,7 +185,8 @@ class TesterController {
 	}
 	
 	
-	def integrationTest () {		
+	def integrationTest () {	
+		[xmlResources: ["small-integration-test-script.xml"]]
 	}
 	
 	def runIntegrationTest () {

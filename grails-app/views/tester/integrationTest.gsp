@@ -15,6 +15,12 @@
 					<li><a class="" href="${createLink(action: 'integrationTest')}"><g:message code="osler.mb.tester.integrationTest.label"/></a></li>
 				</ul>
 			</div>
+			<div style="float: right; width: 16em; margin: 0.5em; padding: 0.5em; border: 1px solid #DDD;">
+				<h3>XML Resources</h3>
+				<ul style="list-style-position: inside;">
+					<g:each in="${xmlResources}" var="x"><li><a href="${resource(dir: 'xml', file: x)}">${x}</a></li></g:each>
+				</ul>
+			</div>			
 			<div id="body" class="narrow">
 				<h1><g:message code="osler.mb.tester.integrationTest.label" /></h1>
 				<g:messages/>
