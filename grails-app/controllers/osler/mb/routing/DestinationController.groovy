@@ -134,8 +134,16 @@ class DestinationController {
 			redirect(uri: "/")
 			return
 		}
-
-        if (params.id.equals(params.name)) { // If the name was changed
+		
+        def destinationInstance = trans.getDestinationByName(rr, params)
+        
+        if (!destinationInstance) {
+            flash.error = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Destination.label', default: 'Destination'), params.id])
+            redirect(action: "list")
+            return
+        }
+        
+        if (!params.id.equals(params.name)) { // If the name was changed
         	// Check if there's an element with the given name        	
         	if (trans.getDestinationByName(rr, [id: params.name])) {
         		// If so, give an error and go back
@@ -143,16 +151,8 @@ class DestinationController {
         		render(view: "edit", model: [destinationInstance: destinationInstance])
         		return
         	}                   	
-        }
+        }		
 
-
-        def destinationInstance = trans.getDestinationByName(rr, params)
-		
-        if (!destinationInstance) {
-            flash.error = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Destination.label', default: 'Destination'), params.id])
-            redirect(action: "list")
-            return
-        }
 		destinationInstance.applyProperties(params)		
         
         if (!destinationInstance.validate()) {

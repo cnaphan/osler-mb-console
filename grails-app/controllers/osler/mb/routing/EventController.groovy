@@ -201,7 +201,13 @@ class EventController {
 		}
         def eventInstance = trans.getEventByName(rr, params)
 		
-        if (params.id.equals(params.name)) { // If the name was changed
+        if (!eventInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'event.label', default: 'Event'), params.id])
+            redirect(action: "list")
+            return
+        }
+
+       if (!params.id.equals(params.name)) { // If the name was changed
         	// Check if there's an element with the given name        	
         	if (trans.getEventByName(rr, [id: params.name])) {
         		// If so, give an error and go back
@@ -211,12 +217,6 @@ class EventController {
         	}                   	
         }
         
-        if (!eventInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'event.label', default: 'Event'), params.id])
-            redirect(action: "list")
-            return
-        }
-
         eventInstance.applyProperties(params)
 
         if (!eventInstance.validate()) {

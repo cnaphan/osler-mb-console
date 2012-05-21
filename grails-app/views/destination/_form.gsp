@@ -4,7 +4,7 @@
 	<label for="name">
 		<g:message code="osler.mb.routing.Destination.name.label" default="Name" />
 		<span class="required-indicator">*</span>
-	</label>
+	</label>	
 	<g:textField name="name" maxlength="50" required="" value="${destinationInstance?.name}"/>
 </div>
 <div class="fieldcontain ${hasErrors(bean: destinationInstance, field: 'description', 'error')}">

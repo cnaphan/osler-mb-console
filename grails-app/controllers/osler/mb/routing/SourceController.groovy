@@ -130,8 +130,14 @@ class SourceController {
 			return
 		}
         def sourceInstance = trans.getSourceByName(rr, params)
+
+        if (!sourceInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Source.label', default: 'Source'), params.id])
+            redirect(action: "list")
+            return
+        }
 		
-        if (params.id.equals(params.name)) { // If the name was changed
+        if (!params.id.equals(params.name)) { // If the name was changed
         	// Check if there's an element with the given name        	
         	if (trans.getSourceByName(rr, [id: params.name])) {
         		// If so, give an error and go back
@@ -141,11 +147,6 @@ class SourceController {
         	}                   	
         }
         
-        if (!sourceInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Source.label', default: 'Source'), params.id])
-            redirect(action: "list")
-            return
-        }
 		sourceInstance.applyProperties(params)		
         
         if (!sourceInstance.validate()) {

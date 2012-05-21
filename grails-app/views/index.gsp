@@ -58,7 +58,7 @@
 					<div>
 						<g:link controller="tester" action="index">Run Script</g:link> |
 						<g:link controller="tester" action="rtlsSimulator"><g:message code="osler.mb.tester.rtlsSimulator.label"/></g:link> | 
-						<g:link controller="tester" action="integrationTest"><g:message code="osler.mb.tester.integrationTest.label"/></g:link>
+						<g:link controller="tester" action="integrationTest"><g:message code="osler.mb.tester.integrationTest.label"/></g:link>						
 					</div>
 				</li>
 				<li id="log-li">
