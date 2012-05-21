@@ -78,8 +78,8 @@ The formats can be descibed as follows:
 Tomcat Administration
 =====================
 * Administrator
-* Name: 		oslermbadmin
-* Password: 	oslermbadmin
+	* Name: 		oslermbadmin
+	* Password: 	oslermbadmin
 
 MySQL Administration
 ====================
