@@ -60,6 +60,12 @@ The console interacts with the broker via the classes XmlTransport (abstract sup
 
 Routing Rules Structure
 -----------------------
+	<oslerRoutingRules>
+		<events></events>
+		<destination></destinations>
+		<sources></sources>
+	</oslerRoutingRules>
+
 The routing rules are composed of three parts: events, destinations and sources. Events and sources are pretty straightforward. Destinations are more complex. Destinations have a method and a format. The method determines what protocol or transport mechanism the events will be delivered by. SOAP is standard, REST works and JMS almost works. The format determines what format the message will be transformed to, before it is delivered to the destination. PFM format is standard and is used internally in the broker, but WBE and TWS are also supported. Adding new methods involves changes to the message flow in the broker. Adding new formats involves creating a new PFM-*.xls file and adding it to the broker. Destinations also contain a list of events, which they receive. Each event should correspondent to an event listed in the root events section.
 
 The formats can be descibed as follows:
