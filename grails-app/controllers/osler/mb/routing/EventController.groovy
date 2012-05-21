@@ -125,8 +125,8 @@ class EventController {
 		def rr = trans.getRoutingRules()
 		
 		// Check if any event with this name exists, if so give an error
-		if (rr.events.event.findAll{ it == eventInstance.name }.size() > 0) {
-			eventInstance.errors.reject("osler.mb.routing.event.not.unique", eventInstance.name)
+		if (rr.events.event.findAll{ it.name == eventInstance.name }.size() > 0) {
+        		eventInstance.errors.rejectValue("name","osler.mb.routing.Event.not.unique")
 			render(view: "create", model: [eventInstance: eventInstance])
 			return
 		}
@@ -201,6 +201,16 @@ class EventController {
 		}
         def eventInstance = trans.getEventByName(rr, params)
 		
+        if (params.id.equals(params.name)) { // If the name was changed
+        	// Check if there's an element with the given name        	
+        	if (trans.getEventByName(rr, [id: params.name])) {
+        		// If so, give an error and go back
+        		eventInstance.errors.rejectValue("name","osler.mb.routing.Event.not.unique")
+        		render(view: "edit", model: [eventInstance: eventInstance])
+        		return
+        	}                   	
+        }
+        
         if (!eventInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'event.label', default: 'Event'), params.id])
             redirect(action: "list")

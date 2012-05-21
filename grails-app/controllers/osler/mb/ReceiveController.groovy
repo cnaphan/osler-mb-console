@@ -38,6 +38,7 @@ class ReceiveController {
 					if (this.testEquals(errors, "BadBodyChildrenNum", b.children().size(), 1)) {
 						def e = b.children()[0]
 						this.testEquals(errors, "BadEventNS", e.namespaceURI(), grailsApplication.config.osler.mb.eventNamespace)
+						this.testEquals(errors, "EventWith1stUpperCase", e.name()[0], e.name().toLowerCase()[0])
 						// Ensure all the children of the event have NO namespace
 						e.children().each {
 							this.testEquals(errors, "BadParameterNS-${it.name()}", it.namespaceURI(), "")
@@ -72,11 +73,15 @@ class ReceiveController {
 	def rest () {
 		try {
 			def xml = request.XML
-			def errors = [:]
+			def errors = [:]			
 
 			// Try to detect errors in the canonical REST format
 			this.testEquals(errors, "BadEventNS", xml.namespaceURI(), grailsApplication.config.osler.mb.eventNamespace)
-			xml.children().each { this.testEquals(errors, "BadEvent${it.name()}NS", it.namespaceURI(), "") }
+			this.testEquals(errors, "EventWith1stUpperCase", xml.name()[0], xml.name().toLowerCase()[0])
+			xml.children().each { 
+				this.testEquals(errors, "BadEvent${it.name()}NS", it.namespaceURI(), "")
+				this.testEquals(errors, "ParameterWith1stUpperCase-${it.name()}", it.name()[0], it.name().toLowerCase()[0])				
+			}
 			if (this.testEquals(errors, "LastParameterNotTimestamp", xml.children()[-1].name(), "timestamp")) {
 				this.testDateFormat(errors,"TimestampFormat", xml.children()[-1].text())
 			}
@@ -148,6 +153,44 @@ class ReceiveController {
 		}
 
 	}
+	
+	/**
+	 * Receives a message from the JMS queue, sent by REST (to avoid having to read directly from JMS - a pain)
+	 */
+	def jms () {
+		try {
+			def xml = request.XML
+			def errors = [:]
+			
+			def eventName = xml?.name() ?: "Unknown"		
+			this.testEquals(errors, "BadEventNS", xml.namespaceURI(), grailsApplication.config.osler.mb.eventNamespace)
+			xml.children().each { 
+				this.testEquals(errors, "BadEvent${it.name()}NS", it.namespaceURI(), "")
+				this.testEquals(errors, "ParameterWith1stUpperCase-${it.name()}", it.name()[0], it.name().toLowerCase()[0])				
+			}
+			if (this.testEquals(errors, "LastParameterNotTimestamp", xml.children()[-1].name(), "timestamp")) {
+				this.testDateFormat(errors,"TimestampFormat", xml.children()[-1].text())
+			}
+			
+			if (!errors) {
+				log.info("JMS event ${ eventName } received from ${request.getRemoteHost()}")
+				render(status: 200) // Respond with 200 Ack
+			} else {
+				log.warn("JMS event received from ${request.getRemoteHost()} with the following errors: ${errors as XML}")
+				render(text: errors as XML, status: 500) // Respond with 500 Internal Error
+			}
+			new DestinationResult(logTime: new Date(), 
+				event: eventName,
+				method: "JMS",
+				remoteHost: request.getRemoteHost(), 
+				errorXml: errors ? (errors as XML).toString() : null).save(failOnError: true, flush: true)
+			
+		} catch (Exception e) {
+			log.error("Failed in JMS event handler: ${e.getMessage()}")
+			render (text: e.getMessage(), status: 500) // Respond with 500 server error
+		}
+		
+	}
 
 	private boolean testEquals (def errors, String errorKey, def actual, def expected) {
 		if (actual != expected) {
@@ -194,7 +237,6 @@ class ReceiveController {
 			return false
 		}
 	}
-
 
 
 }

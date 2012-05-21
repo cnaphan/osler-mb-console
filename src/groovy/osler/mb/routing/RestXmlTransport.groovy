@@ -21,7 +21,7 @@ class RestXmlTransport extends XmlTransport {
 	
 	private final static String NEXT_TIME_KEY = "NextTime"
 	private final static Integer USE_LOCAL_FOR_MINUTES = 5
-	private final static String PATH_TO_LATEST_COPY = "/xml/latest-routing-rules.xml"
+	private final static String PATH_TO_LATEST_COPY = "/xml/default-routing-rules.xml"
 		
 	public groovy.util.slurpersupport.GPathResult getRoutingRules() {				
 		def grailsApplication = new Log().domainClass.grailsApplication		
@@ -32,6 +32,7 @@ class RestXmlTransport extends XmlTransport {
 			SCH.servletContext.setAttribute(NEXT_TIME_KEY, c.getTime())
 			log.debug("Fetching routing rules from remote service")
 			return new HTTPBuilder(grailsApplication.config.osler.mb.getRoutingRulesUrl).request(Method.GET,ContentType.XML) {}
+						
 		} else {
 			log.debug("Fetching routing rules from local file")
 			return new XmlSlurper(true, false).parse(SCH.servletContext.getRealPath(PATH_TO_LATEST_COPY))
@@ -51,7 +52,8 @@ class RestXmlTransport extends XmlTransport {
 		} catch (Exception e) {
 			log.debug("Failed to write latest copy of routing rules to web app but continuing... Message: ${e.getMessage()}")
 		}
-		new HTTPBuilder(grailsApplication.config.osler.mb.updateRoutingRulesUrl).post (body: result) { resp ->
+		
+		new HTTPBuilder(grailsApplication.config.osler.mb.updateRoutingRulesUrl).post (body: eventXml) { resp ->
 			if (resp.statusLine.statusCode == 200) {
 				log.debug("Sent updated routing rules. Responded with status code ${resp.statusLine.statusCode}.")
 				return true
@@ -60,5 +62,6 @@ class RestXmlTransport extends XmlTransport {
 				return false
 			}
 		}
+		
 	}
 }

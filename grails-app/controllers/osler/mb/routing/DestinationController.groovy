@@ -51,8 +51,8 @@ class DestinationController {
 		}
 		
 		// Check if any event with this name exists, if so give an error
-		if (rr.destinations.destination.findAll{ it == destinationInstance.name }.size() > 0) {
-			destinationInstance.errors.reject("osler.mb.routing.Destination.not.unique", destinationInstance.name)
+		if (rr.destinations.destination.findAll{ it.name == destinationInstance.name }.size() > 0) {
+        	destinationInstance.errors.rejectValue("name","osler.mb.routing.Destination.not.unique")
 			render(view: "create", model: [destinationInstance: destinationInstance])
 			return
 		}
@@ -134,7 +134,19 @@ class DestinationController {
 			redirect(uri: "/")
 			return
 		}
-        def destinationInstance = trans.getDestinationByName(rr, params)		
+
+        if (params.id.equals(params.name)) { // If the name was changed
+        	// Check if there's an element with the given name        	
+        	if (trans.getDestinationByName(rr, [id: params.name])) {
+        		// If so, give an error and go back
+        		destinationInstance.errors.rejectValue("name","osler.mb.routing.Destination.not.unique")
+        		render(view: "edit", model: [destinationInstance: destinationInstance])
+        		return
+        	}                   	
+        }
+
+
+        def destinationInstance = trans.getDestinationByName(rr, params)
 		
         if (!destinationInstance) {
             flash.error = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Destination.label', default: 'Destination'), params.id])

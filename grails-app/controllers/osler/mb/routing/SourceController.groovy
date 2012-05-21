@@ -49,8 +49,8 @@ class SourceController {
 		}
 		
 		// Check if any event with this name exists, if so give an error
-		if (rr.sources.source.findAll{ it == sourceInstance.name }.size() > 0) {
-			sourceInstance.errors.reject("osler.mb.routing.Source.not.unique", sourceInstance.name)
+		if (rr.sources.source.findAll{ it.name == sourceInstance.name }.size() > 0) {
+        		sourceInstance.errors.rejectValue("name","osler.mb.routing.Source.not.unique")
 			render(view: "create", model: [sourceInstance: sourceInstance])
 			return
 		}
@@ -131,6 +131,16 @@ class SourceController {
 		}
         def sourceInstance = trans.getSourceByName(rr, params)
 		
+        if (params.id.equals(params.name)) { // If the name was changed
+        	// Check if there's an element with the given name        	
+        	if (trans.getSourceByName(rr, [id: params.name])) {
+        		// If so, give an error and go back
+        		sourceInstance.errors.rejectValue("name","osler.mb.routing.Source.not.unique")
+         		render(view: "edit", model: [sourceInstance: sourceInstance])
+        		return
+        	}                   	
+        }
+        
         if (!sourceInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'osler.mb.routing.Source.label', default: 'Source'), params.id])
             redirect(action: "list")

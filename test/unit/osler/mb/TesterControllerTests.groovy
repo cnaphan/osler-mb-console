@@ -55,23 +55,7 @@ class TesterControllerTests {
 		assert controller.response.contentAsString.contains("Sent")		
 		assert Log.count() == 1	
 		assert Log.get(1).source == "TEST-RTLS"
-	}
-
-	void testRunLocationTest() {
-		params.locationEventName = "physicianInCCU"
-		params.locationId = "CCU12"
-		params.locationPersonType = "patientId"
-		params.locationPersonId = "Pa123456"
-		assert Log.count() == 0
-		controller.runLocationTest()
-		assert Log.count() == 1
-		def l = Log.get(1)
-		
-		assert l.event == "physicianInCCU"
-		assert l.source == "TEST-RTLS"
-		assert l.logTime.dateString == new Date().dateString
-		assert l.inputMethod == "TEST-SOAP"
-	}
+	}	
 		
 	void testExtractSuffix() {
 		assert controller.extractSuffix("<event sourceSuffix='RTLS'>") == "-RTLS"

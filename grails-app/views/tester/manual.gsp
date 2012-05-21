@@ -22,12 +22,7 @@
 	</head>
 	<body>
 		<div id="page-body" role="main">
-			<div class="nav" role="navigation">
-				<ul>
-					<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-					
-				</ul>
-			</div>
+			<g:render template="nav"/>
 			<div id="body">
 				<g:messages/>
 				<h1><g:message code="osler.mb.tester.manual.title" /></h1>

@@ -142,46 +142,21 @@ class TesterController {
 		}
 	}
 	
-	def locationTest() {
-		[eventName: params.eventName ? params.eventName : "patientInCCU",
-		 personType: params.personType ? params.personType : "patientId",
-		 personId:params.personId ? params.personId : "Pa123456",
-		 locationId: params.locationId ? params.locationId : "CCU12"]
+	def rtlsSimulator() {
+		[people: [[id: "patientId", name: "Patient", value: "Pa123456", icon: "patient_48.png"], 
+				  [id: "physicianId", name: "Physician", value: "Phy777777", icon: "doctor_48.png"],
+				  [id: "providerId", name: "Provider", value: "Pro666666", icon: "nurse_female_dark_48.png"]
+				  ],
+		 locations: [
+		 	[id: "CCU", value: "Assessment12"],
+		 	[id: "ED", value: "Bed207"]
+		 	]
+		 ]
 	}
 	
-	def runLocationTest() {
-		// Check the parameters to make sure we don't input something bad
-		if (!params.eventName || !params.locationId || params.eventName.contains(" ") || !params.personId) { 
-			flash.error = "Bad parameters. All are required."
-			redirect(action: "locationTest")
-			return
-		}
-		
-		// Assemble the XML to send to message broker
-		String dateFormat = grailsApplication.config.osler.mb.dateFormat	
-		String dateValue = new Date().format(dateFormat)	
-		def bodyWriter = new StringWriter()
-		def xml = new groovy.xml.MarkupBuilder(bodyWriter)		
-		xml."${params.eventName}" (sourceSuffix: "RTLS") {
-			"${params.personType}"(params.personId)
-			locationId(params.locationId)
-			timestamp (dateValue)
-		}	
-		String body = bodyWriter.toString()			
-		Integer responseStatusCode = this.sendMessage(params.eventName, body)
-		
-		// Report back to the user
-		if (responseStatusCode < 400) {		
-			log.info("${params.eventName} sent using the location tester")
-			flash.message = "'${params.eventName}' was successfully sent to Message Broker. (${dateValue})"
-		} else {
-			log.error("${params.eventName} failed to send with location tester, returning status ${responseStatusCode}")
-			flash.error = "'${params.eventName}' was not sent to the Message Broker due to communications issues. Response code was ${responseStatusCode}. (${dateValue})"
-		}
-		redirect(action:"locationTest", model: [eventName: params.eventName,
-											personType: params.personType,
-											personId: params.personId,
-											locationId: params.locationId])
+	def runRtlsEvent() {
+		this.sendRtlsEvent(params)		
+		redirect(action:"rtlsSimulator")
 	}
 	
 	
@@ -245,8 +220,13 @@ class TesterController {
 		
 		// Confirm the destinations exist and they are properly configured
 		def eventCount = rr.events.event.size()
-		// Initialize a list of receivers. Add more to test more receivers.
-		def dests = ["TestSoap", "TestRest", "TestTws"]
+		// Initialize a list of receivers. Uses any receiver that is named "Test*"
+		def dests = []
+		trans.listDestinations(rr, [:]).destinationInstanceList.each {
+			if (it.name.toLowerCase().startsWith("test")) {
+				dests << it.name
+			}
+		}
 		dests.each { destName ->
 			def testDest = rr.destinations.destination.find{ it.name.text().toUpperCase() == destName.toUpperCase() }
 			if (testDest) {
@@ -555,6 +535,40 @@ class TesterController {
 		} else {
 			return ""
 		}		
+	}
+	
+	/**
+	 * Sends an RTLS event, given the minimum necessary parameters. Used by ad hoc location tests and RTLS simulations.
+	 * @return True if success, false if failure
+	 */
+	private boolean sendRtlsEvent(def params) {
+		if (!params.eventName || !params.locationId || params.eventName.contains(" ") || !params.personId || !params.personType) { 
+			flash.error = "Bad parameters. All are required."			
+			return
+		}
+		// Assemble the XML to send to message broker
+		String dateFormat = grailsApplication.config.osler.mb.dateFormat	
+		String dateValue = new Date().format(dateFormat)	
+		def bodyWriter = new StringWriter()
+		def xml = new groovy.xml.MarkupBuilder(bodyWriter)		
+		xml."${params.eventName}" (sourceSuffix: "RTLS") {
+			"${params.personType}"(params.personId)
+			locationId(params.locationId)
+			timestamp (dateValue)
+		}	
+		String body = bodyWriter.toString()			
+		Integer responseStatusCode = this.sendMessage(params.eventName, body)
+		
+		// Report back to the user
+		if (responseStatusCode < 400) {		
+			log.debug("${params.eventName} sent using the location tester")
+			flash.message = "'${params.eventName}' was successfully sent to Message Broker. (${dateValue})"
+			return true
+		} else {
+			log.error("${params.eventName} failed to send with location tester, returning status ${responseStatusCode}")
+			flash.error = "'${params.eventName}' was not sent to the Message Broker due to communications issues. Response code was ${responseStatusCode}. (${dateValue})"
+			return false
+		}
 	}
 	
 }

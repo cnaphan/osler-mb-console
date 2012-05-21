@@ -34,6 +34,7 @@
 			<ul>
 				<li>Console Version: ${grailsApplication.metadata['app.version'] }</li>
 				<li>Environment: ${grails.util.GrailsUtil.environment}</li>
+				<li>Broker URL: ${grailsApplication.config.osler.mb.brokerUrl}</li>
 				<li>Rules Transmission: ${grailsApplication.config.osler.mb.routingRulesTransportMode }</li>
 				<li>Event Tranmission: ${grailsApplication.config.osler.mb.registerEventMethod }</li>
 				<li>Schematic: <a href="https://docs.google.com/drawings/d/1F_-LBLroqUFj0bD7KDeTxOrZZOn2vx6fE-7uNQt0Ke8/edit">On Google Docs</a>
@@ -56,7 +57,7 @@
 					<h2><g:link controller="tester" action="index">Inject Test Events</g:link></h2>Use this tool to inject test events from a script into Message Broker.
 					<div>
 						<g:link controller="tester" action="index">Run Script</g:link> |
-						<g:link controller="tester" action="locationTest"><g:message code="osler.mb.tester.locationTest.label"/></g:link> | 
+						<g:link controller="tester" action="rtlsSimulator"><g:message code="osler.mb.tester.rtlsSimulator.label"/></g:link> | 
 						<g:link controller="tester" action="integrationTest"><g:message code="osler.mb.tester.integrationTest.label"/></g:link>
 					</div>
 				</li>

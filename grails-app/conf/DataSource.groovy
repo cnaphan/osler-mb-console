@@ -36,9 +36,10 @@ environments {
 	production {
 		dataSource {
 			dbCreate = "update"			
-			url = "jdbc:mysql://fsa4.site.uottawa.ca/osler-mb-prod?useUnicode=yes&characterEncoding=UTF-8"
+			url = "jdbc:mysql://137.122.88.139/osler_mb_prod?useUnicode=yes&characterEncoding=UTF-8"
 			username = "oslermbuser"
 			password = "oslermbuser"
+			
 			properties {
 				// Borrowed from http://grails.1312388.n4.nabble.com/Getting-exceptions-jdbc4-CommunicationsException-The-last-packet-successfully-received-from-the-servl-td2309458.html
 				// to solve socket exception problem when MySQL is running > 8 hours idle

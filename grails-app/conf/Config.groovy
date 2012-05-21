@@ -62,15 +62,16 @@ grails.hibernate.cache.queries = true
 
 // Configuration some elements that pertain to Message broker
 osler.mb.dateFormat="yyyy-MM-dd'T'HH:mm:ss"
+osler.mb.brokerUrl="137.122.88.139"
 
 // Register Event configuration
-osler.mb.registerEventUrls=[SOAP:"http://fsa4.site.uottawa.ca:7080/soap/registerEvent",
-							REST:"http://fsa4.site.uottawa.ca:7080/rest/registerEvent"]
+osler.mb.registerEventUrls=[SOAP:"http://${osler.mb.brokerUrl}:7080/soap/registerEvent",
+							REST:"http://${osler.mb.brokerUrl}:7080/rest/registerEvent"]
 osler.mb.registerEventMethod="DIRECT" // DIRECT or SOAP
 							
 // Routing Rules configuration			
-osler.mb.getRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/rest/getRoutingRules"
-osler.mb.updateRoutingRulesUrl="http://fsa4.site.uottawa.ca:7080/rest/updateRoutingRules"
+osler.mb.getRoutingRulesUrl="http://${osler.mb.brokerUrl}:7080/rest/getRoutingRules"
+osler.mb.updateRoutingRulesUrl="http://${osler.mb.brokerUrl}:7080/rest/updateRoutingRules"
 osler.mb.routingRulesTransportMode = "MEM" // MEM, LOCAL or REST
 
 // Namespaces used by the console
@@ -86,7 +87,7 @@ environments {
 		osler.mb.routingRulesTransportMode = "LOCAL" // Work with the default routing rules file in local mode
     }
     production {
-        grails.serverURL = "http://fsa4.site.uottawa.ca:8080/osler-mb"
+        grails.serverURL = "http://137.122.88.139:8080/osler-mb"
         grails.logging.jul.usebridge = false
 		osler.mb.registerEventMethod="SOAP"
 		osler.mb.routingRulesTransportMode = "REST"
