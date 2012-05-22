@@ -37,7 +37,7 @@ class ReceiveController {
 					// Ensure the event's namespace is Shirley's
 					if (this.testEquals(errors, "BadBodyChildrenNum", b.children().size(), 1)) {
 						def e = b.children()[0]
-						this.testEquals(errors, "BadEventNS", e.namespaceURI(), grailsApplication.config.osler.mb.eventNamespace)
+						this.testEquals(errors, "BadEventNS", e.namespaceURI(), grailsApplication.config.osler.mb.pfmNamespace)
 						this.testEquals(errors, "EventWith1stUpperCase", e.name()[0], e.name().toLowerCase()[0])
 						// Ensure all the children of the event have NO namespace
 						e.children().each {
@@ -76,11 +76,13 @@ class ReceiveController {
 			def errors = [:]			
 
 			// Try to detect errors in the canonical REST format
-			this.testEquals(errors, "BadEventNS", xml.namespaceURI(), grailsApplication.config.osler.mb.eventNamespace)
-			this.testEquals(errors, "EventWith1stUpperCase", xml.name()[0], xml.name().toLowerCase()[0])
+			this.testEquals(errors, "BadEventNS", xml.namespaceURI(), grailsApplication.config.osler.mb.twsNamespace)
+			this.testEquals(errors, "EventWith1stLowerCase", xml.name()[0], xml.name().toUpperCase()[0])
 			xml.children().each { 
-				this.testEquals(errors, "BadEvent${it.name()}NS", it.namespaceURI(), "")
-				this.testEquals(errors, "ParameterWith1stUpperCase-${it.name()}", it.name()[0], it.name().toLowerCase()[0])				
+				this.testEquals(errors, "BadEventNS-${it.name()}", it.namespaceURI(), grailsApplication.config.osler.mb.twsNamespace)
+				if (it.name() != "timestamp") {
+					this.testEquals(errors, "ParameterWith1stLowerCase-${it.name()}", it.name()[0], it.name().toUpperCase()[0])
+				}
 			}
 			if (this.testEquals(errors, "LastParameterNotTimestamp", xml.children()[-1].name(), "timestamp")) {
 				this.testDateFormat(errors,"TimestampFormat", xml.children()[-1].text())
@@ -113,10 +115,8 @@ class ReceiveController {
 			// Try to detect errors in the TWS format, determined by Lombardi's WSDL
 			if (this.testEquals(errors, "NoEnvelope", xml.name(), "Envelope")) {
 				this.testEquals(errors, "BadEnvelopeNS", xml.namespaceURI(), grailsApplication.config.osler.mb.soapNamespace)
-				this.testEquals(errors, "NoHeader", xml.children()[0].name(), "Header")
-				this.testEquals(errors, "BadHeaderNS", xml.children()[0].namespaceURI(), grailsApplication.config.osler.mb.soapNamespace)
-				if (this.testEquals(errors, "NoBody", xml.children()[1].name(), "Body")) {
-					def b = xml.children()[1]
+				if (this.testEquals(errors, "NoBody", xml.children()[-1].name(), "Body")) {
+					def b = xml.children()[-1]
 					this.testEquals(errors, "BadBodyNS", b.namespaceURI(), grailsApplication.config.osler.mb.soapNamespace)
 					if (this.testEquals(errors, "BadBodyChildrenNum", b.children().size(), 1)) {
 						def e = b.children()[0]

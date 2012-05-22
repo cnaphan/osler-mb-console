@@ -44,8 +44,8 @@ class LogController {
 				bySource.put(l.source, 1)
 			}
 			
-			// If the first character is in the upper case, translate it to lower case
-			String eventKey = l.event[0].tr('A-Z','a-z') + l.event[1..l.event.length()-1]			
+			// If the first character is in the lower case, translate it to upper case
+			String eventKey = l.event[0].toUpperCase() + l.event[1..l.event.length()-1]			
 			if (byType.get(eventKey) > 0) {
 				byType.put(eventKey, byType.get(eventKey)+1)
 			} else {

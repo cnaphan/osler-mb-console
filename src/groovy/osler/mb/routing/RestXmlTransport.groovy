@@ -21,7 +21,7 @@ class RestXmlTransport extends XmlTransport {
 	
 	private final static String NEXT_TIME_KEY = "NextTime"
 	private final static Integer USE_LOCAL_FOR_MINUTES = 5
-	private final static String PATH_TO_LATEST_COPY = "/xml/default-routing-rules.xml"
+	private final static String PATH_TO_LATEST_COPY = "/xml/local-routing-rules.xml"
 		
 	public groovy.util.slurpersupport.GPathResult getRoutingRules() {				
 		def grailsApplication = new Log().domainClass.grailsApplication		
@@ -35,7 +35,7 @@ class RestXmlTransport extends XmlTransport {
 						
 		} else {
 			log.debug("Fetching routing rules from local file")
-			return new XmlSlurper(true, false).parse(SCH.servletContext.getRealPath(PATH_TO_LATEST_COPY))
+			return new XmlSlurper(false, false).parse(SCH.servletContext.getRealPath(PATH_TO_LATEST_COPY))
 		}
 	}
 

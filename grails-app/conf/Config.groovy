@@ -65,8 +65,8 @@ osler.mb.dateFormat="yyyy-MM-dd'T'HH:mm:ss"
 osler.mb.brokerUrl="137.122.88.139"
 
 // Register Event configuration
-osler.mb.registerEventUrls=[SOAP:"http://${osler.mb.brokerUrl}:7080/soap/registerEvent",
-							REST:"http://${osler.mb.brokerUrl}:7080/rest/registerEvent"]
+osler.mb.registerEventUrls=[SOAP:"http://${osler.mb.brokerUrl}:7080/soap/registerEvent-tws",
+							REST:"http://${osler.mb.brokerUrl}:7080/rest/registerEvent-tws"]
 osler.mb.registerEventMethod="DIRECT" // DIRECT or SOAP
 							
 // Routing Rules configuration			
@@ -131,6 +131,6 @@ log4j = {
     info file: ['grails.app.controllers',
     			'osler.mb.routing']
     			
-	//debug file: ['grails.app.controllers.osler.mb.routing.EventController']
+	debug file: ['grails.app.controllers.osler.mb.routing.TesterController']
 				
 }

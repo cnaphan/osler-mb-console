@@ -5,15 +5,15 @@
   <testDescription>Contains two events used to run integration tests.</testDescription>
 	
   <!-- Input events -->	
-  <event name="patientInED" sourceSuffix="RTLS">
-    <patientId>Pa123456</patientId>
-    <locationId>AssessmentRoom12</locationId>
+  <event name="PatientInED" sourceSuffix="RTLS">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Location_ID>AssessmentRoom12</Location_ID>
     <timestamp>2012-03-12 01:12:46</timestamp>
   </event>
-  <event name="patientAdmittedWithBed" sourceSuffix="BPM">
-    <patientId>Pa123456</patientId>
-    <unitId>CCU</unitId>
-    <bedId>Bed207</bedId>
+  <event name="PatientAdmittedWithBed" sourceSuffix="BPM">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Unit_ID>CCU</Unit_ID>
+    <Bed_ID>Bed207</Bed_ID>
     <timestamp>2012-03-12 02:21:36</timestamp>
   </event>    
 </oslerTestScript>

@@ -190,7 +190,6 @@ class TesterController {
 		
 		// Check some configuration elements before proceeding
 		if (grailsApplication.config.osler.mb.registerEventMethod != "SOAP") {	w << [type:"warn", text:"The method to register events must be SOAP. Console is incorrectly configured (possibly in development mode)."] }
-		if (grailsApplication.config.osler.mb.routingRulesTransportMode != "REST") {	w << [type:"warn", text:"The method to get routign rules must be REST. Console is incorrectly configured (possibly in development mode)."] }
 		if (w.find { it.type?.equals("error") }) { return w }
 		
 		// Check the test script for problems
@@ -230,9 +229,7 @@ class TesterController {
 		dests.each { destName ->
 			def testDest = rr.destinations.destination.find{ it.name.text().toUpperCase() == destName.toUpperCase() }
 			if (testDest) {
-				if (testDest.disabled?.text()?.equals("true")) {
-					w << [type:"warn", text:"The destination ${destName} is disabled. This might cause problems with the test."]
-				} else if (testDest.receives.event.size() != eventCount) { 
+				if (testDest.receives.event.size() != eventCount) { 
 					w << [type:"warn", text:"The destination ${destName} receives ${testDest.receives.event.size()} of ${eventCount} events. The test destination should receive all events."]					
 				} else {
 					w << [type:"info", text:"Confirmed that ${destName} exists and receives all ${eventCount} events."]
@@ -457,7 +454,7 @@ class TesterController {
 		connection.setRequestProperty("Accept" , "*/*" )
 		connection.setRequestProperty("Host" , request["Host"] )
 		// Required by some destinations for processing
-		connection.setRequestProperty("SOAPAction" , soapMethod)
+		connection.setRequestProperty("SOAPAction" , "\"${bodyNamespace}/${soapMethod}\"")
 		connection.doOutput = true
 		
 		// Write to stream
@@ -467,7 +464,11 @@ class TesterController {
 			writer.flush()
 			writer.close()
 			connection.connect()
-			return connection.getResponseCode()
+			def code = connection.getResponseCode()
+			if (code >= 400) {
+				log.warn("Console failed to send event to broker at ${url}:\n${soapRequest}")
+			}
+			return code
 		} catch (java.net.ConnectException e) {
 			log.error("Communication error sending SOAP message to message broker: ${e.getMessage()}")
 			flash.error = "Failed to send message. Message Broker seems to be down."
@@ -549,14 +550,15 @@ class TesterController {
 		// Assemble the XML to send to message broker
 		String dateFormat = grailsApplication.config.osler.mb.dateFormat	
 		String dateValue = new Date().format(dateFormat)	
-		def bodyWriter = new StringWriter()
+/*		def bodyWriter = new StringWriter()
 		def xml = new groovy.xml.MarkupBuilder(bodyWriter)		
 		xml."${params.eventName}" (sourceSuffix: "RTLS") {
 			"${params.personType}"(params.personId)
 			Location_ID(params.locationId)
 			timestamp (dateValue)
 		}	
-		String body = bodyWriter.toString()			
+		String body = bodyWriter.toString()*/		
+		String body = "<tws:${params.eventName} sourceSuffix='RTLS'><tws:${params.personType}>${params.personId}</tws:${params.personType}><tws:Location_ID>${params.locationId}</tws:Location_ID><tws:timestamp>${dateValue}</tws:timestamp></tws:${params.eventName}>"
 		Integer responseStatusCode = this.sendMessage(params.eventName, body)
 		
 		// Report back to the user

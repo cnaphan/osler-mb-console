@@ -64,8 +64,8 @@
 									${p.value}
 								</td>
 								<g:each in="${locations}" var="l">
-									<td><button type="button" onclick="submitEvent('${p.name.toLowerCase()}In${l.id}','${p.id}','${p.value}','${l.value}');">${p.name}<br/> in ${l.id}</button></td>
-									<td><button type="button" onclick="submitEvent('${p.name.toLowerCase()}Out${l.id}','${p.id}','${p.value}','${l.value}');">${p.name}<br/> out of ${l.id}</button></td>
+									<td><button type="button" onclick="submitEvent('${p.name}In${l.id}','${p.id}','${p.value}','${l.value}');">${p.name}<br/> in ${l.id}</button></td>
+									<td><button type="button" onclick="submitEvent('${p.name}Out${l.id}','${p.id}','${p.value}','${l.value}');">${p.name}<br/> out of ${l.id}</button></td>
 								</g:each>								
 							</tr>
 						</g:each>
