@@ -37,10 +37,6 @@ Routing Rules
 -------------
 The routing rules section is handled by the DestinationController, EventController and SourceController classes. These classes provide the CRUD functionality for the destination, event and source records stored in the routing rules. Additionally, the EventController class handles updates to the routing rules themselves.
 
-The EventController class also exposes one REST web service:
-
-* /event/getDefaultRoutingRules (GET): Used by the broker to fetch an initial copy of the routing rules, should it ever not have it locally.
-
 Receiving Events
 ----------------
 The "receive" section is handled by the ReceiveController. It exposes one REST web service for each type of verification it does. Currently, it exposes:
@@ -54,7 +50,7 @@ Handling the Routing Rules
 ==========================
 Special attention must be paid to how the broker maintains its routing rules. Primarily, the rules are kept in the broker's memory. Secondarily, the broker also keeps the latest copy on its local file system. It reads the rules in, if ever they should disappear from memory (re-deployment, power failure, etc...) Lastly, if they are not on the local file system, it will ask for a copy from the console.
 
-The console also maintains a copy on its local file system, called "default-routing-rules.xml" under /WEB-INF/xml. Whenever it updates the routing rules, it also writes the latest version here. It uses this version for caching purposes and also to supply the broker if it should ever need a fresh copy, via the /event/getDefaultRoutingRules web service.
+The console also maintains a copy on its local file system, called "local-routing-rules.xml" under /WEB-INF/xml. Whenever it updates the routing rules, it also writes the latest version here. It uses this version for caching purposes.
 
 The console interacts with the broker via the classes XmlTransport (abstract superclass) and RestXmlTransport (subclass). RestXmlTransport contains the code to call the read and update web services. Other implementations of XmlTransport are used for testing purposes (i.e. MemXmlTransport for unit-testing and LocalFileXmlTransport for development mode). The transport mechanism used in each deployment environment is configured in Config.groovy and can be seen on the console homepage.
 
@@ -66,14 +62,16 @@ Routing Rules Structure
 		<sources></sources>
 	</oslerRoutingRules>
 
-The routing rules are composed of three parts: events, destinations and sources. Events and sources are pretty straightforward. Destinations are more complex. Destinations have a method and a format. The method determines what protocol or transport mechanism the events will be delivered by. SOAP is standard, REST works and JMS almost works. The format determines what format the message will be transformed to, before it is delivered to the destination. PFM format is standard and is used internally in the broker, but WBE and TWS are also supported. Adding new methods involves changes to the message flow in the broker. Adding new formats involves creating a new PFM-*.xls file and adding it to the broker. Destinations also contain a list of events, which they receive. Each event should correspondent to an event listed in the root events section.
+The routing rules are composed of three parts: events, destinations and sources. Events and sources are pretty straightforward. Destinations are more complex. Destinations have a method and a format. The method determines what protocol or transport mechanism the events will be delivered by. SOAP is standard, REST works and JMS almost works. The format determines what format the message will be transformed to, before it is delivered to the destination. TWS (a.k.a Teamworks a.k.a. IBM WebSphere Lombardi) format is standard, but an obsolete PFM format is supported, as well as specialized formats for WBE (WebSphere Business Events) and Active MQ (the JMS queue used by PFM) Destinations also contain a list of events, which they receive. Each event should correspondent to an event listed in the root events section.
 
 The formats can be descibed as follows:
 
-* PFM: method-style camelcase. Namespace is used at root but not elsewhere.
-		(e.g. `<pat:bedRequest><patientId></patientId</pat: bedRequest>`)	
 * TWS: class-style camelcase, but IDs are given as _ID. Namespace is used on every element.
 		(e.g. `<tws:BedRequest><tws:Patient_ID></tws:Patient_ID></tws:BedRequest>`)
+* PFM: method-style camelcase. Namespace is used at root but not elsewhere.
+		(e.g. `<pat:bedRequest><patientId></patientId</pat: bedRequest>`)	
+* AMQ: JSON-like without braces. Parameters in similar format to TWS. Timestamp in strange colon-less format.
+	(e.g. `event:ConsultationCompleted1,Patient_ID:Pa123456,timestamp:2012-05-05/19-15-30`)
 
 Tomcat Administration
 =====================
@@ -114,4 +112,3 @@ Gotchas
 5. A single custom tag is used to output info, warning and error messages. It's pretty trivial, though.
 
 6. The Destination, Source and Event classes may look and act like domain classes but they are not. They implement the Validatable interface, which allows them to be validated, but they are not persisted to a database and do not have methods like list, count, find, etc...
-

@@ -69,11 +69,13 @@ class LogController {
 		// Use the response log entries to build some statistics
 		def responseLogItems = this.listResponsesByTime(by)
 		responseLogItems.each{ ResponseLog l ->
-			String destinationAndCodeKey = "${l.destinationName}-${l.responseStatusCode}"
-			if (byDest.get(destinationAndCodeKey) > 0) {
-				byDest.put(destinationAndCodeKey, byDest.get(destinationAndCodeKey)+1)
-			} else {
-				byDest.put(destinationAndCodeKey, 1)
+			if (!l.destinationName.toLowerCase().startsWith("test")) {
+				String destinationAndCodeKey = "${l.destinationName}-${l.responseStatusCode}"
+				if (byDest.get(destinationAndCodeKey) > 0) {
+					byDest.put(destinationAndCodeKey, byDest.get(destinationAndCodeKey)+1)
+				} else {
+					byDest.put(destinationAndCodeKey, 1)				
+				}
 			}
 		}
 		
