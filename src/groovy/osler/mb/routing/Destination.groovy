@@ -15,8 +15,8 @@ class Destination implements Comparable  {
     static constraints = {
 		name maxSize: 50, blank: false, validator: { if (it?.contains(" ")) return ["has.whitespace"] }
 		description maxSize: 500, nullable: true, blank: true
-		accessMethod inList: ["SOAP", "REST", "JMS", "MQ", "PubSub"], validator: checkMethod
-		format maxSize: 25, inList: ["PFM", "TWS", "WBE", "AMQ"]
+		accessMethod maxSize: 10, validator: checkMethod
+		format maxSize: 10
 		url nullable: true, maxSize: 500	
     }
 	
