@@ -43,11 +43,11 @@ class RestXmlTransport extends XmlTransport {
 		def grailsApplication = new Log().domainClass.grailsApplication	
 		// Turn the parsed XML back into a string
 		def outputBuilder = new StreamingMarkupBuilder()
-		String result = outputBuilder.bind{ mkp.yield(root) }
+		String eventXml = outputBuilder.bind{ mkp.yield(root) }
 		try {
 			// Write a copy to the local drive
 			File f = new File (SCH.servletContext.getRealPath(PATH_TO_LATEST_COPY))
-			f.write(result)
+			f.write(eventXml)
 			log.debug("Wrote routing rules to a local file")
 		} catch (Exception e) {
 			log.debug("Failed to write latest copy of routing rules to web app but continuing... Message: ${e.getMessage()}")

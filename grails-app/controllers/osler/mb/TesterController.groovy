@@ -143,9 +143,9 @@ class TesterController {
 	}
 	
 	def rtlsSimulator() {
-		[people: [[id: "patientId", name: "Patient", value: "Pa123456", icon: "patient_48.png"], 
-				  [id: "physicianId", name: "Physician", value: "Phy777777", icon: "doctor_48.png"],
-				  [id: "providerId", name: "Provider", value: "Pro666666", icon: "nurse_female_dark_48.png"]
+		[people: [[id: "Patient_ID", name: "Patient", value: "Pa123456", icon: "patient_48.png"], 
+				  [id: "Physician_ID", name: "Physician", value: "Phy777777", icon: "doctor_48.png"],
+				  [id: "Provider_ID", name: "Provider", value: "Pro666666", icon: "nurse_female_dark_48.png"]
 				  ],
 		 locations: [
 		 	[id: "CCU", value: "Assessment12"],
@@ -400,10 +400,10 @@ class TesterController {
 			it.timestamp = ts
 						
 			// Gather the text for the children nodes
-			String childrenNodes = it.children().collect { "<${it.name()}>${it}</${it.name()}>" }.join('')
+			String childrenNodes = it.children().collect { "<ns1:${it.name()}>${it}</ns1:${it.name()}>" }.join('')
 			// Then, create the entire event tag using the event's name, which is the format that MB wants
 			// Add the attribute @sourceSuffix, which will be used by message broker for simulating virtual sources
-			String bodyText = "<${eventName}${sourceSuffix}${isTest}>${childrenNodes}</${eventName}>"
+			String bodyText = "<ns1:${eventName}${sourceSuffix}${isTest}>${childrenNodes}</ns1:${eventName}>"
 			
 			results << [method: eventName, body: bodyText]
 		}
@@ -441,9 +441,9 @@ class TesterController {
 		// Message broker and destinations are super picky about the SOAP namespace
 		def soapNamespace = grailsApplication.config.osler.mb.soapNamespace
 		def bodyNamespace = grailsApplication.config.osler.mb.eventNamespace
-		soapBody = soapBody.replace("<${soapMethod}", "<pat:${soapMethod}").replace("</${soapMethod}>", "</pat:${soapMethod}>")		
+		//soapBody = soapBody.replace("<${soapMethod}", "<pat:${soapMethod}").replace("</${soapMethod}>", "</pat:${soapMethod}>")		
 		// Generate the SOAP message
-		def soapRequest = "<soapenv:Envelope xmlns:soapenv=\"${soapNamespace}\" xmlns:pat=\"${bodyNamespace}\"><soapenv:Header/><soapenv:Body>${soapBody}</soapenv:Body></soapenv:Envelope>"
+		def soapRequest = "<soapenv:Envelope xmlns:soapenv=\"${soapNamespace}\" xmlns:ns1=\"${bodyNamespace}\"><soapenv:Header/><soapenv:Body>${soapBody}</soapenv:Body></soapenv:Envelope>"
 		String url = grailsApplication.config.osler.mb.registerEventUrls["SOAP"]
 		if (log.isDebugEnabled()) { log.debug("Registering event ${soapMethod} via SOAP using '${url}': ${soapRequest}") }		
 		 
@@ -553,7 +553,7 @@ class TesterController {
 		def xml = new groovy.xml.MarkupBuilder(bodyWriter)		
 		xml."${params.eventName}" (sourceSuffix: "RTLS") {
 			"${params.personType}"(params.personId)
-			locationId(params.locationId)
+			Location_ID(params.locationId)
 			timestamp (dateValue)
 		}	
 		String body = bodyWriter.toString()			

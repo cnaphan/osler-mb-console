@@ -8,7 +8,7 @@ class Destination implements Comparable  {
 	String description
 	String url
 	String accessMethod = "SOAP"
-	String format = "PFM"
+	String format = "TWS"
 	Boolean disabled = false
 	def events = []
 	
@@ -16,7 +16,7 @@ class Destination implements Comparable  {
 		name maxSize: 50, blank: false, validator: { if (it?.contains(" ")) return ["has.whitespace"] }
 		description maxSize: 500, nullable: true, blank: true
 		accessMethod inList: ["SOAP", "REST", "JMS", "MQ", "PubSub"], validator: checkMethod
-		format maxSize: 25, inList: ["PFM", "TWS", "WBE"]
+		format maxSize: 25, inList: ["PFM", "TWS", "WBE", "AMQ"]
 		url nullable: true, maxSize: 500	
     }
 	

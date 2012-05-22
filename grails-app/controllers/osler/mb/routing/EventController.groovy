@@ -280,6 +280,8 @@ class EventController {
 	 * first initialized or if the file is ever deleted)
 	 * @return A routing rules file from the WEB-INF folder in XML format
 	 */
+	/*
+	@deprecated Delete later!
 	def getDefaultRoutingRules() {
 		log.info("Default routing rules were requested from ${request.getRemoteHost()}")
 		try {		
@@ -291,6 +293,7 @@ class EventController {
 			render (text: "Problem retrieving default routing rules: ${e.getMessage()}", status: 500)
 		}
 	}
+	*/
 	
 
 	

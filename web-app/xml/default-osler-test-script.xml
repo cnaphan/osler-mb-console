@@ -4,154 +4,154 @@
   <testDescription>The basic test script that contains definitions and sample data for all the types of events. Used to quickly prototype new tests.</testDescription>
   <!-- Sample event to make copy pasting easier 
 	
-	<event name="allFlavouredEvent">
-		<patientId>Pa123456</patientId>
-		<providerId>Pro654321</providerId>
-		<physicianId>Phy777777</physicianId>
-		<unitId>CCU</unitId>
-		<roomId>Room12</roomId>
-		<bedId>Bed207</bedId>
-		<locationId>AssessmentRoom12</locationId>
-		<orderId>Order1111</orderId>		
-		<orderType>ECG</orderType>
-		<ctas>Sample CTAS data</ctas>				
+	<event name="AllFlavouredEvent">
+		<Patient_ID>Pa123456</Patient_ID>
+		<Provider_ID>Pro654321</Provider_ID>
+		<Physician_ID>Phy777777</Physician_ID>
+		<Unit_ID>CCU</Unit_ID>
+		<Room_ID>Room12</Room_ID>
+		<Bed_ID>Bed207</Bed_ID>
+		<Location_ID>AssessmentRoom12</Location_ID>
+		<Order_ID>Order1111</Order_ID>		
+		<Order_Type>ECG</Order_Type>
+		<CTAS>Sample CTAS data</CTAS>				
 		<timestamp>2012-03-12 02:08:16</timestamp>	
 	</event>
 	
 	-->
-  <event name="patientAdmittedWithBed">
-    <patientId>Pa123456</patientId>
-    <unitId>CCU</unitId>
-    <bedId>Bed207</bedId>
+  <event name="PatientAdmittedWithBed">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Unit_ID>CCU</Unit_ID>
+    <Bed_ID>Bed207</Bed_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="consultationCompleted2">
-    <patientId>Pa123456</patientId>
-    <providerId>Pro654321</providerId>
+  <event name="ConsultationCompleted2">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Provider_ID>Pro654321</Provider_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="patientRegistered">
-    <patientId>Pa123456</patientId>
-    <roomId>Room12</roomId>
+  <event name="PatientRegistered">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Room_ID>Room12</Room_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="consultationStarted1">
-    <patientId>Pa123456</patientId>
-    <physicianId>Phy777777</physicianId>
+  <event name="ConsultationStarted1">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Physician_ID>Phy777777</Physician_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="orderExecutionCompleted">
-    <patientId>Pa123456</patientId>
+  <event name="OrderExecutionCompleted">
+    <Patient_ID>Pa123456</Patient_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="discharge">
-    <patientId>Pa123456</patientId>
-    <providerId>Pro654321</providerId>
+  <event name="Discharge">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Provider_ID>Pro654321</Provider_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="consultationCompleted1">
-    <patientId>Pa123456</patientId>
-    <providerId>Pro654321</providerId>
+  <event name="ConsultationCompleted1">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Provider_ID>Pro654321</Provider_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="waitForTransport">
-    <patientId>Pa123456</patientId>
-    <unitId>CCU</unitId>
+  <event name="WaitForTransport">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Unit_ID>CCU</Unit_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="patientInED">
-    <patientId>Pa123456</patientId>
-    <locationId>AssessmentRoom12</locationId>
+  <event name="PatientInED">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Location_ID>AssessmentRoom12</Location_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="physicianInED">
-    <physicianId>Phy777777</physicianId>
-    <locationId>AssessmentRoom12</locationId>
+  <event name="PhysicianInED">
+    <Physician_ID>Phy777777</Physician_ID>
+    <Location_ID>AssessmentRoom12</Location_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="waitForOrderExecution">
-    <patientId>Pa123456</patientId>
+  <event name="WaitForOrderExecution">
+    <Patient_ID>Pa123456</Patient_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="patientOutED">
-    <patientId>Pa123456</patientId>
-    <locationId>AssessmentRoom12</locationId>
+  <event name="PatientOutED">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Location_ID>AssessmentRoom12</Location_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="patientTransportRequest">
-    <patientId>Pa123456</patientId>
-    <providerId>Pro654321</providerId>
-    <unitId>CCU</unitId>
+  <event name="PatientTransportRequest">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Provider_ID>Pro654321</Provider_ID>
+    <Unit_ID>CCU</Unit_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="consultationStarted2">
-    <patientId>Pa123456</patientId>
-    <providerId>Pro654321</providerId>
+  <event name="ConsultationStarted2">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Provider_ID>Pro654321</Provider_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="waitForConsultation2">
-    <patientId>Pa123456</patientId>
+  <event name="WaitForConsultation2">
+    <Patient_ID>Pa123456</Patient_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="bedRequest">
-    <patientId>Pa123456</patientId>
-    <providerId>Pro654321</providerId>
-    <unitId>CCU</unitId>
+  <event name="BedRequest">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Provider_ID>Pro654321</Provider_ID>
+    <Unit_ID>CCU</Unit_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="waitForConsultation1">
-    <patientId>Pa123456</patientId>
+  <event name="WaitForConsultation1">
+    <Patient_ID>Pa123456</Patient_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="patientTransportStarted">
-    <patientId>Pa123456</patientId>
-    <unitId>CCU</unitId>
+  <event name="PatientTransportStarted">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Unit_ID>CCU</Unit_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="patientArrivedInBed">
-    <patientId>Pa123456</patientId>
-    <unitId>CCU</unitId>
-    <bedId>Bed207</bedId>
+  <event name="PatientArrivedInBed">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Unit_ID>CCU</Unit_ID>
+    <Bed_ID>Bed207</Bed_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="waitForBed">
-    <patientId>Pa123456</patientId>
-    <unitId>CCU</unitId>
+  <event name="WaitForBed">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Unit_ID>CCU</Unit_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="triageScore">
-    <patientId>Pa123456</patientId>
-    <providerId>Pro654321</providerId>
-    <ctas>Sample CTAS data</ctas>
+  <event name="TriageScore">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Provider_ID>Pro654321</Provider_ID>
+    <CTAS>Sample CTAS data</CTAS>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="orderRequestCompleted">
-    <patientId>Pa123456</patientId>
-    <providerId>Pro654321</providerId>
-    <orderId>Order1111</orderId>
-    <orderType>ECG</orderType>
+  <event name="OrderRequestCompleted">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Provider_ID>Pro654321</Provider_ID>
+    <Order_ID>Order1111</Order_ID>
+    <Order_Type>ECG</Order_Type>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="orderRequest">
-    <patientId>Pa123456</patientId>
-    <providerId>Pro654321</providerId>
-    <orderId>Order1111</orderId>
-    <orderType>ECG</orderType>
+  <event name="OrderRequest">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Provider_ID>Pro654321</Provider_ID>
+    <Order_ID>Order1111</Order_ID>
+    <Order_Type>ECG</Order_Type>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="patientInCCU">
-    <patientId>Pa123456</patientId>
-    <locationId>AssessmentRoom12</locationId>
+  <event name="PatientInCCU">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Location_ID>AssessmentRoom12</Location_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="patientAdmittedWithNoBed">
-    <patientId>Pa123456</patientId>
-    <unitId>CCU</unitId>
+  <event name="PatientAdmittedWithNoBed">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Unit_ID>CCU</Unit_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
-  <event name="physicianOutED">
-    <physicianId>Phy777777</physicianId>
-    <locationId>AssessmentRoom12</locationId>
+  <event name="PhysicianOutED">
+    <Physician_ID>Phy777777</Physician_ID>
+    <Location_ID>AssessmentRoom12</Location_ID>
     <timestamp>2012-03-12 02:08:16</timestamp>
   </event>
 </oslerTestScript>
