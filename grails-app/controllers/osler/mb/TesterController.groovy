@@ -13,7 +13,7 @@ class TesterController {
 	private static final String MODE_AUTO = 2
 	private static final Map modeList = [(MODE_MANUAL):"osler.mb.tester.mode.manual.label",
 										 (MODE_AUTO):"osler.mb.tester.mode.auto.label"]
-
+	private static final String NS = "osler" // The namespace prefix used in outgoing messages
 
 	/**
 	 * Renders the initial test script page.				
@@ -397,10 +397,10 @@ class TesterController {
 			it.timestamp = ts
 						
 			// Gather the text for the children nodes
-			String childrenNodes = it.children().collect { "<ns1:${it.name()}>${it}</ns1:${it.name()}>" }.join('')
+			String childrenNodes = it.children().collect { "<${NS}:${it.name()}>${it}</${NS}:${it.name()}>" }.join('')
 			// Then, create the entire event tag using the event's name, which is the format that MB wants
 			// Add the attribute @sourceSuffix, which will be used by message broker for simulating virtual sources
-			String bodyText = "<ns1:${eventName}${sourceSuffix}${isTest}>${childrenNodes}</ns1:${eventName}>"
+			String bodyText = "<${NS}:${eventName}${sourceSuffix}${isTest}>${childrenNodes}</${NS}:${eventName}>"
 			
 			results << [method: eventName, body: bodyText]
 		}
@@ -437,10 +437,9 @@ class TesterController {
 		
 		// Message broker and destinations are super picky about the SOAP namespace
 		def soapNamespace = grailsApplication.config.osler.mb.soapNamespace
-		def bodyNamespace = grailsApplication.config.osler.mb.eventNamespace
-		//soapBody = soapBody.replace("<${soapMethod}", "<pat:${soapMethod}").replace("</${soapMethod}>", "</pat:${soapMethod}>")		
+		def bodyNamespace = grailsApplication.config.osler.mb.eventNamespace				
 		// Generate the SOAP message
-		def soapRequest = "<soapenv:Envelope xmlns:soapenv=\"${soapNamespace}\" xmlns:ns1=\"${bodyNamespace}\"><soapenv:Header/><soapenv:Body>${soapBody}</soapenv:Body></soapenv:Envelope>"
+		def soapRequest = "<soapenv:Envelope xmlns:soapenv=\"${soapNamespace}\" xmlns:${NS}=\"${bodyNamespace}\"><soapenv:Header/><soapenv:Body>${soapBody}</soapenv:Body></soapenv:Envelope>"
 		String url = grailsApplication.config.osler.mb.registerEventUrls["SOAP"]
 		if (log.isDebugEnabled()) { log.debug("Registering event ${soapMethod} via SOAP using '${url}': ${soapRequest}") }		
 		 
@@ -558,7 +557,7 @@ class TesterController {
 			timestamp (dateValue)
 		}	
 		String body = bodyWriter.toString()*/		
-		String body = "<tws:${params.eventName} sourceSuffix='RTLS'><tws:${params.personType}>${params.personId}</tws:${params.personType}><tws:Location_ID>${params.locationId}</tws:Location_ID><tws:timestamp>${dateValue}</tws:timestamp></tws:${params.eventName}>"
+		String body = "<${NS}:${params.eventName} sourceSuffix='RTLS'><${NS}:${params.personType}>${params.personId}</${NS}:${params.personType}><${NS}:Location_ID>${params.locationId}</${NS}:Location_ID><${NS}:timestamp>${dateValue}</${NS}:timestamp></${NS}:${params.eventName}>"
 		Integer responseStatusCode = this.sendMessage(params.eventName, body)
 		
 		// Report back to the user

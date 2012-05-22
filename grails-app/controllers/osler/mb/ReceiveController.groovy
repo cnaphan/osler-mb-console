@@ -158,20 +158,9 @@ class ReceiveController {
 	 * Receives a message from the JMS queue, sent by REST (to avoid having to read directly from JMS - a pain)
 	 */
 	def jms () {
-		try {
-			def xml = request.XML
+		try {			
 			def errors = [:]
-			
-			def eventName = xml?.name() ?: "Unknown"		
-			this.testEquals(errors, "BadEventNS", xml.namespaceURI(), grailsApplication.config.osler.mb.eventNamespace)
-			xml.children().each { 
-				this.testEquals(errors, "BadEvent${it.name()}NS", it.namespaceURI(), "")
-				this.testEquals(errors, "ParameterWith1stUpperCase-${it.name()}", it.name()[0], it.name().toLowerCase()[0])				
-			}
-			if (this.testEquals(errors, "LastParameterNotTimestamp", xml.children()[-1].name(), "timestamp")) {
-				this.testDateFormat(errors,"TimestampFormat", xml.children()[-1].text())
-			}
-			
+						
 			if (!errors) {
 				log.info("JMS event ${ eventName } received from ${request.getRemoteHost()}")
 				render(status: 200) // Respond with 200 Ack

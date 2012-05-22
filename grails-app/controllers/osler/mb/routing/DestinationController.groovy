@@ -153,7 +153,7 @@ class DestinationController {
         	}                   	
         }		
 
-		destinationInstance.applyProperties(params)		
+ 		destinationInstance.applyProperties(params)		
         
         if (!destinationInstance.validate()) {
             render(view: "edit", model: [destinationInstance: destinationInstance])
