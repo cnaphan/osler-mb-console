@@ -143,13 +143,14 @@ class TesterController {
 	}
 	
 	def rtlsSimulator() {
-		[people: [[id: "Patient_ID", name: "Patient", value: "Pa123456", icon: "patient_48.png"], 
-				  [id: "Physician_ID", name: "Physician", value: "Phy777777", icon: "doctor_48.png"],
-				  [id: "Provider_ID", name: "Provider", value: "Pro666666", icon: "nurse_female_dark_48.png"]
-				  ],
+		[people: [
+			[id: "Patient_ID", name: "Patient", value: "Pa123456", icon: "patient_48.png"], 
+			[id: "Physician_ID", name: "Physician", value: "Phy777777", icon: "doctor_48.png"]
+			//[id: "Provider_ID", name: "Provider", value: "Pro666666", icon: "nurse_female_dark_48.png"]
+			], 
 		 locations: [
-		 	[id: "CCU", value: "Assessment12"],
-		 	[id: "ED", value: "Bed207"]
+		 	[id: "ED", value: "Bed207"],
+		 	[id: "CCU", value: "Assessment12"]		 	
 		 	]
 		 ]
 	}

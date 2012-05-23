@@ -29,7 +29,7 @@
 	<body>
 		<div id="page-body" role="main">
 			<g:render template="nav"/>
-			<div id="body" class="narrow">
+			<div id="body">
 				<h2><g:message code="osler.mb.tester.rtlsSimulator.label" /></h2>
 				<g:messages/>
 				<div><g:message code="osler.mb.tester.rtlsSimulator.help"/></div>				

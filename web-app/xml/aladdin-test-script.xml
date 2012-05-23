@@ -4,7 +4,13 @@
   <testName>Aladdin's Test Script</testName>
   <testDescription>Contains all the events for CEP (InputCEPTestXML). Ordered by timestamp. Sources simulate coming from either RTLS or BPM.</testDescription>
 	
-  <!-- Input events -->	
+  <!-- Input events -->
+  <event name="TriageScore" sourceSuffix="BPM">
+    <Patient_ID>Pa123456</Patient_ID>
+    <Provider_ID>Nurse1111</Provider_ID>
+    <CTAS>2</CTAS> 
+    <timestamp>2012-03-12 01:00:46</timestamp>
+  </event>	
   <event name="PatientInED" sourceSuffix="RTLS">
     <Patient_ID>Pa123456</Patient_ID>
     <Location_ID>AssessmentRoom12</Location_ID>
@@ -22,7 +28,7 @@
   </event>    
   <event name="OrderRequest" sourceSuffix="BPM">
     <Patient_ID>Pa123456</Patient_ID>
-    <Provider_ID>Pro654321</Provider_ID>
+    <Provider_ID>Phy777777</Provider_ID>
     <Order_ID>Order1111</Order_ID>
     <Order_Type>ECG</Order_Type>
     <timestamp>2012-03-12 01:22:33</timestamp>
@@ -31,14 +37,14 @@
     <Patient_ID>Pa123456</Patient_ID>
     <Provider_ID>Phy777777</Provider_ID>
     <Order_ID>Order1112</Order_ID>
-    <Order_Type>Blood Sample</Order_Type>
+    <Order_Type>BloodSample</Order_Type>
     <timestamp>2012-03-12 01:27:41</timestamp>
   </event>  
   <event name="OrderRequest" sourceSuffix="BPM">
     <Patient_ID>Pa123456</Patient_ID>
-    <Provider_ID>Order1113</Provider_ID>
+    <Provider_ID>Phy777777</Provider_ID>
     <Order_ID>Order1113</Order_ID>
-    <Order_Type>Blood Analysis</Order_Type>
+    <Order_Type>BloodAnalysis</Order_Type>
     <timestamp>2012-03-12 01:30:40</timestamp>
   </event>
   <event name="OrderRequestCompleted" sourceSuffix="BPM">
@@ -50,16 +56,16 @@
   </event>
   <event name="OrderRequestCompleted" sourceSuffix="BPM">
     <Patient_ID>Pa123456</Patient_ID>
-    <Provider_ID>Pro654321</Provider_ID>
+    <Provider_ID>Nurse121212</Provider_ID>
     <Order_ID>Order1112</Order_ID>
-    <Order_Type>Blood Sample</Order_Type>
+    <Order_Type>BloodSample</Order_Type>
     <timestamp>2012-03-12 01:41:03</timestamp>
   </event>
   <event name="OrderRequestCompleted" sourceSuffix="BPM">
     <Patient_ID>Pa123456</Patient_ID>
-    <Provider_ID>Pro654321</Provider_ID>
+    <Provider_ID>Lab654321</Provider_ID>
     <Order_ID>Order1113</Order_ID>
-    <Order_Type>Blood Analysis</Order_Type>
+    <Order_Type>BloodAnalysis</Order_Type>
     <timestamp>2012-03-12 01:43:47</timestamp>
   </event>
   <event name="PatientInED" sourceSuffix="RTLS">
@@ -103,11 +109,6 @@
   <event name="PatientOutED" sourceSuffix="RTLS">
     <Patient_ID>Pa123456</Patient_ID>
     <Location_ID>AssessmentRoom12</Location_ID>
-    <timestamp>2012-03-12 02:32:14</timestamp>
-  </event>
-  <event name="PatientRegistered" sourceSuffix="BPM">
-    <Patient_ID>Pa123456</Patient_ID>
-    <Room_ID>Room12</Room_ID>
     <timestamp>2012-03-12 02:32:14</timestamp>
   </event>    
   <event name="PatientInCCU" sourceSuffix="RTLS">

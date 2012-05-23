@@ -31,7 +31,7 @@
 		<g:message code="osler.mb.routing.Destination.format.label" />
 	</label>	
 	<g:textField name="format" maxlength="10" required="" value="${destinationInstance?.format}"/>
-	(TWS, PFM, WBE, MQ, etc...)	
+	(TWS, PFM, WBE, AMQ, etc...)	
 </div>
 <div class="fieldcontain ${hasErrors(bean: destinationInstance, field: 'disabled', 'error')}">
 	<label for="url">

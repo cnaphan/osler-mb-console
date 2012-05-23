@@ -5,8 +5,8 @@
 		<title><g:message code="osler.mb.tester.index.title" default="Inject Test Events" /></title>
 		<style type="text/css">
 		.xml-body {
-			height: 4em;
-			width: 60em;			
+			height: 5em;
+			width: 50%;			
 		}
 		.sent {
 			color: green;

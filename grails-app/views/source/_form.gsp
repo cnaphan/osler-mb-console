@@ -13,7 +13,7 @@
 	</label>	
 	<g:textField name="accessMethod" maxlength="10" required="" value="${sourceInstance?.accessMethod}"/>	
 	(SOAP, REST, etc...)	
-<</div>
+</div>
 <div class="fieldcontain ${hasErrors(bean: sourceInstance, field: 'matchingString', 'error')} required">
 	<label for="matchingString">
 		<g:message code="osler.mb.routing.Source.matchingString.label" default="Matching String" />

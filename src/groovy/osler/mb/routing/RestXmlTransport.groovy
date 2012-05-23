@@ -20,7 +20,7 @@ class RestXmlTransport extends XmlTransport {
 	private static final log = org.apache.commons.logging.LogFactory.getLog(this)
 	
 	private final static String NEXT_TIME_KEY = "NextTime"
-	private final static Integer USE_LOCAL_FOR_MINUTES = 5
+	private final static Integer USE_LOCAL_FOR_MINUTES = 1
 	private final static String PATH_TO_LATEST_COPY = "/xml/local-routing-rules.xml"
 		
 	public groovy.util.slurpersupport.GPathResult getRoutingRules() {				

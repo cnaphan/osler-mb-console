@@ -160,6 +160,7 @@ class ReceiveController {
 	def jms () {
 		try {			
 			def errors = [:]
+			def eventName = "?"
 						
 			if (!errors) {
 				log.info("JMS event ${ eventName } received from ${request.getRemoteHost()}")
