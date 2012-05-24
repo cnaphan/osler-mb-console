@@ -7,7 +7,7 @@ import java.util.*;
 
 class TesterController {
 	
-	static allowedMethods = [index: "GET", run: "POST", send: "POST", locationTest: "GET", runLocationTest: "POST"]
+	static allowedMethods = [index: "GET", run: "POST", send: "POST"]
 	
 	private static final String MODE_MANUAL = 1
 	private static final String MODE_AUTO = 2
@@ -66,7 +66,7 @@ class TesterController {
 				for (def it : events) {		
 					Integer responseCode = 0
 					try {
-						responseCode = this.sendMessage(it.method, it.body)																					
+						responseCode = this.sendMessage(it.method, it.body)
 					} catch (java.net.UnknownHostException uhe) {
 						// If the host was not found (the MB server was likely down)
 						log.warn("Could not establish connection to MB: ${uhe.getMessage()}")
@@ -77,6 +77,12 @@ class TesterController {
 					if (responseCode == 200) { // 200=OK
 						numEventsSent = numEventsSent + 1
 						if (log.isDebugEnabled()) { log.debug("Event '${it.method}' successfully sent") }
+						
+						// HACK - Remove this once there is no file I/O between PFM and CEP
+						if (it.method.contains("In")) {	// For RTLS events, ones that contain the word "In"
+							if (log.isDebugEnabled()) { log.debug("Going to sleep for 1 second after sending RTLS event ${it.method}") }
+							Thread.sleep(1000) // Delay for 1 second before sending the next event
+						}												
 					} else {
 						// If there's a non-OK code, log it and report it to the user
 						log.warn("SOAP call reported failure: code=${responseCode}'")

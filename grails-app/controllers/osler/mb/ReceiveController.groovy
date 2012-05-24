@@ -154,13 +154,37 @@ class ReceiveController {
 
 	}
 	
+	def jms () {
+		amq()
+	}
+	
 	/**
 	 * Receives a message from the JMS queue, sent by REST (to avoid having to read directly from JMS - a pain)
 	 */
-	def jms () {
+	def amq () {
 		try {			
 			def errors = [:]
-			def eventName = "?"
+			byte[] buffer = new byte[(int) request.getContentLength()]
+			def f = request.getInputStream()
+			f.read(buffer)
+			def amqString = new String(buffer)
+			def eventName
+			def map = [:]
+			amqString.split(",").each {param ->
+				def nameAndValue = param.split(":")
+				map[nameAndValue[0].trim()] = nameAndValue[1].trim()
+	    	}
+	    	
+	    	if (this.testTrue(errors, "NoEvent", map["event"])) {
+	    		eventName = map["event"]
+	    	}
+			if (this.testTrue(errors, "NoTimestamp", map["timestamp"])) {
+				def t = map["timestamp"]
+				this.testEquals(errors, "TimestampNoMiddleSlash", t[10], "/")
+				this.testTrue(errors, "TimestampWrongLength", t.size(), 19)
+				this.testNotContains(errors, "TimestampWithColons", t, ":")
+			}	    		
+			
 						
 			if (!errors) {
 				log.info("JMS event ${ eventName } received from ${request.getRemoteHost()}")
