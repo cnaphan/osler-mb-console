@@ -5,9 +5,9 @@ Overview
 ========
 A Grails web application designed to interact with the IBM WebSphere Message Broker server for the University of Ottawa "Osler" project. Message Broker is being used to broker events from various applications in a hub-and-spoke pattern. The console aids in injecting events into the broker and in visualizing what is happening in the broker itself.
 
-It requires Grails 2.0.3. I use the ![rest](http://grails.org/plugin/rest) plugin, which should download automatically when you compile the application. 
+It requires Grails 2.0.3. I use the [rest](http://grails.org/plugin/rest) plugin, which should download automatically when you compile the application. 
 
-The console is probably running at ![http://137.122.88.139:8080/osler-mb](http://137.122.88.139:8080/osler-mb).
+The console is probably running at [http://137.122.88.139:8080/osler-mb](http://137.122.88.139:8080/osler-mb).
 
 Structure
 =========
