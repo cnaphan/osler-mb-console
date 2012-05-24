@@ -22,6 +22,9 @@ The testing section is handled by the TesterController class. There are currentl
 * Integration Test: Test the functionality of the message broker automatically
 	
 The TesterController class also contains the code for sending an event via SOAP to the broker. The console can be configured to not send events to the broker, but to simulate sending them instead. This is primarily used in unit-testing.
+
+###Delays in Automated Scripting
+One of the downsides of automated event generation is that, if events are generated too quickly, the scenario will not move forward correctly. To counteract this problem, it is a good idea to introduce a small delay between sending events. However, not all events need delay, just the ones that will result in CEP generating an event. These events are always RTLS events, so the automated test script introduces a small 1 second delay after sending an RTLS event (significant by having the word "In" or "Out" in the event name). Changes to this behaviour can be made in the `run` method of the `TesterController` class.
 	
 Logging
 -------

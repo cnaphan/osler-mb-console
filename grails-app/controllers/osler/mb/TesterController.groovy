@@ -78,8 +78,7 @@ class TesterController {
 						numEventsSent = numEventsSent + 1
 						if (log.isDebugEnabled()) { log.debug("Event '${it.method}' successfully sent") }
 						
-						// HACK - Remove this once there is no file I/O between PFM and CEP
-						if (it.method.contains("In")) {	// For RTLS events, ones that contain the word "In"
+						if (it.method.contains("In") || it.method.contains("Out")) {	// For RTLS events, ones that contain the word "In" or "Out"
 							if (log.isDebugEnabled()) { log.debug("Going to sleep for 1 second after sending RTLS event ${it.method}") }
 							Thread.sleep(1000) // Delay for 1 second before sending the next event
 						}												
