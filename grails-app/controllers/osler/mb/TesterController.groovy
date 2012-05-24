@@ -78,10 +78,8 @@ class TesterController {
 						numEventsSent = numEventsSent + 1
 						if (log.isDebugEnabled()) { log.debug("Event '${it.method}' successfully sent") }
 						
-						if (it.method.contains("In") || it.method.contains("Out")) {	// For RTLS events, ones that contain the word "In" or "Out"
-							if (log.isDebugEnabled()) { log.debug("Going to sleep for 1 second after sending RTLS event ${it.method}") }
-							Thread.sleep(1000) // Delay for 1 second before sending the next event
-						}												
+						if (log.isDebugEnabled()) { log.debug("Going to sleep for 1 second after sending event ${it.method}") }
+						Thread.sleep(1000) // Delay for 1 second before sending the next event
 					} else {
 						// If there's a non-OK code, log it and report it to the user
 						log.warn("SOAP call reported failure: code=${responseCode}'")

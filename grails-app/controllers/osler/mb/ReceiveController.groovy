@@ -159,7 +159,9 @@ class ReceiveController {
 	}
 	
 	/**
-	 * Receives a message from the JMS queue, sent by REST (to avoid having to read directly from JMS - a pain)
+	 * Receives a message in the AMQ format, sent by REST (to avoid having to read directly from JMS - a pain)
+	 * AMQ format just means: "The format Rougu used on the PFM internal queue" It's a strange, nasty little format
+	 * that looks like JSON but has no curly braces. Also, the timestamp is in the format YYYY-MM-DD/HH-MM-SS.	 
 	 */
 	def amq () {
 		try {			
@@ -187,20 +189,20 @@ class ReceiveController {
 			
 						
 			if (!errors) {
-				log.info("JMS event ${ eventName } received from ${request.getRemoteHost()}")
+				log.info("AMQ event ${ eventName } received from ${request.getRemoteHost()}")
 				render(status: 200) // Respond with 200 Ack
 			} else {
-				log.warn("JMS event received from ${request.getRemoteHost()} with the following errors: ${errors as XML}")
+				log.warn("AMQ event received from ${request.getRemoteHost()} with the following errors: ${errors as XML}")
 				render(text: errors as XML, status: 500) // Respond with 500 Internal Error
 			}
 			new DestinationResult(logTime: new Date(), 
 				event: eventName,
-				method: "JMS",
+				method: "AMQ",
 				remoteHost: request.getRemoteHost(), 
 				errorXml: errors ? (errors as XML).toString() : null).save(failOnError: true, flush: true)
 			
 		} catch (Exception e) {
-			log.error("Failed in JMS event handler: ${e.getMessage()}")
+			log.error("Failed in AMQ event handler: ${e.getMessage()}")
 			render (text: e.getMessage(), status: 500) // Respond with 500 server error
 		}
 		
