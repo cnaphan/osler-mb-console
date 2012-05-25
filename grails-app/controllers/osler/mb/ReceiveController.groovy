@@ -177,10 +177,10 @@ class ReceiveController {
 				map[nameAndValue[0].trim()] = nameAndValue[1].trim()
 	    	}
 	    	
-	    	if (this.testTrue(errors, "NoEvent", map["event"])) {
+	    	if (this.testTrue(errors, "NoEvent", map["event"] ? true : false)) {
 	    		eventName = map["event"]
 	    	}
-			if (this.testTrue(errors, "NoTimestamp", map["timestamp"])) {
+			if (this.testTrue(errors, "NoTimestamp", map["timestamp"] ? true : false)) {
 				def t = map["timestamp"]
 				this.testEquals(errors, "TimestampNoMiddleSlash", t[10], "/")
 				this.testTrue(errors, "TimestampWrongLength", t.size(), 19)
