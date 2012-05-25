@@ -6,7 +6,7 @@
 		<style type="text/css">
 		.xml-body {
 			height: 5em;
-			width: 50%;			
+			width: 100%;			
 		}
 		.sent {
 			color: green;
@@ -33,7 +33,7 @@
 						<tr>
 							<th style="width: 2em;">#</th>
 							<th>Event Name</th>
-							<th>Body</th>
+							<th style="width: 50%;">Body</th>
 							<th>&nbsp;</th>									
 						</tr>
 					</thead>
