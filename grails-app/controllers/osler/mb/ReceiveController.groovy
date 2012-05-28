@@ -185,8 +185,7 @@ class ReceiveController {
 				this.testEquals(errors, "TimestampNoMiddleSlash", t[10], "/")
 				this.testTrue(errors, "TimestampWrongLength", t.size(), 19)
 				this.testNotContains(errors, "TimestampWithColons", t, ":")
-			}	    		
-			
+			}			
 						
 			if (!errors) {
 				log.info("AMQ event ${ eventName } received from ${request.getRemoteHost()}")

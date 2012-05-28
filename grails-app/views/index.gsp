@@ -68,7 +68,8 @@
 						<g:link controller="log" action="index" params="${[viewfor:2]}">Today</g:link> |
 						<g:link controller="log" action="list"><g:message code="osler.mb.routing.Log.list.title"/></g:link> |
 						<g:link controller="log" action="responseLogList"><g:message code="osler.mb.routing.Log.responseLogList.title"/></g:link> |					
-						<g:link controller="log" action="destinationResultList"><g:message code="osler.mb.routing.Log.destinationResultList.title"/></g:link>						
+						<g:link controller="log" action="destinationResultList"><g:message code="osler.mb.routing.Log.destinationResultList.title"/></g:link> | 						
+						<g:link controller="log" action="listSystemLog">System Log</g:link>						
 					</div>
 				</li>
 				

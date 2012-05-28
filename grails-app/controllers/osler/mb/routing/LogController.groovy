@@ -1,6 +1,7 @@
 package osler.mb.routing
 
-import java.util.List;
+import java.util.List
+import osler.mb.SystemLog
 
 class LogController {
 
@@ -232,6 +233,13 @@ class LogController {
 			render (text:  e.getMessage(), status: 500) // Respond with 500 server error
 		}
 	}
+	
+	def listSystemLog = {
+        params.max = Math.min(params.max ? params.int('max') : 25, 100)
+        if (!params.sort) { params.sort = "dated" }
+        if (!params.order) { params.order = "desc" }
+        [logInstanceList: SystemLog.list(params), logInstanceTotal: SystemLog.count()]
+    }
 	
 	/**
 	 * Parses the form and to dates in the parameters into a nice map
