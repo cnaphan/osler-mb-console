@@ -79,7 +79,7 @@ class TesterController {
 						if (log.isDebugEnabled()) { log.debug("Event '${it.method}' successfully sent") }
 						
 						if (log.isDebugEnabled()) { log.debug("Going to sleep for 1 second after sending event ${it.method}") }
-						Thread.sleep(1000) // Delay for 1 second before sending the next event
+						Thread.sleep(6000) // Delay for 1 second before sending the next event
 					} else {
 						// If there's a non-OK code, log it and report it to the user
 						log.warn("SOAP call reported failure: code=${responseCode}'")
