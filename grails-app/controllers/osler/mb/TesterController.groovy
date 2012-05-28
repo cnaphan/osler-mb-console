@@ -152,8 +152,8 @@ class TesterController {
 			//[id: "Provider_ID", name: "Provider", value: "Pro666666", icon: "nurse_female_dark_48.png"]
 			], 
 		 locations: [
-		 	[id: "ED", value: "Bed207"],
-		 	[id: "CCU", value: "Assessment12"]		 	
+		 	[id: "ED", value: "Assessment12"],
+		 	[id: "CCU", value: "Bed207"]		 	
 		 	]
 		 ]
 	}
