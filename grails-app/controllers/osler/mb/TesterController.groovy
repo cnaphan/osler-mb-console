@@ -36,7 +36,7 @@ class TesterController {
 	def run () { 		
 		flash.errors = []		
 		def f = request.getFile("testScript")	
-		boolean overrideTimestamps = (request.getParameter("overrideTimestamps") != null)
+		boolean overrideTimestamps = (request.getParameter("overrideTimestamps") != null)		
 				
 		if (!f || f.isEmpty()) {
 			// Check if the file uploaded was empty
@@ -79,7 +79,7 @@ class TesterController {
 						if (log.isDebugEnabled()) { log.debug("Event '${it.method}' successfully sent") }
 						
 						if (log.isDebugEnabled()) { log.debug("Going to sleep for 1 second after sending event ${it.method}") }
-						Thread.sleep(10000) // Delay for 1 second before sending the next event
+						Thread.sleep(params.delaySeconds * 1000) // Delay for 1 second before sending the next event
 					} else {
 						// If there's a non-OK code, log it and report it to the user
 						log.warn("SOAP call reported failure: code=${responseCode}'")
