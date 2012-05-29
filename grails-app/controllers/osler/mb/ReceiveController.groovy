@@ -172,7 +172,9 @@ class ReceiveController {
 			def amqString = new String(buffer)
 			def eventName = "?"
 			def map = [:]
-			amqString.split(",").each {param ->
+			def amqStringSplit = amqString.split(",")
+			if (log.isInfoEnabled()) { log.info("AMQ string '${amqString}' received with ${amqStringSplit.size()} parameters") }
+			amqStringSplit.each {param ->
 				def nameAndValue = param.split(":")
 				map[nameAndValue[0].trim()] = nameAndValue[1].trim()
 	    	}

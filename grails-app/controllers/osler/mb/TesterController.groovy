@@ -334,7 +334,7 @@ class TesterController {
 				if (r.errorXml) {
 					def xml = new XmlSlurper(false, false).parseText(r.errorXml)
 					def errorList = xml.entry?.collect { "<li>${it.@key} ${it.text()}</li>" }?.join("\n")
-					w << [type:"error", text:"An error was detected in the result of event ${r.event} by method ${r.method}:\n<ul>${errorList}</ul>"]
+					w << [type:"error", text:"An error was detected in the result of event ${r.event} by method ${r.method}:\n<ol>${errorList}</ol>"]
 				}
 			}
 		} else if (results) {
