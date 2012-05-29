@@ -233,12 +233,7 @@ class TesterController {
 		dests.each { destName ->
 			def testDest = rr.destinations.destination.find{ it.name.text().toUpperCase() == destName.toUpperCase() }
 			if (testDest) {
-				if (testDest.receives.event.size() != eventCount) { 
-					w << [type:"warn", text:"The destination ${destName} receives ${testDest.receives.event.size()} of ${eventCount} events. The test destination should receive all events."]					
-				} else {
-					w << [type:"info", text:"Confirmed that ${destName} exists and receives all ${eventCount} events."]
-				}
-			
+				w << [type:"info", text:"Confirmed that ${destName} exists."]			
 			} else {
 				w << [type:"warn", text:"Routing rules did not contain a destination called '${destName}'. This could cause problems testing responses."]
 			}
@@ -338,8 +333,8 @@ class TesterController {
 			for (def r : results) {
 				if (r.errorXml) {
 					def xml = new XmlSlurper(false, false).parseText(r.errorXml)
-					def errorList = xml.entry?.collect { '<li>${it.@key} ${it.text()}</li>' }?.join("\n")
-					w << [type:"error", text:"An error was detected in the result of event ${r.eventName} by method ${r.method}:\n<ul>${errorList}</ul>"]
+					def errorList = xml.entry?.collect { "<li>${it.@key} ${it.text()}</li>" }?.join("\n")
+					w << [type:"error", text:"An error was detected in the result of event ${r.event} by method ${r.method}:\n<ul>${errorList}</ul>"]
 				}
 			}
 		} else if (results) {

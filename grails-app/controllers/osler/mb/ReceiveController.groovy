@@ -176,22 +176,22 @@ class ReceiveController {
 				def nameAndValue = param.split(":")
 				map[nameAndValue[0].trim()] = nameAndValue[1].trim()
 	    	}
-	    	
-	    	if (this.testTrue(errors, "NoEvent", map["event"] ? true : false)) {
-	    		eventName = map["event"]
-	    	}
-			if (this.testTrue(errors, "NoTimestamp", map["timestamp"] ? true : false)) {
-				def t = map["timestamp"]
-				this.testEquals(errors, "TimestampNoMiddleSlash", t[10], "/")
-				this.testTrue(errors, "TimestampWrongLength", t.size(), 19)
-				this.testNotContains(errors, "TimestampWithColons", t, ":")
-			}			
-						
+	    	if (this.testTrue(errors, "NotEnoughValues", map.size() >= 2)) {
+				if (this.testTrue(errors, "NoEvent", map["event"] ? true : false)) {
+					eventName = map["event"]
+				}
+				if (this.testTrue(errors, "NoTimestamp", map["timestamp"] ? true : false)) {
+					def t = map["timestamp"]
+					this.testEquals(errors, "TimestampNoMiddleSlash", t[10], "/")
+					this.testTrue(errors, "TimestampWrongLength", t.size(), 19)
+					this.testNotContains(errors, "TimestampWithColons", t, ":")
+				}			
+			}
 			if (!errors) {
 				log.info("AMQ event ${ eventName } received from ${request.getRemoteHost()}")
 				render(status: 200) // Respond with 200 Ack
 			} else {
-				log.warn("AMQ event received from ${request.getRemoteHost()} with the following errors: ${errors as XML}")
+				log.warn("AMQ event received from ${request.getRemoteHost()} with the following errors: ${errors as XML}: ${amqString}")
 				render(text: errors as XML, status: 500) // Respond with 500 Internal Error
 			}
 			new DestinationResult(logTime: new Date(), 
