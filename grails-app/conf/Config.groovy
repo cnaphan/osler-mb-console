@@ -108,16 +108,16 @@ log4j = {
 		production {
 			appenders {			
 				rollingFile name: "rollingFile", maxFileSize: 1024, file: "C:\\tomcat7\\logs\\osler-mb.txt"
-
+			
 			/*jdbc name:"jdbc",
 				URL:"jdbc:mysql://137.122.88.139/osler_mb_prod?useUnicode=yes&characterEncoding=UTF-8",
 				driver: "com.mysql.jdbc.Driver",
 				user: "oslermbuser",
 				password: "oslermbuser", 
 				sql: "INSERT INTO system_log VALUES('%x','%d','%C','%p','%m')"			
-                    
+            */        
     		}
-    		*/
+    		
 		}
 	}
 	

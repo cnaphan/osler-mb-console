@@ -170,7 +170,7 @@ class ReceiveController {
 			def f = request.getInputStream()
 			f.read(buffer)
 			def amqString = new String(buffer)
-			def eventName
+			def eventName = "?"
 			def map = [:]
 			amqString.split(",").each {param ->
 				def nameAndValue = param.split(":")
