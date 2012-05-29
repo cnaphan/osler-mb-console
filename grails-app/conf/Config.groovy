@@ -107,11 +107,9 @@ log4j = {
 	environments {		
 		production {
 			appenders {			
-				rollingFile name: "rollingFile",
-                    maxFileSize: 1024,
-                    file: "C:\\tomcat7\\logs\\osler-mb.txt"
+				rollingFile name: "rollingFile", maxFileSize: 1024, file: "C:\\tomcat7\\logs\\osler-mb.txt"
 
-			jdbc name:"jdbc",
+			/*jdbc name:"jdbc",
 				URL:"jdbc:mysql://137.122.88.139/osler_mb_prod?useUnicode=yes&characterEncoding=UTF-8",
 				driver: "com.mysql.jdbc.Driver",
 				user: "oslermbuser",
@@ -119,12 +117,12 @@ log4j = {
 				sql: "INSERT INTO system_log VALUES('%x','%d','%C','%p','%m')"			
                     
     		}
-    		
+    		*/
 		}
 	}
 	
 
-    error ['org.codehaus.groovy.grails.web.servlet',  //  controllers
+    error rollingFile:['org.codehaus.groovy.grails.web.servlet',  //  controllers
            'org.codehaus.groovy.grails.web.pages', //  GSP
            'org.codehaus.groovy.grails.web.sitemesh', //  layouts
            'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
@@ -137,7 +135,7 @@ log4j = {
            'net.sf.ehcache.hibernate',
 		   'org.springframework.core.env.StandardEnvironment']
 		   
-    info  ['grails.app.controllers',
+    info  rollingFile:['grails.app.controllers',
     	   'osler.mb.routing']
 				
 }
