@@ -76,8 +76,8 @@ osler.mb.routingRulesTransportMode = "MEM" // MEM, LOCAL or REST
 
 // Namespaces used by the console
 osler.mb.soapNamespace = "http://schemas.xmlsoap.org/soap/envelope/"
-osler.mb.pfmNamespace = "http://patientflowmonitoring/"
-osler.mb.twsNamespace="http://WIN-687RHJV6VUL:19086/teamworks/webservices/OPPOD/WFMCoordinationEventService.tws"
+osler.mb.pfmNamespace = "http://pfm/"
+osler.mb.twsNamespace="http://OSLERBPM.site.uottawa.ca:9080/teamworks/webservices/OPPOD/WFMCoordinationEventService.tws"
 osler.mb.eventNamespace = osler.mb.twsNamespace // The namespace used by events sent out by the console
 
 environments {
